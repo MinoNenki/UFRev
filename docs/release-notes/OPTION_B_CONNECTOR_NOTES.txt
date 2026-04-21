@@ -1,0 +1,14 @@
+OPTION B implementation summary
+
+This package includes:
+- Currency normalization layer (USD/EUR/PLN/GBP)
+- Stronger public market intelligence extraction
+- Shopify public JSON enrichment for /products/ URLs
+- Connector-ready Shopify Admin env configuration
+- Faster first-screen UX with quick actions and currency selectors
+
+Not completed in this environment:
+- Live Amazon SP-API auth flow
+- Live ads connector auth (Meta/Google/TikTok)
+
+Reason: secure credentials were not provided inside the uploaded project. The code is prepared for connector-driven expansion, but final live auth still requires your private keys/tokens locally.

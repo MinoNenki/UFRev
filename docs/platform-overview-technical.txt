@@ -1,0 +1,168 @@
+UFREV.com / Ultra Future Review - WERSJA TECHNICZNA DLA DEVELOPERA I WDROZENIA
+
+1. CHARAKTER PRODUKTU
+Projekt jest aplikacja SaaS oparta o Next.js, TypeScript, Supabase i Stripe. Glowna funkcja produktu to analiza danych wejsciowych uzytkownika i zwracanie werdyktu wspieranego przez logike decyzyjna, warstwe AI, market signals i guardraile anti-loss.
+
+2. GLOWNY STOS TECHNOLOGICZNY
+- Next.js App Router,
+- React,
+- TypeScript,
+- Supabase / Postgres,
+- Stripe,
+- OpenAI,
+- Tailwind CSS,
+- Vitest.
+
+3. GLOWNE OBSZARY APLIKACJI
+Warstwa app:
+- public pages,
+- auth,
+- dashboard,
+- account,
+- pricing,
+- automations,
+- integrations,
+- support,
+- admin.
+
+Warstwa API:
+- analyze,
+- market-watch,
+- rewards ads,
+- admin settings,
+- stripe checkout,
+- stripe webhook,
+- notifications,
+- support,
+- reviews,
+- profile updates.
+
+Warstwa lib:
+- decision engine,
+- market watch,
+- market connectors,
+- plans,
+- plan access,
+- monetization config,
+- automation config,
+- integration config,
+- env,
+- security,
+- supabase clients.
+
+4. LOGIKA PRODUKTOWA
+Produkt ma kilka trybow analizy:
+- product_analysis,
+- cost_optimization,
+- document_analysis,
+- visual_analysis.
+
+Wynik analizy jest laczony z:
+- pricing outputs,
+- market signals,
+- recommended plan,
+- confidence,
+- burn risk,
+- moat score,
+- rollout guidance,
+- capital protection.
+
+5. MONETYZACJA
+Model komercyjny obejmuje:
+- subskrypcje: free, starter19, growth49, scale99, command149,
+- credit packs: pack9, pack19, pack39,
+- Stripe price ID mapping,
+- checkout API,
+- webhook synchronization,
+- reward ads,
+- premium gating per feature.
+
+Plan gating jest wyciagniety do osobnej logiki, co pozwala sterowac dostepem do automatyzacji i integracji zaleznymi od planu.
+
+6. AUTOMATYZACJE I MARKET WATCH
+Platforma zawiera:
+- market watch report route,
+- automation route do odpalania market watch batchowo,
+- persystencje market watch events i watchlists,
+- digesty tygodniowe,
+- notification events,
+- guardraile dla alert routing.
+
+7. INTEGRACJE
+Warstwa integracji obejmuje konfiguracje i surface dla:
+- marketplace globalnych,
+- marketplace lokalnych / EU,
+- storefronts,
+- social demand channels.
+
+Nie wszystkie konektory musza byc live aktywne produkcyjnie, ale model danych, ustawienia i widoki sa przygotowane pod dalsza rozbudowe.
+
+8. ADMIN
+Admin app obejmuje:
+- founder view,
+- users,
+- monetization,
+- automations,
+- integrations,
+- support,
+- reviews,
+- retention.
+
+Admin ma sluzyc jako control layer dla produktu, przychodu i ryzyka, a nie jako prosty CRUD.
+
+9. BAZA DANYCH
+Backend opiera sie na Supabase schema i tabelach obejmujacych miedzy innymi:
+- profiles,
+- analyses,
+- app_config,
+- reward events,
+- notification events,
+- support messages,
+- reviews,
+- market_watch_events,
+- market_watchlists,
+- ai_usage_logs,
+- security_events.
+
+10. BEZPIECZENSTWO
+Produkt zawiera:
+- request rate limiting,
+- caps for analyses,
+- token cost estimation,
+- signed reward token,
+- stricter file/text limits,
+- environment-based launch gating,
+- Supabase auth and role-based access,
+- anti-loss logic embedded in analysis flow.
+
+11. TESTY I WALIDACJA
+Projekt ma zestaw testow obejmujacy miedzy innymi:
+- decision engine,
+- plans,
+- currency,
+- market data,
+- market watch,
+- security,
+- analyze route helpers,
+- notifications.
+
+Build produkcyjny i testy przechodza poprawnie po ostatnich zmianach.
+
+12. GOTOWOSC WDROZENIOWA
+Projekt jest gotowy do uruchomienia lokalnie i do wdrozenia na Vercel pod warunkiem poprawnego ustawienia:
+- Supabase,
+- OpenAI,
+- Stripe,
+- ewentualnych providerow reklam,
+- opcjonalnych danych marketplace.
+
+13. OGRANICZENIA I DALSZY ROZWOJ
+Do dalszej rozbudowy pozostaja naturalnie:
+- pelniejsze live sync dla wybranych providerow,
+- dalsza rozbudowa admin monetization,
+- dalsze prace przy schema.sql i migracjach,
+- pelne produkcyjne podpiecia niektorych konektorow,
+- dalsze czyszczenie i lokalizacja starszych komunikatow.
+
+14. PODSUMOWANIE
+To rozbudowany projekt SaaS z realna logika produktowa, warstwa komercyjna i admin control layer. Technicznie nie jest to landing z jednym endpointem AI, tylko wielomodulowa aplikacja z backendem, plan access, market watch, guardrails, monetyzacja i testami.

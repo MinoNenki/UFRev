@@ -1,0 +1,24 @@
+FULL PRO UI V2
+
+This version extends the premium redesign further while preserving the protected business logic.
+
+Newly redesigned pages:
+- app/page.tsx
+- app/pricing/page.tsx
+- app/account/page.tsx
+- app/dashboard/page.tsx
+- app/admin/page.tsx
+- app/admin/monetization/page.tsx
+- app/admin/automations/page.tsx
+- app/admin/integrations/page.tsx
+
+Shared premium UI components:
+- components/pro-ui/MetricCard.tsx
+- components/pro-ui/TrendChart.tsx
+- components/pro-ui/DonutChart.tsx
+- components/pro-ui/InsightPanel.tsx
+- components/pro-ui/ProgressRows.tsx
+
+Important:
+- subscriptions, credits, reward logic, anti-loss protections, and security logic were not intentionally changed.
+- this is a visual and presentation-layer upgrade.

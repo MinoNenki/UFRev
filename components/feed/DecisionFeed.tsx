@@ -1,0 +1,1 @@
+export default function DecisionFeed() { return ( <div className="card"> <h2>Decision Feed</h2> <p>Recent analyses will appear here.</p> </div> ); }

@@ -1,0 +1,277 @@
+PORTAL - CO POSIADA OD A DO Z (PEŁNY OPIS PO POLSKU)
+===================================================
+
+To nie jest zwykła strona WWW. To rozbudowany portal SaaS typu global business / AI commerce intelligence.
+Poniżej masz pełny opis od A do Z.
+
+A - ANALIZA AI PRODUKTÓW
+------------------------
+Portal analizuje produkty, pomysły sprzedażowe i oferty pod kątem opłacalności.
+Generuje werdykty typu:
+- BUY
+- TEST
+- AVOID
+
+B - BEZPIECZEŃSTWO I ANTI-LOSS
+------------------------------
+System ma warstwy ochronne, które pilnują, aby nie przepalać budżetu:
+- guardraile marży
+- limity bezpiecznych testów
+- kill switch
+- staged rollout
+- blokady przy zbyt słabych danych
+- wymóg URL lub dowodów konkurencji dla mocnych decyzji
+
+C - CENNIK I MONETYZACJA
+------------------------
+Portal posiada model SaaS z monetyzacją:
+- plany subskrypcyjne
+- pakiety tokenów AI
+- premium gate
+- logikę paywalla
+- reward ads
+- referral/reward mechanikę
+
+D - DASHBOARD UŻYTKOWNIKA
+-------------------------
+Użytkownik ma dopracowany, premium dashboard z:
+- widokiem analiz
+- statusami i sygnałami
+- market watch
+- widokiem automatyzacji
+- integracjami
+- szybkimi insightami o ryzyku i potencjale
+
+E - EKONOMIKA I WSKAŹNIKI ZYSKU
+--------------------------------
+Portal uwzględnia:
+- estymowaną marżę
+- break-even ROAS
+- sugerowaną cenę testową
+- przedział cenowy
+- logikę anti-burn
+- szacunki opłacalności
+
+F - FOUNDER COMMAND CENTER
+--------------------------
+Dla właściciela / admina jest specjalny panel premium z KPI i kontrolą wzrostu:
+- MRR
+- ARR
+- ARPPU
+- LTV/CAC proxy
+- retention
+- monetization view
+- CRM / lifecycle signal layer
+
+G - GLOBALNE INTEGRACJE
+-----------------------
+Portal jest przygotowany pod integracje globalne i regionalne, m.in.:
+- Shopify
+- WooCommerce
+- Amazon
+- eBay
+- Alibaba
+- AliExpress
+- Walmart
+- Etsy
+- Rakuten
+- Allegro
+- Cdiscount
+- eMAG
+- OTTO
+- Zalando
+- TikTok
+- Meta
+- X
+
+H - HISTORIA, RAPORTY I WATCHLISTY
+----------------------------------
+Portal może przechowywać i pokazywać:
+- historię analiz
+- snapshoty sygnałów rynkowych
+- watchlisty produktów lub nisz
+- raporty market watch
+- tygodniowe digesty
+
+I - INTELIGENCJA RYNKU I KONKURENCJI
+------------------------------------
+System analizuje otoczenie rynkowe:
+- trendy
+- presję konkurencyjną
+- zagrożenia marży
+- siłę popytu
+- pozycjonowanie oferty
+- opportunity profile
+
+J - JĘZYKI INTERFEJSU
+---------------------
+Portal jest gotowy pod wielojęzyczny interfejs.
+W projekcie widać obsługę kilku języków, m.in.:
+- angielski
+- polski
+- hiszpański
+- rosyjski
+
+K - KPI I ANALITYKA PRZYCHODOWA
+-------------------------------
+W części admin / owner widać metryki strategiczne, np.:
+- MRR
+- ARR
+- purchase rate
+- checkout rate
+- premium gate rate
+- płatnych użytkowników
+- aktywność i przychód
+
+L - LOGOWANIE, KONTA I ROLE
+---------------------------
+Portal posiada:
+- rejestrację
+- logowanie
+- konto użytkownika
+- wylogowanie
+- role user / admin
+- kontrolę planu i salda tokenów AI
+
+M - MARKET WATCH I ALERTY
+-------------------------
+Portal ma rozbudowaną warstwę monitoringu rynku:
+- market radar
+- competitor watchtower
+- alerty rynku
+- tygodniowy digest
+- market-watch report API
+
+N - NOTYFIKACJE I DELIVERY ROUTING
+----------------------------------
+Powiadomienia mogą działać przez:
+- in-app
+- email
+- Telegram
+- Discord
+- gotowość pod push w kolejnych krokach
+
+O - OPINIE I SOCIAL PROOF
+-------------------------
+Portal ma moduł recenzji/opinii:
+- tworzenie opinii
+- moderację przez admina
+- statusy approved / pending / rejected
+- wykorzystanie opinii jako social proof
+
+P - PANEL ADMINA
+----------------
+Panel admina jest rozbudowany i wygląda jak centrum dowodzenia SaaS.
+Zawiera m.in. moduły:
+- users
+- monetization
+- founder
+- automations
+- integrations
+- reviews
+- support
+- retention
+
+Q - QUICK SIGNAL LAYER
+----------------------
+W interfejsie są szybkie sygnały i skróty, które pomagają podejmować decyzje bez przeklikiwania się przez cały system.
+To daje bardziej profesjonalny, enterprise feel.
+
+R - REWARD ADS I REFERRAL SYSTEM
+--------------------------------
+Portal wspiera:
+- reklamy nagradzane
+- limity reward claim
+- bonusy za polecenia
+- dodatkowe tokeny AI
+- bezpieczną logikę, aby nie zjadać marży
+
+S - SUPPORT I OBSŁUGA ZGŁOSZEŃ
+------------------------------
+Jest też system obsługi zgłoszeń użytkowników:
+- formularz kontaktowy
+- support inbox w adminie
+- statusy zgłoszeń
+- kolejka obsługi
+
+T - TESTY WHAT-IF I SYMULATOR SCENARIUSZY
+-----------------------------------------
+Portal posiada warstwę symulacji i scenariuszy:
+- what-if simulator
+- analiza różnych wariantów ceny / kosztu / ryzyka
+- podgląd możliwego wpływu na decyzję biznesową
+
+U - USTAWIENIA AUTOMATYZACJI
+----------------------------
+Admin może zarządzać automatyzacjami, np.:
+- auto competitor scans
+- margin alerts
+- review requests
+- weekly market digest
+- sync interval
+- staged rollout percent
+- manual approval before scale
+
+V - WIDOCZNOŚĆ PREMIUM / GLOBAL BUSINESS FEEL
+---------------------------------------------
+Portal został dopracowany tak, aby wyglądał jak produkt klasy global SaaS:
+- premium dashboard
+- lepsza hierarchia widoków
+- sekcje executive
+- uporządkowana nawigacja
+- nowoczesny design i motion layer
+
+W - WEEKLY DIGEST I AUTOMATYCZNE RAPORTY
+----------------------------------------
+Portal może regularnie generować:
+- podsumowania tygodniowe
+- alerty watchlist
+- raporty do działań operacyjnych
+- rekomendacje dla admina i operatora
+
+X - X (TWITTER) / SOCIAL SIGNALS
+--------------------------------
+Portal ma już wyraźnie przygotowane miejsce dla:
+- X
+- TikTok
+- Meta
+jako warstwy sygnałów popytu, reklam i globalnej ekspansji.
+
+Y - "YET READY" CONNECTOR ARCHITECTURE
+--------------------------------------
+Bardzo ważne:
+portal jest już przygotowany architektonicznie pod live integracje, ale do pełnego działania potrzebujesz własnych:
+- kluczy API
+- kont marketplace
+- kont reklamowych
+- danych produkcyjnych
+
+Innymi słowy:
+SYSTEM JEST GOTOWY, ale pełny live sync zależy od Twoich realnych połączeń.
+
+Z - ZABEZPIECZENIA PRZED PUBLIKACJĄ I LEGAL
+-------------------------------------------
+Portal ma także:
+- tryb prywatnego preview przed premierą
+- stronę privacy
+- stronę terms
+- kontrolę dostępu przed publicznym startem
+- możliwość testowania online bez pokazania pomysłu każdemu
+
+PODSUMOWANIE KOŃCOWE
+--------------------
+Twój portal posiada:
+- nowoczesny SaaS frontend
+- AI decision engine
+- system bezpieczeństwa anti-loss
+- dashboard premium
+- globalne integracje
+- automatyzacje i alerty
+- admin command center
+- monetyzację i billing
+- analitykę przychodu
+- support i reviews
+- prywatny staging przed premierą
+
+Krótko mówiąc:
+masz rozbudowany portal SaaS klasy premium/global business, gotowy do testów, rozwoju i wejścia na rynek.

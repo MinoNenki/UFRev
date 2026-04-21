@@ -1,0 +1,1 @@
+export default function RecheckButton() { return <button className="glow">Re-analyze</button>; }

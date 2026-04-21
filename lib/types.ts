@@ -1,0 +1,5 @@
+export type Profile = { id: string; email: string | null; full_name: string | null; company_name: string | null; plan_key: string; credits_balance: number; monthly_analysis_limit: number; analyses_used_this_month: number; role: 'user' | 'admin'; onboarding_completed: boolean; created_at: string; updated_at: string; };
+export type AnalysisRow = { id: string; user_id: string; analysis_type: string; input_text: string; result_text: string; product_name: string | null; decision_json: any | null; created_at: string; };
+export type ReviewRow = { id: string; name: string; company_or_role: string | null; rating: number; content: string; status: 'pending' | 'approved' | 'rejected'; user_id: string | null; created_at: string; };
+export type SupportMessageRow = { id: string; email: string; name: string | null; subject: string; message: string; status: 'new' | 'in_progress' | 'closed'; user_id: string | null; created_at: string; };
+export type CreditRewardEventRow = { id: string; user_id: string; reward_date: string; ads_watched: number; credits_granted: number; reward_unlocked: boolean; created_at: string; updated_at: string; };

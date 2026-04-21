@@ -1,0 +1,23 @@
+FINAL UPGRADE NOTES
+
+1. Analysis engine expanded
+- advanced analysis form
+- analysis type selector
+- product / competitor / offer / ad / pricing modes
+- support for pasted text
+- support for text file uploads
+- support for image uploads (.png, .jpg, .jpeg, .webp)
+- more business fields: market, cost, ad budget, channel, URLs
+
+2. User panel improved
+- stronger account page
+- clearer dashboard actions
+- latest result is displayed better
+
+3. Admin visibility improved
+- account page explains how to enable admin access
+- admin panel link is visible when role=admin
+
+4. Packaging
+- source-only delivery
+- no .env.local in the zip

@@ -1,0 +1,205 @@
+INSTRUKCJA URUCHOMIENIA PORTALU KROK PO KROKU (PO POLSKU)
+=====================================================
+
+Nazwa projektu:
+UFREV.com / Ultra Future Review - globalny portal SaaS do analizy produktów, automatyzacji i ochrony zysku.
+
+1. CZEGO POTRZEBUJESZ NA START
+-----------------------------
+- Komputer z Node.js i npm
+- Konto Supabase
+- Klucz OpenAI API
+- Opcjonalnie: konto Stripe do płatności
+- Opcjonalnie: Vercel do wdrożenia online
+- Folder projektu: C:\Users\Admin\Desktop\JLOrginal
+
+2. OTWARCIE PROJEKTU
+--------------------
+1. Otwórz VS Code.
+2. Otwórz folder projektu:
+   C:\Users\Admin\Desktop\JLOrginal
+3. Otwórz terminal w VS Code.
+
+3. INSTALACJA ZALEŻNOŚCI
+------------------------
+W terminalu uruchom:
+
+npm install
+
+To pobierze wszystkie pakiety wymagane przez Next.js, React, Supabase, Stripe, OpenAI i testy.
+
+4. UTWORZENIE PLIKU .ENV.LOCAL
+------------------------------
+1. Skopiuj plik .env.example do .env.local
+2. Uzupełnij najważniejsze zmienne:
+
+WYMAGANE:
+- NEXT_PUBLIC_SITE_URL=https://ufrev.com
+- NEXT_PUBLIC_SUPABASE_URL=...
+- NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+- SUPABASE_SERVICE_ROLE_KEY=...
+- OPENAI_API_KEY=...
+
+ZALECANE / OPCJONALNE:
+- STRIPE_SECRET_KEY=...
+- STRIPE_WEBHOOK_SECRET=...
+- STRIPE_PRICE_PRO=...
+- STRIPE_PRICE_SCALE=...
+- STRIPE_PRICE_STARTER_19=...
+- STRIPE_PRICE_GROWTH_49=...
+- STRIPE_PRICE_SCALE_99=...
+- STRIPE_PRICE_PACK_9=...
+- STRIPE_PRICE_PACK_19=...
+- STRIPE_PRICE_PACK_39=...
+- NOTIFICATION_EMAIL_FROM=ufrevsupport@gmail.com
+- REWARD_TOKEN_SECRET=ustaw-dlugie-losowe-haslo
+
+TRYB PRYWATNEGO TESTU PRZED PUBLIKACJĄ:
+- PRELAUNCH_MODE=true
+- PRELAUNCH_PASSWORD=twoje_mocne_prywatne_haslo
+- PRELAUNCH_COOKIE_NAME=ufrev_preview_access
+
+5. KONFIGURACJA BAZY DANYCH W SUPABASE
+--------------------------------------
+1. Zaloguj się do Supabase.
+2. Otwórz SQL Editor.
+3. Wklej i uruchom cały plik:
+   supabase/schema.sql
+4. To utworzy wymagane tabele, funkcje i konfiguracje dla:
+   - użytkowników
+   - analiz AI
+   - automatyzacji
+   - integracji
+   - powiadomień
+   - watchlist i market watch
+   - reward ads i zabezpieczeń
+
+6. URUCHOMIENIE LOKALNE
+-----------------------
+W terminalu wpisz:
+
+npm run dev
+
+Po uruchomieniu otwórz w przeglądarce:
+- http://localhost:3000
+
+Jeśli port 3000 jest zajęty, aplikacja może wejść na:
+- http://localhost:3001
+lub
+- http://localhost:3002
+
+7. PIERWSZE LOGOWANIE I KONTO ADMINA
+------------------------------------
+1. Wejdź na stronę.
+2. Załóż konto użytkownika.
+3. Zaloguj się.
+4. W Supabase otwórz tabelę profiles.
+5. Znajdź swoje konto i ustaw:
+   role = 'admin'
+6. Zaloguj się ponownie.
+7. Wejdź do:
+   /dashboard
+   /admin
+
+8. CO SPRAWDZIĆ PO URUCHOMIENIU
+-------------------------------
+Sprawdź po kolei:
+- strona główna
+- logowanie i rejestracja
+- dashboard użytkownika
+- analiza produktu / wynik BUY-TEST-AVOID
+- automations
+- integrations
+- konto użytkownika
+- panel admina
+- admin/users
+- admin/automations
+- admin/integrations
+- admin/monetization
+- admin/reviews
+- admin/support
+
+9. JAK TESTOWAĆ PRYWATNIE PRZED PUBLIKACJĄ
+------------------------------------------
+Jeśli ustawiłeś:
+- PRELAUNCH_MODE=true
+- PRELAUNCH_PASSWORD=twoje_haslo
+
+wtedy portal będzie ukryty za prywatną bramką.
+
+Co zrobić:
+1. Uruchom ponownie aplikację.
+2. Wejdź na:
+   /launch-access
+3. Wpisz hasło.
+4. Dopiero po poprawnym haśle da się przeglądać portal.
+
+To jest najlepszy tryb na testy zaufanym osobom bez ujawniania pomysłu publicznie.
+
+10. PŁATNOŚCI STRIPE (JEŚLI CHCESZ TESTOWAĆ BILLING)
+----------------------------------------------------
+1. Utwórz produkty i ceny w Stripe.
+2. Wklej ich Price ID do .env.local.
+3. Jeśli testujesz webhook lokalnie, uruchom:
+
+stripe listen --forward-to localhost:3000/api/stripe/webhook
+
+4. Otrzymany sekret webhooka wklej do:
+   STRIPE_WEBHOOK_SECRET
+
+11. TESTY TECHNICZNE PRZED WDROŻENIEM
+-------------------------------------
+Uruchom kolejno:
+
+npm run test:run
+npm run build
+
+Dzięki temu sprawdzisz:
+- testy logiki
+- bezpieczeństwo
+- silnik decyzji
+- działanie builda produkcyjnego
+
+12. WDROŻENIE ONLINE NA VERCEL
+------------------------------
+1. Wypchnij projekt na GitHub.
+2. Zaloguj się do Vercel.
+3. Importuj repozytorium.
+4. Dodaj wszystkie zmienne z .env.local do ustawień projektu w Vercel.
+5. Ustaw poprawną domenę w:
+   NEXT_PUBLIC_SITE_URL
+6. Zrób deploy.
+
+Jeśli nadal chcesz mieć portal prywatny po wrzuceniu online:
+- zostaw PRELAUNCH_MODE=true
+- ustaw PRELAUNCH_PASSWORD
+
+13. KIEDY PRZEJŚĆ NA PUBLICZNY START
+------------------------------------
+Gdy wszystko będzie gotowe:
+1. ustaw PRELAUNCH_MODE=false
+2. zrób redeploy
+3. sprawdź jeszcze raz logowanie, dashboard, admina i płatności
+4. wtedy portal jest gotowy do publicznego wejścia
+
+14. NAJWAŻNIEJSZE UWAGI
+----------------------
+- Bez Supabase portal nie będzie działał w pełni.
+- Bez OPENAI_API_KEY analiza AI przejdzie na fallback lub będzie ograniczona.
+- Bez realnych kluczy marketplace integracje są connector-ready, ale nie będą w 100% live.
+- Bez Stripe da się używać portalu, ale bez pełnej obsługi płatności i subskrypcji.
+
+15. NAJKRÓTSZA WERSJA STARTU
+----------------------------
+Jeśli chcesz ultra-krótko:
+
+1. npm install
+2. uzupełnij .env.local
+3. uruchom supabase/schema.sql
+4. npm run dev
+5. załóż konto
+6. ustaw sobie role='admin' w Supabase
+7. testuj /dashboard i /admin
+8. przed publikacją włącz PRELAUNCH_MODE=true
+
+Koniec.

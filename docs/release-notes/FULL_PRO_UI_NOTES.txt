@@ -1,0 +1,18 @@
+FULL PRO UI UPDATE
+
+This package keeps the monetization and protection logic unchanged.
+Only the visual layer of the user dashboard and admin monetization/admin home was redesigned.
+
+Updated files:
+- app/dashboard/page.tsx
+- app/admin/page.tsx
+- app/admin/monetization/page.tsx
+- components/pro-ui/MetricCard.tsx
+- components/pro-ui/TrendChart.tsx
+- components/pro-ui/DonutChart.tsx
+- components/pro-ui/InsightPanel.tsx
+- components/pro-ui/ProgressRows.tsx
+
+Notes:
+- Stripe, credits, reward logic, limits, and anti-loss protections were not intentionally changed.
+- This is a UI-first redesign focused on stronger premium presentation.

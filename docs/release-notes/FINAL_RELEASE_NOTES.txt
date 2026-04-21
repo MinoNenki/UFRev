@@ -1,0 +1,19 @@
+FINAL RELEASE
+
+This package is intended as the final visual release.
+
+What was preserved:
+- subscriptions
+- credits
+- reward logic
+- limits
+- anti-loss protections
+- security-oriented backend logic
+
+What was upgraded:
+- premium visual layer across landing, pricing, account, dashboard, support, reviews, user integrations/automations, and admin surfaces
+- premium analytics cards, trend charts, progress bars, insight blocks
+- more global SaaS presentation without intentionally changing business safeguards
+
+Honest note:
+This is still a presentation-layer redesign. It should be reviewed in your local environment with npm install + npm run dev.

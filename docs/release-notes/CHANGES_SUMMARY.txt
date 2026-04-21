@@ -1,0 +1,25 @@
+UFREV.com GLOBAL SaaS CHANGES
+
+1. Fixed auth UX:
+- login now redirects to /account
+- navbar detects logged-in users
+- added logout button
+- added My account button
+
+2. Globalization:
+- English-first UI
+- added language switcher (EN / PL)
+- pricing switched to $
+
+3. Security and packaging:
+- removed .env.local from delivery package
+- README rewritten with step-by-step setup
+- .gitignore updated to keep secrets and build output out of git
+
+4. Code updates:
+- OpenAI env handling improved
+- key public pages rewritten for global presentation
+- pricing, support, reviews, account, legal pages adjusted
+
+IMPORTANT:
+Rotate previously exposed secrets before deployment.

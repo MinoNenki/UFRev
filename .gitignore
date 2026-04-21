@@ -1,0 +1,14 @@
+node_modules
+.next
+.env
+.env.*
+!.env.example
+.env.local
+.vercel
+coverage
+tsconfig.tsbuildinfo
+.debug-frames
+artifacts/
+*.zip
+*.zip.*
+.env copy.local

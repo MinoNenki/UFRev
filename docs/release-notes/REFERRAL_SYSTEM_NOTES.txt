@@ -1,0 +1,15 @@
+REFERRAL SYSTEM (SAFE VERSION)
+
+Added:
+- referral_code, referred_by, referral_credits in profiles
+- referral_events table
+- referral reward only after referred user completes first real analysis
+- referral reward set to +2 credits to protect margins
+- referral link visible for user in dashboard and account
+- referral reward settings configurable in app_config
+
+Important:
+- protected anti-loss logic remains in place
+- reward is not granted on click
+- reward is not granted on signup alone
+- reward is granted only once per activated referral

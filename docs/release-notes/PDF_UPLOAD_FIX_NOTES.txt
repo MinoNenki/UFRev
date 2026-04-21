@@ -1,0 +1,13 @@
+PDF upload fix added.
+
+What changed:
+- client no longer tries to read PDF as inline text in the browser
+- server extracts text from PDF using pdftotext
+- CSV / JSON / TXT / HTML / XML remain supported
+- image uploads remain supported
+
+After deploy:
+1. npm install
+2. npm run dev
+
+Note: scanned/image-only PDFs may not yield extractable text.

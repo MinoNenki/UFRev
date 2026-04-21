@@ -1,0 +1,1 @@
+export default function SaveButton() { return <button className="glow">Save decision</button>; }

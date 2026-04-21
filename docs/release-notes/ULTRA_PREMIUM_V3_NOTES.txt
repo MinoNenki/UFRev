@@ -1,0 +1,22 @@
+ULTRA PREMIUM V3
+
+Goal:
+- preserve anti-loss protections, subscriptions, credits, limits, and reward logic
+- push the visual layer closer to a global top-tier SaaS experience
+
+Newly enhanced in V3:
+- landing page
+- pricing page
+- account page
+- dashboard
+- integrations (user)
+- automations (user)
+- support page
+- admin home
+- admin monetization
+- admin automations
+- admin integrations
+- richer background and premium glass styling
+
+Important:
+This is still a visual/presentation upgrade. The protected business logic was not intentionally changed.
