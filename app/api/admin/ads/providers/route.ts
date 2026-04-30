@@ -4,6 +4,7 @@ import { requireAdmin } from '@/lib/admin';
 import { ensureDefaultAdProviders, sanitizeProviderConfig } from '@/lib/ad-providers';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 // GET - List all ad providers
 export async function GET(req: NextRequest) {

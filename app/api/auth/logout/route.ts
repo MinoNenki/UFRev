@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 
+export const dynamic = 'force-dynamic';
+
 async function performLogout(request: Request) {
   try {
     const supabase = await createSupabaseServerClient();

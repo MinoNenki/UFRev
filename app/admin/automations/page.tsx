@@ -9,6 +9,8 @@ import TutorialMode, { TutorialStep } from '@/components/pro-ui/TutorialMode';
 import { tr } from '@/lib/i18n';
 import { getLanguage } from '@/lib/i18n-server';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminAutomationsPage({ searchParams }: { searchParams?: { updated?: string; error?: string; deliveryUpdated?: string; deliveryError?: string } }) {
   const language = await getLanguage();
   const { isAdmin } = await requireAdmin();
