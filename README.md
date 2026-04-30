@@ -133,6 +133,36 @@ Then:
    - `https://ufrev.com/api/stripe/webhook`
 6. Redeploy after adding env variables.
 
+## Fresh Vercel import (no-env safe) - verified
+The project now builds correctly even when `.env.local` is missing, so a fresh Vercel import should not fail at build time because of Supabase.
+
+Use this exact order after import:
+
+1. Open `Project Settings -> Environment Variables`.
+2. Add these required keys for `Production` (and copy to `Preview` if needed):
+   - `NEXT_PUBLIC_SITE_URL`
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `SUPABASE_SERVICE_ROLE_KEY`
+   - `OPENAI_API_KEY`
+   - `STRIPE_SECRET_KEY`
+   - `STRIPE_WEBHOOK_SECRET`
+   - `REWARD_TOKEN_SECRET_CURRENT`
+   - `REWARD_TOKEN_KID_CURRENT`
+   - `SIGNED_LINK_SECRET_CURRENT`
+   - `SIGNED_LINK_KID_CURRENT`
+3. Add Stripe price variables used by checkout:
+   - `STRIPE_PRICE_STARTER`
+   - `STRIPE_PRICE_PRO`
+   - `STRIPE_PRICE_SCALE`
+   - `STRIPE_PRICE_PACK_9`
+   - `STRIPE_PRICE_PACK_19`
+   - `STRIPE_PRICE_PACK_39`
+4. Ensure Stripe keys and webhook secret come from the same Stripe account.
+5. Trigger `Redeploy` for the latest deployment.
+
+If Vercel still shows a failed deployment, open `Inspect Deployment` and confirm whether the failure is from build phase or runtime phase.
+
 ## Signed cron URL for automations
 To call `/api/automations/market-watch/run` without admin session, use either header secret auth or a signed URL.
 
