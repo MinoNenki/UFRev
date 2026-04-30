@@ -3,6 +3,11 @@ export type LegacyPlanKey = 'starter19' | 'growth49' | 'scale99' | 'command149';
 export type AnyPlanKey = PlanKey | LegacyPlanKey;
 export type CreditPackKey = 'pack9' | 'pack19' | 'pack39';
 
+const matchesStripeReference = (configuredRef: string | undefined, priceId: string | null | undefined, productId?: string | null) => {
+  if (!configuredRef) return false;
+  return configuredRef === priceId || configuredRef === productId;
+};
+
 export const BILLING_UNIT_LABEL = 'AI tokens';
 export const BILLING_UNIT_LABEL_SINGULAR = 'AI token';
 
@@ -94,11 +99,11 @@ export const getPlanDisplayName = (planKey: string | null | undefined) => {
   return match?.name || PLANS.free.name;
 };
 
-export const getPlanByStripePriceId = (priceId: string | null | undefined): PlanKey | null => {
-  if (!priceId) return null;
-  if (priceId === process.env.STRIPE_PRICE_STARTER || priceId === process.env.STRIPE_PRICE_STARTER_19) return 'starter';
-  if (priceId === process.env.STRIPE_PRICE_PRO || priceId === process.env.STRIPE_PRICE_GROWTH_49) return 'pro';
-  if (priceId === process.env.STRIPE_PRICE_SCALE || priceId === process.env.STRIPE_PRICE_SCALE_99 || priceId === process.env.STRIPE_PRICE_COMMAND_149) return 'scale';
+export const getPlanByStripePriceId = (priceId: string | null | undefined, productId?: string | null): PlanKey | null => {
+  if (!priceId && !productId) return null;
+  if (matchesStripeReference(process.env.STRIPE_PRICE_STARTER, priceId, productId) || matchesStripeReference(process.env.STRIPE_PRICE_STARTER_19, priceId, productId)) return 'starter';
+  if (matchesStripeReference(process.env.STRIPE_PRICE_PRO, priceId, productId) || matchesStripeReference(process.env.STRIPE_PRICE_GROWTH_49, priceId, productId)) return 'pro';
+  if (matchesStripeReference(process.env.STRIPE_PRICE_SCALE, priceId, productId) || matchesStripeReference(process.env.STRIPE_PRICE_SCALE_99, priceId, productId) || matchesStripeReference(process.env.STRIPE_PRICE_COMMAND_149, priceId, productId)) return 'scale';
   return null;
 };
 
@@ -120,10 +125,10 @@ export const getStripePriceIdForPlan = (planKey: string | null | undefined) => {
   return null;
 };
 
-export const getCreditPackByStripePriceId = (priceId: string | null | undefined): CreditPackKey | null => {
-  if (!priceId) return null;
-  if (priceId === process.env.STRIPE_PRICE_PACK_9) return 'pack9';
-  if (priceId === process.env.STRIPE_PRICE_PACK_19) return 'pack19';
-  if (priceId === process.env.STRIPE_PRICE_PACK_39) return 'pack39';
+export const getCreditPackByStripePriceId = (priceId: string | null | undefined, productId?: string | null): CreditPackKey | null => {
+  if (!priceId && !productId) return null;
+  if (matchesStripeReference(process.env.STRIPE_PRICE_PACK_9, priceId, productId)) return 'pack9';
+  if (matchesStripeReference(process.env.STRIPE_PRICE_PACK_19, priceId, productId)) return 'pack19';
+  if (matchesStripeReference(process.env.STRIPE_PRICE_PACK_39, priceId, productId)) return 'pack39';
   return null;
 };

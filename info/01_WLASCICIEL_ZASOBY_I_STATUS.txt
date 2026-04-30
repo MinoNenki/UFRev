@@ -1,0 +1,52 @@
+UFREV - CO POSIADASZ JAKO WLASCICIEL (STAN AKTUALNY)
+
+1. Produkt i architektura
+- Dzialajaca aplikacja SaaS oparta o Next.js + TypeScript.
+- Backend i baza danych na Supabase.
+- Platnosci i billing przez Stripe.
+- Silnik analiz oparty o OpenAI.
+- Testy i typecheck przechodza poprawnie.
+
+2. Glowna wartwa biznesowa
+- Panel publiczny + marketingowe strony sprzedazowe.
+- Logowanie i konta userow.
+- Dashboard decyzyjny (BUY/TEST/SKIP + kontekst ryzyka i marzy).
+- Analiza produktu, kosztu, dokumentu i obrazu.
+
+3. Co masz po stronie owner/admin
+- Globalne centrum admina z modulami:
+  - founder,
+  - users,
+  - monetization,
+  - automations,
+  - integrations,
+  - support,
+  - reviews,
+  - retention.
+- Kontrola planow, roli, tokenow AI i podstaw billingu usera.
+- Kontrola ustawien monetyzacji, reward ads i warstwy providerow reklam.
+- Kontrola automatyzacji i alert routing.
+- Kontrola integracji kanalow i bezpiecznego rolloutu.
+
+4. Monetyzacja i przychod
+- Drabina planow + pakiety tokenow AI.
+- Checkout Stripe + webhook Stripe.
+- Reward ads i referral jako dodatkowa petla aktywacji.
+- Premium gating (trudniejsze funkcje za wyzszymi planami).
+
+5. Bezpieczenstwo (wdrozone)
+- Rozdzielone sekrety per use-case.
+- Rotacja kluczy przez current/previous + kid.
+- Podpisywane linki i ochrona endpointow automatyzacji.
+- Walidacje konfiguracji i ostrzezenia setupu.
+- Ograniczenia anti-loss i mechanizmy ochrony marzy.
+
+6. Integracje i automatyzacje
+- Integracje user/admin gotowe warstwowo (storefront, marketplace, regional).
+- Automatyzacje user/admin gotowe do operacyjnego uzycia.
+- Routing alertow: in-app + opcje email/telegram/discord.
+
+7. Co to daje Tobie jako wlascicielowi
+- Masz realny, wielomodulowy produkt, nie tylko landing z AI.
+- Masz narzedzie do monetyzacji i kontroli ryzyka operacyjnego.
+- Masz baze pod skalowanie B2C/B2B i dokumenty pod rozmowy inwestorskie/dotacyjne.

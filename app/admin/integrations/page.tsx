@@ -407,6 +407,11 @@ export default async function AdminIntegrationsPage({ searchParams }: { searchPa
       max: 10000,
     },
   ];
+  const integrationQuickLinks = [
+    { href: '#admin-connection-validation', label: tr(language, { en: 'Connection validation', pl: 'Walidacja połączeń' }) },
+    { href: '#admin-channel-presets', label: tr(language, { en: 'Channel presets', pl: 'Presety kanałów' }) },
+    { href: '#admin-advanced-settings', label: tr(language, { en: 'Advanced settings', pl: 'Ustawienia zaawansowane' }) },
+  ];
 
   return (
     <main className="mx-auto max-w-[1550px] px-4 py-14 text-white sm:px-6">
@@ -423,20 +428,22 @@ export default async function AdminIntegrationsPage({ searchParams }: { searchPa
       {(params.updated || params.error || tested) && <div className={`mt-6 rounded-2xl border p-4 ${params.error ? 'border-rose-300/30 bg-rose-300/10 text-rose-200' : 'border-emerald-300/30 bg-emerald-300/10 text-emerald-200'}`}>{params.error ? tr(language, { en: 'Could not save integration settings.', pl: 'Nie udało się zapisać ustawień integracji.' }) : tested ? tr(language, { en: `Validation refreshed for ${testedLabel}. Check the results below.`, pl: `Odświeżono walidację dla ${testedLabel}. Sprawdź wyniki poniżej.` }) : tr(language, { en: 'Integration settings saved.', pl: 'Ustawienia integracji zapisane.' })}</div>}
 
       <div className="mt-6 flex flex-wrap gap-3">
-        <a href="#admin-connection-validation" className="rounded-2xl border border-cyan-300/30 bg-cyan-300/10 px-5 py-3 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-300/15">
-          {tr(language, { en: 'Quick admin help', pl: 'Szybka pomoc admina' })}
-        </a>
-        <a href="#admin-advanced-settings" className="rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.08]">
-          {tr(language, { en: 'Jump to advanced settings', pl: 'Przejdź do ustawień zaawansowanych' })}
-        </a>
+        {integrationQuickLinks.map((item, index) => (
+          <a key={item.href} href={item.href} className={`rounded-2xl px-5 py-3 text-sm font-semibold transition ${index === 0 ? 'border border-cyan-300/30 bg-cyan-300/10 text-cyan-100 hover:bg-cyan-300/15' : 'border border-white/10 bg-white/[0.04] text-white hover:bg-white/[0.08]'}`}>
+            {item.label}
+          </a>
+        ))}
       </div>
-      <CategoryBadgeLegend
-        language={language}
-        categories={['store', 'validation', 'channel', 'marketplace', 'region', 'data', 'safety', 'limit']}
-        title={tr(language, { en: 'Badge legend', pl: 'Legenda oznaczeń' })}
-        description={tr(language, { en: 'Every integration block now uses one global category system, so new admins understand immediately which option is a store, channel, data scope, safety rule, or hard limit.', pl: 'Każdy blok integracji używa teraz jednego globalnego systemu kategorii, więc nowy admin od razu widzi co jest sklepem, kanałem, zakresem danych, zabezpieczeniem albo twardym limitem.' })}
-        className="mt-6"
-      />
+      <details className="mt-6 rounded-[28px] border border-white/10 bg-slate-950/40 p-6">
+        <summary className="cursor-pointer list-none text-sm font-semibold text-white">{tr(language, { en: 'Open badge legend and category help', pl: 'Otwórz legendę oznaczeń i pomoc kategorii' })}</summary>
+        <CategoryBadgeLegend
+          language={language}
+          categories={['store', 'validation', 'channel', 'marketplace', 'region', 'data', 'safety', 'limit']}
+          title={tr(language, { en: 'Badge legend', pl: 'Legenda oznaczeń' })}
+          description={tr(language, { en: 'Every integration block now uses one global category system, so new admins understand immediately which option is a store, channel, data scope, safety rule, or hard limit.', pl: 'Każdy blok integracji używa teraz jednego globalnego systemu kategorii, więc nowy admin od razu widzi co jest sklepem, kanałem, zakresem danych, zabezpieczeniem albo twardym limitem.' })}
+          className="mt-5"
+        />
+      </details>
       <TutorialMode
         language={language}
         title={tr(language, { en: 'Need help using admin integrations?', pl: 'Potrzebujesz pomocy w obsłudze integracji admina?' })}
@@ -516,11 +523,13 @@ export default async function AdminIntegrationsPage({ searchParams }: { searchPa
             ))}
           </section>
 
-          <section className="mt-8 grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-            <div className="rounded-[32px] border border-white/10 bg-slate-950/60 p-8 shadow-[0_24px_100px_rgba(2,6,23,0.45)]">
-              <div className="text-[11px] uppercase tracking-[0.24em] text-cyan-200">{tr(language, { en: 'Global channel presets', pl: 'Globalne presety kanałów' })}</div>
-              <h2 className="mt-2 text-3xl font-black">{tr(language, { en: 'One-click sync modes', pl: 'Tryby synchronizacji jednym kliknięciem' })}</h2>
-              <div className="mt-5 grid gap-4">
+          <details id="admin-channel-presets" className="mt-8 rounded-[32px] border border-white/10 bg-slate-950/60 p-8 shadow-[0_24px_100px_rgba(2,6,23,0.45)]">
+            <summary className="cursor-pointer list-none text-2xl font-bold text-white">{tr(language, { en: 'Open channel presets and rollout notes', pl: 'Otwórz presety kanałów i notatki rolloutu' })}</summary>
+            <div className="mt-6 grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+              <div>
+                <div className="text-[11px] uppercase tracking-[0.24em] text-cyan-200">{tr(language, { en: 'Global channel presets', pl: 'Globalne presety kanałów' })}</div>
+                <h2 className="mt-2 text-3xl font-black">{tr(language, { en: 'One-click sync modes', pl: 'Tryby synchronizacji jednym kliknięciem' })}</h2>
+                <div className="mt-5 grid gap-4">
             <form action="/api/admin/integrations/settings" method="post" className="hover-lift rounded-[24px] border border-white/10 bg-white/[0.03] p-5">
               <input type="hidden" name="shopifyEnabled" value="on" />
               <input type="hidden" name="amazonEnabled" value="on" />
@@ -573,15 +582,16 @@ export default async function AdminIntegrationsPage({ searchParams }: { searchPa
               <p className="mt-2 text-sm text-slate-300">{tr(language, { en: 'Strong EU/local presence for Allegro, Zalando, OTTO, and Cdiscount with safer rollout controls.', pl: 'Mocna obecność europejska i lokalna dla Allegro, Zalando, OTTO i Cdiscount z bezpieczniejszymi ograniczeniami wdrożenia.' })}</p>
               <button className="mt-4 rounded-2xl bg-emerald-300 px-4 py-2 text-sm font-semibold text-slate-950">{tr(language, { en: 'Apply preset', pl: 'Zastosuj preset' })}</button>
             </form>
+                </div>
               </div>
-            </div>
-            <InsightPanel language={language} title={tr(language, { en: 'Global architecture notes', pl: 'Notatki architektury globalnej' })} items={[
+              <InsightPanel language={language} title={tr(language, { en: 'Global architecture notes', pl: 'Notatki architektury globalnej' })} items={[
               tr(language, { en: 'Global marketplaces give you volume and competitive data, but require stronger price and margin discipline.', pl: 'Globalne marketplace dają wolumen i dane konkurencyjne, ale wymagają mocniejszej dyscypliny ceny i marży.' }),
               tr(language, { en: 'Allegro, Cdiscount, eMAG, OTTO, and Zalando make the expansion story real for Europe and regional operators.', pl: 'Allegro, Cdiscount, eMAG, OTTO i Zalando czynią scenariusz ekspansji realnym dla Europy i operatorów regionalnych.' }),
               tr(language, { en: 'Shopify and WooCommerce stay visible because they are the only truly user-facing validated storefront connections in the lean MVP.', pl: 'Shopify i WooCommerce zostają widoczne, bo to jedyne naprawdę zweryfikowane połączenia sklepów dostępne dla użytkownika w uproszczonym MVP.' }),
               tr(language, { en: 'Dry-run and manual approval stay available so the wider sync map does not weaken anti-loss discipline.', pl: 'Tryb testowy i ręczna akceptacja pozostają dostępne, żeby szersza mapa synchronizacji nie osłabiała dyscypliny ochrony przed stratą.' }),
             ]} />
-          </section>
+            </div>
+          </details>
         </TutorialStep>
 
         <TutorialStep
@@ -589,7 +599,7 @@ export default async function AdminIntegrationsPage({ searchParams }: { searchPa
           title={tr(language, { en: 'Use advanced settings as the main admin control room', pl: 'Traktuj ustawienia zaawansowane jako główne centrum kontroli admina' })}
           description={tr(language, { en: 'This section decides what data is synced, what channels are active, and what safety rules block risky publishing.', pl: 'Ta sekcja decyduje jakie dane są synchronizowane, które kanały są aktywne i jakie zabezpieczenia blokują ryzykowną publikację.' })}
         >
-          <details id="admin-advanced-settings" className="mt-8 scroll-mt-24 rounded-[32px] border border-white/10 bg-slate-950/60 p-8 shadow-[0_24px_100px_rgba(2,6,23,0.45)]" open>
+          <details id="admin-advanced-settings" className="mt-8 scroll-mt-24 rounded-[32px] border border-white/10 bg-slate-950/60 p-8 shadow-[0_24px_100px_rgba(2,6,23,0.45)]">
             <summary className="cursor-pointer list-none text-2xl font-bold text-white">{tr(language, { en: 'Open advanced connection settings', pl: 'Otwórz zaawansowane ustawienia połączeń' })}</summary>
 
             <div className="mt-6 grid gap-4 xl:grid-cols-4">

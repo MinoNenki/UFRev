@@ -7,6 +7,7 @@ import { buildMarketWatchNotifications, buildWeeklyDigestNotification, getEnable
 import { getNotificationSettings } from '@/lib/growth-config';
 import { getAutomationSettings } from '@/lib/profit-config';
 import { buildMarketWatchReport, buildWeeklyMarketDigest, getActiveMarketWatchlists, getRecentMarketWatchSnapshots, persistMarketWatchReport, type MarketWatchReport } from '@/lib/market-watch';
+import { verifySignedLinkSignature } from '@/lib/security';
 
 export const runtime = 'nodejs';
 
@@ -26,6 +27,17 @@ async function isAuthorized(request: NextRequest) {
   const cronSecret = process.env.MARKET_WATCH_CRON_SECRET || process.env.CRON_SECRET;
   const providedSecret = request.headers.get('x-cron-secret') || request.headers.get('authorization')?.replace(/^Bearer\s+/i, '');
   if (cronSecret && providedSecret === cronSecret) return true;
+
+  const signed = verifySignedLinkSignature({
+    pathname: request.nextUrl.pathname,
+    method: request.method,
+    kid: request.nextUrl.searchParams.get('sl_kid'),
+    expiresRaw: request.nextUrl.searchParams.get('sl_exp'),
+    nonce: request.nextUrl.searchParams.get('sl_nonce'),
+    signature: request.nextUrl.searchParams.get('sl_sig'),
+    extra: request.nextUrl.searchParams.get('sl_extra'),
+  });
+  if (signed.valid) return true;
 
   const { isAdmin } = await requireAdmin();
   return isAdmin;

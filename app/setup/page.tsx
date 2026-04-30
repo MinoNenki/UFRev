@@ -1,4 +1,4 @@
-import { getSetupWarnings, isOpenAIConfigured, isRewardSecurityConfigured, isStripeConfigured, isStripeWebhookConfigured, isSupabaseConfigured } from '@/lib/env';
+import { getSetupWarnings, isOpenAIConfigured, isRewardSecurityConfigured, isSignedLinkSecurityConfigured, isStripeConfigured, isStripeWebhookConfigured, isSupabaseConfigured } from '@/lib/env';
 import { tr } from '@/lib/i18n';
 import { getLanguage } from '@/lib/i18n-server';
 
@@ -24,7 +24,8 @@ export default async function SetupPage() {
               <li>• OpenAI key: {isOpenAIConfigured ? 'OK' : tr(language, { en: 'Missing', pl: 'Brak', es: 'Falta', ru: 'Отсутствует' })}</li>
               <li>• Stripe secret: {isStripeConfigured ? 'OK' : tr(language, { en: 'Missing', pl: 'Brak', es: 'Falta', ru: 'Отсутствует' })}</li>
               <li>• Stripe webhook: {isStripeWebhookConfigured ? 'OK' : tr(language, { en: 'Missing', pl: 'Brak', es: 'Falta', ru: 'Отсутствует' })}</li>
-              <li>• Reward token secret: {isRewardSecurityConfigured ? 'OK' : tr(language, { en: 'Missing', pl: 'Brak', es: 'Falta', ru: 'Отсутствует' })}</li>
+              <li>• Reward token secret (rotating): {isRewardSecurityConfigured ? 'OK' : tr(language, { en: 'Missing', pl: 'Brak', es: 'Falta', ru: 'Отсутствует' })}</li>
+              <li>• Signed link secret: {isSignedLinkSecurityConfigured ? 'OK' : tr(language, { en: 'Missing', pl: 'Brak', es: 'Falta', ru: 'Отсутствует' })}</li>
             </ul>
           </div>
           <div className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-5">
@@ -44,7 +45,12 @@ SUPABASE_SERVICE_ROLE_KEY=your-production-service-role-key
 OPENAI_API_KEY=your-openai-production-key
 STRIPE_SECRET_KEY=sk_live_replace_before_launch
 STRIPE_WEBHOOK_SECRET=whsec_replace_with_live_webhook_secret
-REWARD_TOKEN_SECRET=replace-with-a-long-random-production-secret
+REWARD_TOKEN_SECRET_CURRENT=replace-with-a-long-random-production-secret
+REWARD_TOKEN_SECRET_PREVIOUS=
+REWARD_TOKEN_KID_CURRENT=rwd_v1
+SIGNED_LINK_SECRET_CURRENT=replace-with-a-long-random-production-secret
+SIGNED_LINK_SECRET_PREVIOUS=
+SIGNED_LINK_KID_CURRENT=lnk_v1
 NOTIFICATION_EMAIL_FROM=ufrevsupport@gmail.com`}</pre>
         </div>
 

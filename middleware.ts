@@ -12,9 +12,39 @@ function isPreviewBypassPath(pathname: string) {
   return pathname.startsWith('/launch-access') || pathname.startsWith('/api/launch-access') || pathname.startsWith('/api/auth/') || pathname === '/api/stripe/webhook';
 }
 
+function isSignedLinkProtectedPath(pathname: string) {
+  return pathname === '/api/automations/market-watch/run';
+}
+
+function hasHeaderBasedCronAuth(request: NextRequest) {
+  return Boolean(request.headers.get('x-cron-secret') || request.headers.get('authorization'));
+}
+
+function hasValidSignedLinkEnvelope(request: NextRequest) {
+  const params = request.nextUrl.searchParams;
+  const kid = params.get('sl_kid');
+  const exp = params.get('sl_exp');
+  const nonce = params.get('sl_nonce');
+  const sig = params.get('sl_sig');
+
+  if (!kid || !exp || !nonce || !sig) return false;
+  if (!/^[A-Za-z0-9_-]{12,128}$/.test(nonce)) return false;
+
+  const expTs = Number(exp);
+  const now = Math.floor(Date.now() / 1000);
+  const maxFuture = now + 60 * 60; // at most 1h into future
+  if (!Number.isFinite(expTs) || expTs < now || expTs > maxFuture) return false;
+
+  return true;
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
   const previewCookie = request.cookies.get(env.prelaunchCookieName)?.value;
+
+  if (isSignedLinkProtectedPath(pathname) && !hasHeaderBasedCronAuth(request) && !hasValidSignedLinkEnvelope(request)) {
+    return NextResponse.json({ error: 'Missing or invalid signed link envelope' }, { status: 401 });
+  }
 
   if (isPrelaunchEnabled) {
     const hasPreviewAccess = previewCookie === env.prelaunchPassword;

@@ -45,6 +45,42 @@ export default async function DashboardPage() {
 
   const latestDecision = analyses?.[0]?.decision_json || null;
   const rewardToken = createRewardToken(user.id);
+  const watchedRewardAds = rewardEvent?.ads_watched ?? 0;
+  const rewardAdsLeftToday = Math.max(0, rewardSettings.dailyAdLimit - watchedRewardAds);
+  const rewardCreditsLeftToday = rewardAdsLeftToday * rewardSettings.dailyRewardCredits;
+  const hasManyRewardsLeft = rewardAdsLeftToday >= Math.max(2, Math.ceil(rewardSettings.dailyAdLimit * 0.5));
+  const rewardPromoState = rewardAdsLeftToday === 0 ? 'exhausted' : hasManyRewardsLeft ? 'rich' : 'limited';
+  const rewardPromoHeadline = rewardPromoState === 'exhausted'
+    ? tr(language, {
+        en: 'Today’s ad reward limit is used up. Come back tomorrow for fresh AI tokens.',
+        pl: 'Dzisiejszy limit reward ads został wykorzystany. Wróć jutro po nowe tokeny AI.',
+      })
+    : rewardPromoState === 'rich'
+      ? tr(language, {
+          en: 'You still have plenty of rewarded views left today, so you can unlock more AI tokens without paying immediately.',
+          pl: 'Masz jeszcze sporo rewarded views na dziś, więc możesz odblokować więcej tokenów AI bez natychmiastowej płatności.',
+        })
+      : tr(language, {
+          en: 'You still have a few rewarded views left today, so it is worth using them before the daily reset.',
+          pl: 'Masz jeszcze kilka rewarded views na dziś, więc warto wykorzystać je przed dziennym resetem.',
+        });
+  const rewardPromoBody = rewardPromoState === 'exhausted'
+    ? tr(language, {
+        en: 'The user already consumed the daily rewarded inventory. The panel below still shows progress and the platform keeps the free-to-paid monetization loop visible for the next session.',
+        pl: 'User wykorzystał już dzienny limit rewarded inventory. Panel niżej nadal pokazuje postęp, a platforma utrzymuje widoczną pętlę monetyzacji free-to-paid na kolejną sesję.',
+      })
+    : rewardPromoState === 'rich'
+      ? tr(language, {
+          en: 'This is the strongest reactivation moment: the user gets extra analysis time, and the platform still earns from rewarded inventory instead of hard-blocking the session.',
+          pl: 'To jest najmocniejszy moment reaktywacyjny: user dostaje dodatkowy czas analizy, a platforma nadal zarabia na rewarded inventory zamiast twardo blokować sesję.',
+        })
+      : tr(language, {
+          en: 'The user can still squeeze more value from today’s limit, while the platform continues monetizing free sessions through rewarded inventory.',
+          pl: 'User może jeszcze wycisnąć wartość z dzisiejszego limitu, a platforma dalej monetyzuje darmowe sesje przez rewarded inventory.',
+        });
+  const rewardPromoCta = rewardPromoState === 'exhausted'
+    ? tr(language, { en: 'Check reward progress', pl: 'Sprawdź postęp reward ads' })
+    : tr(language, { en: 'Go to Reward Ads', pl: 'Przejdź do Reward Ads' });
   const enabledNotificationChannels = [
     notificationSettings.inAppEnabled,
     notificationSettings.emailEnabled,
@@ -245,6 +281,101 @@ export default async function DashboardPage() {
             <Link href="/automations" className="rounded-2xl bg-cyan-300 px-4 py-3 text-center text-sm font-semibold text-slate-950">{tr(language, { en: 'Open automations', pl: 'Otwórz automatyzacje' })}</Link>
             <Link href="/account" className="rounded-2xl border border-white/10 px-4 py-3 text-center text-sm font-semibold text-white hover:bg-white/5">{tr(language, { en: 'Refine account', pl: 'Dopracuj konto' })}</Link>
           </div>
+
+          <div className="relative mt-6 overflow-hidden rounded-[30px] border border-cyan-300/12 bg-[linear-gradient(180deg,rgba(8,15,32,0.96),rgba(17,24,39,0.88))] p-5 sm:p-6">
+            <div className="absolute -right-10 top-0 h-40 w-40 rounded-full bg-cyan-300/12 blur-3xl" />
+            <div className="absolute -left-8 bottom-0 h-36 w-36 rounded-full bg-emerald-300/10 blur-3xl" />
+
+            <div className="relative">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-100">
+                  {tr(language, { en: 'Rewarded ads live', pl: 'Rewarded ads aktywne' })}
+                </span>
+                <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-100">
+                  {tr(language, { en: 'User earns tokens, platform funds free usage', pl: 'User zdobywa tokeny, platforma finansuje darmowe użycie' })}
+                </span>
+              </div>
+
+              <div className="mt-4 grid gap-5 xl:grid-cols-[1.15fr_0.85fr] xl:items-center">
+                <div>
+                  <div className="text-[11px] uppercase tracking-[0.22em] text-cyan-200">{tr(language, { en: 'Free usage loop', pl: 'Pętla darmowego użycia' })}</div>
+                  <h3 className="mt-2 text-[clamp(1.5rem,2vw,2.2rem)] font-black leading-[1.02] tracking-[-0.04em] text-white">
+                    {rewardPromoHeadline}
+                  </h3>
+                  <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-300 sm:text-[15px]">
+                    {rewardPromoBody}
+                  </p>
+
+                  <div className="mt-4 flex flex-wrap gap-3">
+                    <Link href="#reward-ads-panel" scroll className="rounded-2xl bg-cyan-300 px-4 py-3 text-sm font-semibold text-slate-950 transition hover:brightness-110">
+                      {rewardPromoCta}
+                    </Link>
+                    <span className="rounded-2xl border border-white/10 px-4 py-3 text-sm text-slate-300">
+                      {rewardPromoState === 'exhausted'
+                        ? tr(language, { en: 'Reset after the next daily cycle.', pl: 'Reset po następnym cyklu dziennym.' })
+                        : tr(language, { en: `${rewardCreditsLeftToday} AI tokens still unlockable today.`, pl: `${rewardCreditsLeftToday} tokenów AI nadal do odblokowania dziś.` })}
+                    </span>
+                  </div>
+
+                  <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                    <div className="rounded-[20px] border border-white/10 bg-white/[0.04] p-4">
+                      <div className="text-[11px] uppercase tracking-[0.18em] text-slate-400">{tr(language, { en: 'Watched today', pl: 'Obejrzane dziś' })}</div>
+                      <div className="mt-2 text-3xl font-black tracking-[-0.04em] text-white">{watchedRewardAds}</div>
+                    </div>
+                    <div className="rounded-[20px] border border-white/10 bg-white/[0.04] p-4">
+                      <div className="text-[11px] uppercase tracking-[0.18em] text-slate-400">{tr(language, { en: 'Views left today', pl: 'Pozostało dziś' })}</div>
+                      <div className="mt-2 text-3xl font-black tracking-[-0.04em] text-cyan-100">{rewardAdsLeftToday}</div>
+                    </div>
+                    <div className="rounded-[20px] border border-white/10 bg-white/[0.04] p-4">
+                      <div className="text-[11px] uppercase tracking-[0.18em] text-slate-400">{tr(language, { en: 'Tokens still unlockable', pl: 'Tokeny do odblokowania' })}</div>
+                      <div className="mt-2 text-3xl font-black tracking-[-0.04em] text-emerald-100">{rewardCreditsLeftToday}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="rounded-[26px] border border-white/10 bg-slate-950/55 p-4 sm:p-5">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <div className="text-[11px] uppercase tracking-[0.18em] text-slate-400">{tr(language, { en: 'How this works', pl: 'Jak to działa' })}</div>
+                      <div className="mt-2 text-lg font-black text-white">{tr(language, { en: 'Short ad → unlock → continue', pl: 'Krótka reklama → odblokowanie → dalsza analiza' })}</div>
+                    </div>
+                    <div className="relative h-12 w-12 rounded-full border border-cyan-300/20 bg-cyan-300/10">
+                      <div className="absolute inset-2 rounded-full bg-cyan-200/70 animate-ping" />
+                      <div className="absolute inset-3 rounded-full bg-cyan-100" />
+                    </div>
+                  </div>
+
+                  <div className="mt-5 space-y-3">
+                    {[
+                      tr(language, { en: `1 reward ad unlocks ${rewardSettings.dailyRewardCredits} AI tokens.`, pl: `1 reklama nagradzana odblokowuje ${rewardSettings.dailyRewardCredits} tokenów AI.` }),
+                      tr(language, { en: `Daily cap: ${rewardSettings.dailyAdLimit} rewarded views.`, pl: `Dzienny limit: ${rewardSettings.dailyAdLimit} obejrzeń rewarded.` }),
+                      rewardPromoState === 'exhausted'
+                        ? tr(language, { en: 'The limit is consumed today, but the loop returns tomorrow and still supports reactivation.', pl: 'Limit jest dziś wykorzystany, ale pętla wraca jutro i nadal wspiera reaktywację.' })
+                        : tr(language, { en: 'User gets more analysis time, while the platform keeps monetizing free sessions.', pl: 'User dostaje więcej czasu na analizę, a platforma dalej monetyzuje darmowe sesje.' }),
+                    ].map((item, index) => (
+                      <div key={item} className="flex items-start gap-3 rounded-[18px] border border-white/8 bg-white/[0.03] px-3 py-3">
+                        <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-cyan-300/15 text-[11px] font-bold text-cyan-100">{index + 1}</div>
+                        <div className="text-sm leading-6 text-slate-200">{item}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-5 h-2 overflow-hidden rounded-full bg-white/6">
+                    <div
+                      className="h-full rounded-full bg-[linear-gradient(90deg,rgba(34,211,238,0.95),rgba(16,185,129,0.9))] transition-all duration-700"
+                      style={{ width: `${rewardSettings.dailyAdLimit > 0 ? Math.max(8, (watchedRewardAds / rewardSettings.dailyAdLimit) * 100) : 8}%` }}
+                    />
+                  </div>
+                  <div className="mt-2 text-xs text-slate-400">
+                    {tr(language, {
+                      en: `Progress today: ${watchedRewardAds}/${rewardSettings.dailyAdLimit} rewarded views used.`,
+                      pl: `Postęp dziś: ${watchedRewardAds}/${rewardSettings.dailyAdLimit} obejrzeń rewarded wykorzystanych.`,
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -253,7 +384,7 @@ export default async function DashboardPage() {
         initialLatestDecision={latestDecision}
         rewardAdsProps={{
           initialCredits: profile?.credits_balance ?? 0,
-          watchedToday: rewardEvent?.ads_watched ?? 0,
+          watchedToday: watchedRewardAds,
           dailyLimit: rewardSettings.dailyAdLimit,
           rewardCredits: rewardSettings.dailyRewardCredits,
           rewardToken,

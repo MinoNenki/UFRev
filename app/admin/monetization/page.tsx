@@ -52,6 +52,11 @@ export default async function AdminMonetizationPage({ searchParams }: { searchPa
       description: tr(language, { en: 'Execution logs and funnel metrics show where pricing, paywall, or pitch quality still breaks.', pl: 'Logi wykonania i metryki lejka pokazują gdzie nadal pęka cena, paywall albo jakość komunikatu.' }),
     },
   ];
+  const monetizationQuickLinks = [
+    { href: '#monetization-controls', label: tr(language, { en: 'Revenue controls', pl: 'Kontrolki przychodu', es: 'Controles de ingresos', ru: 'Контроль выручки' }) },
+    { href: '#monetization-providers', label: tr(language, { en: 'Ad providers', pl: 'Providerzy reklam', es: 'Proveedores de anuncios', ru: 'Поставщики рекламы' }) },
+    { href: '#monetization-funnel', label: tr(language, { en: 'Funnel diagnostics', pl: 'Diagnostyka lejka', es: 'Diagnóstico del embudo', ru: 'Диагностика funnel' }) },
+  ];
 
   return (
     <main className="mx-auto max-w-[1600px] px-6 py-16 text-white">
@@ -72,6 +77,14 @@ export default async function AdminMonetizationPage({ searchParams }: { searchPa
             : tr(language, { en: 'Could not save changes.', pl: 'Nie udało się zapisać zmian.', es: 'No se pudieron guardar los cambios.', ru: 'Не удалось сохранить изменения.' })}
         </div>
       )}
+
+      <div className="mt-6 flex flex-wrap gap-3">
+        {monetizationQuickLinks.map((item, index) => (
+          <a key={item.href} href={item.href} className={`rounded-2xl px-5 py-3 text-sm font-semibold transition ${index === 0 ? 'border border-amber-300/30 bg-amber-300/10 text-amber-100 hover:bg-amber-300/15' : 'border border-white/10 bg-white/[0.04] text-white hover:bg-white/[0.08]'}`}>
+            {item.label}
+          </a>
+        ))}
+      </div>
 
       <TutorialMode
         language={language}
@@ -177,7 +190,7 @@ export default async function AdminMonetizationPage({ searchParams }: { searchPa
           tone="amber"
         >
 
-      <section className="mt-8 grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
+      <section id="monetization-controls" className="mt-8 grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
         <AdsAdminPanel dailyLimit={rewardSettings.dailyAdLimit} rewardCredits={rewardSettings.dailyRewardCredits} monetizationSettings={monetizationSettings} currentLanguage={language} />
         <DisplayAdMock language={language} title={tr(language, { en: 'Admin-visible display ad slot', pl: 'Widoczny slot reklamowy admina', es: 'Slot de anuncio visible para admin', ru: 'Видимый рекламный слот для admin' })} subtitle={tr(language, { en: 'A clearly visible ad inventory card for the monetization area, so ad monetization is no longer hidden in the redesign.', pl: 'Wyraźnie widoczna karta inventory reklamowego w sekcji monetyzacji, aby reklamy nie były już ukryte po redesignie.', es: 'Una tarjeta visible de inventario publicitario para el área de monetización, para que los anuncios ya no queden ocultos en el rediseño.', ru: 'Хорошо видимая карточка рекламного inventory в разделе monetization, чтобы реклама больше не была скрыта после redesign.' })} provider="AdSense-ready" slotId="admin-display-01" />
       </section>
@@ -206,14 +219,17 @@ export default async function AdminMonetizationPage({ searchParams }: { searchPa
         </div>
       </section>
 
-      <section className="mt-8">
-        <AdminAdsProvidersPanel currentLanguage={language} />
-      </section>
+      <details id="monetization-providers" className="mt-8 rounded-[32px] border border-white/10 bg-slate-950/60 p-8 shadow-[0_24px_100px_rgba(2,6,23,0.45)]">
+        <summary className="cursor-pointer list-none text-2xl font-bold text-white">{tr(language, { en: 'Open ad-provider setup', pl: 'Otwórz konfigurację providerów reklam', es: 'Abrir configuración de proveedores de anuncios', ru: 'Открыть настройку рекламных провайдеров' })}</summary>
+        <div className="mt-6">
+          <AdminAdsProvidersPanel currentLanguage={language} />
+        </div>
+      </details>
 
-      <section className="mt-8 rounded-[32px] border border-white/10 bg-slate-950/60 p-8 shadow-[0_24px_100px_rgba(2,6,23,0.45)]">
-        <h2 className="text-2xl font-bold">{tr(language, { en: 'Recent reward events', pl: 'Ostatnie zdarzenia nagród', es: 'Eventos recientes de recompensa', ru: 'Недавние события наград' })}</h2>
+      <details className="mt-8 rounded-[32px] border border-white/10 bg-slate-950/60 p-8 shadow-[0_24px_100px_rgba(2,6,23,0.45)]">
+        <summary className="cursor-pointer list-none text-2xl font-bold text-white">{tr(language, { en: 'Open recent reward events', pl: 'Otwórz ostatnie zdarzenia nagród', es: 'Abrir eventos recientes de recompensa', ru: 'Открыть недавние reward events' })}</summary>
         <div className="mt-5 space-y-3">{recentRewards?.length ? recentRewards.map((item: any) => <div key={item.id} className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-sm text-slate-300">{item.user_id} • {item.reward_date} • {tr(language, { en: 'ads watched', pl: 'obejrzane reklamy', es: 'anuncios vistos', ru: 'просмотрено рекламы' })}: {item.ads_watched} • {tr(language, { en: 'AI tokens granted', pl: 'przyznane tokeny AI', es: 'tokens AI otorgados', ru: 'выдано AI токенов' })}: {item.credits_granted}</div>) : <div className="text-slate-400">{tr(language, { en: 'No reward events yet.', pl: 'Brak zdarzeń nagród.', es: 'Todavía no hay eventos de recompensa.', ru: 'Событий наград пока нет.' })}</div>}</div>
-      </section>
+      </details>
 
         </TutorialStep>
 
@@ -224,7 +240,7 @@ export default async function AdminMonetizationPage({ searchParams }: { searchPa
           tone="amber"
         >
 
-      <section className="mt-8 grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
+      <section id="monetization-funnel" className="mt-8 grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
         <div className="rounded-[32px] border border-white/10 bg-slate-950/60 p-8 shadow-[0_24px_100px_rgba(2,6,23,0.45)]">
           <div className="mb-5 flex items-center justify-between gap-4">
             <div>

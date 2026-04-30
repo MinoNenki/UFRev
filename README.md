@@ -37,7 +37,12 @@ Rotate the exposed keys in:
    - `OPENAI_API_KEY`
    - `STRIPE_SECRET_KEY`
    - `STRIPE_WEBHOOK_SECRET`
-   - `REWARD_TOKEN_SECRET`
+   - `REWARD_TOKEN_SECRET_CURRENT`
+   - `REWARD_TOKEN_SECRET_PREVIOUS` (optional during rotation)
+   - `REWARD_TOKEN_KID_CURRENT`
+   - `SIGNED_LINK_SECRET_CURRENT`
+   - `SIGNED_LINK_SECRET_PREVIOUS` (optional during rotation)
+   - `SIGNED_LINK_KID_CURRENT`
    - `STRIPE_PRICE_STARTER_19`
    - `STRIPE_PRICE_GROWTH_49`
    - `STRIPE_PRICE_SCALE_99`
@@ -127,6 +132,18 @@ Then:
 5. Add Stripe webhook URL for production:
    - `https://ufrev.com/api/stripe/webhook`
 6. Redeploy after adding env variables.
+
+## Signed cron URL for automations
+To call `/api/automations/market-watch/run` without admin session, use either header secret auth or a signed URL.
+
+1. Set:
+   - `SIGNED_LINK_SECRET_CURRENT`
+   - `SIGNED_LINK_KID_CURRENT`
+2. Generate a signed URL:
+   ```bash
+   npm run security:cron-link
+   ```
+3. Use the printed URL with `POST`.
 
 ## Notes before launch
 - Replace placeholder company details in `lib/site.ts`.
@@ -240,8 +257,8 @@ Make sure your Stripe products and Price IDs match `lib/plans.ts`.
 ## GitHub and Vercel hygiene
 - `.env`, `.env.local`, `.env.production`, `.env.*` should stay out of the repository; only `.env.example` should be committed.
 - This project does not require a dedicated `vercel.json` for a standard Next.js deploy.
-- In Vercel, copy all production env variables before the first public deployment, especially `SUPABASE_SERVICE_ROLE_KEY`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, and `REWARD_TOKEN_SECRET`.
-- If `REWARD_TOKEN_SECRET` is missing in production, rewarded ad claims stay disabled by design.
+- In Vercel, copy all production env variables before the first public deployment, especially `SUPABASE_SERVICE_ROLE_KEY`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `REWARD_TOKEN_SECRET_CURRENT`, and `SIGNED_LINK_SECRET_CURRENT`.
+- If `REWARD_TOKEN_SECRET_CURRENT` is missing in production, rewarded ad claims stay disabled by design.
 
 
 ## V2 safety upgrade

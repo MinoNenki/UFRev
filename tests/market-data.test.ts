@@ -108,5 +108,7 @@ describe('market-data supplier safeguards', () => {
     expect(result.demandScore).toBeGreaterThan(40);
     expect(result.resaleSignalCount).toBeGreaterThanOrEqual(3);
     expect(result.rentalSignalCount).toBeGreaterThanOrEqual(2);
+    expect(result.resaleResearchUrls[0]).toContain('allegro.pl');
+    expect(result.rentalResearchUrls[0]).toContain('wynajem-dmuchanca.pl');
   });
 });

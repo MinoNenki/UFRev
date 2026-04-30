@@ -49,6 +49,11 @@ export default async function FounderCommandCenterPage() {
       description: tr(language, { en: 'Use the final section to confirm whether defense, alerts, and pricing are really ready for the next push.', pl: 'Użyj końcowej sekcji, aby potwierdzić czy obrona, alerty i pricing są naprawdę gotowe na kolejny etap wzrostu.' }),
     },
   ];
+  const founderQuickLinks = [
+    { href: '#founder-kpis', label: tr(language, { en: 'Founder KPIs', pl: 'KPI właściciela', es: 'KPI del fundador', ru: 'KPI владельца' }) },
+    { href: '#founder-actions', label: tr(language, { en: 'Operator actions', pl: 'Działania operatora', es: 'Acciones del operador', ru: 'Действия оператора' }) },
+    { href: '#founder-readiness', label: tr(language, { en: 'Readiness check', pl: 'Kontrola gotowości', es: 'Chequeo de preparación', ru: 'Проверка готовности' }) },
+  ];
 
   return (
     <main className="mx-auto max-w-[1600px] px-6 py-16 text-white">
@@ -57,6 +62,14 @@ export default async function FounderCommandCenterPage() {
         <h1 className="mt-4 text-5xl font-black tracking-tight sm:text-6xl">{tr(language, { en: 'Ultimate growth, monetization, and defense panel', pl: 'Najmocniejszy panel wzrostu, monetyzacji i obrony', es: 'Panel definitivo de crecimiento, monetización y defensa', ru: 'Главная панель роста, монетизации и защиты' })}</h1>
         <p className="mt-5 max-w-4xl text-lg leading-8 text-slate-300">{tr(language, { en: 'This is the strongest version in this build cycle: decision engine, anti-burn, monetization, retention, CRM, notifications, pricing experiments, and owner KPIs in one place.', pl: 'To najmocniejsza wersja w tym cyklu: silnik decyzji, anti-burn, monetyzacja, retencja, CRM, powiadomienia, eksperymenty cenowe i KPI właściciela w jednym miejscu.', es: 'Esta es la versión más potente de este ciclo: motor de decisiones, anti-burn, monetización, retención, CRM, notificaciones, experimentos de precios y KPI del propietario en un solo lugar.', ru: 'Это самая сильная версия в этом цикле: decision engine, anti-burn, monetization, retention, CRM, уведомления, ценовые эксперименты и KPI владельца в одном месте.' })}</p>
       </section>
+
+      <div className="mt-6 flex flex-wrap gap-3">
+        {founderQuickLinks.map((item, index) => (
+          <a key={item.href} href={item.href} className={`rounded-2xl px-5 py-3 text-sm font-semibold transition ${index === 0 ? 'border border-violet-300/30 bg-violet-300/10 text-violet-100 hover:bg-violet-300/15' : 'border border-white/10 bg-white/[0.04] text-white hover:bg-white/[0.08]'}`}>
+            {item.label}
+          </a>
+        ))}
+      </div>
 
       <TutorialMode
         language={language}
@@ -72,15 +85,19 @@ export default async function FounderCommandCenterPage() {
           description={tr(language, { en: 'This row compresses growth, churn, lifecycle pressure, and pricing motion into one faster owner view.', pl: 'Ten rząd kompresuje wzrost, churn, presję lifecycle i ruch pricingowy w jeden szybszy widok właścicielski.' })}
           tone="violet"
         >
-      <section className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-8">
-        <MetricCard label="MRR" value={`$${analytics.mrr}`} delta={tr(language, { en: 'Recurring revenue', pl: 'Przychód cykliczny', es: 'Ingresos recurrentes', ru: 'Регулярная выручка' })} tone="amber" />
-        <MetricCard label="LTV/CAC" value={String(analytics.ltvToCac)} delta={tr(language, { en: `Target ${analytics.targetLtvToCacRatio}`, pl: `Cel ${analytics.targetLtvToCacRatio}`, es: `Objetivo ${analytics.targetLtvToCacRatio}`, ru: `Цель ${analytics.targetLtvToCacRatio}` })} tone="emerald" />
-        <MetricCard label={tr(language, { en: 'High churn', pl: 'Wysoki churn', es: 'Churn alto', ru: 'Высокий churn' })} value={String(highRisk ?? 0)} delta={tr(language, { en: 'Defense queue', pl: 'Kolejka obrony', es: 'Cola de defensa', ru: 'Очередь защиты' })} tone="amber" />
-        <MetricCard label={tr(language, { en: 'CRM events', pl: 'Zdarzenia CRM', es: 'Eventos CRM', ru: 'События CRM' })} value={String(crmCount ?? 0)} delta={tr(language, { en: 'Lifecycle actions', pl: 'Akcje lifecycle', es: 'Acciones del ciclo de vida', ru: 'Lifecycle-действия' })} tone="violet" />
-        <MetricCard label={tr(language, { en: 'Queued notifications', pl: 'Powiadomienia w kolejce', es: 'Notificaciones en cola', ru: 'Уведомления в очереди' })} value={String(queuedNotifications ?? 0)} delta={tr(language, { en: 'Ready to send', pl: 'Gotowe do wysłania', es: 'Listas para enviar', ru: 'Готово к отправке' })} tone="cyan" />
-        <MetricCard label={tr(language, { en: 'Pricing experiments', pl: 'Eksperymenty cenowe', es: 'Experimentos de precios', ru: 'Ценовые эксперименты' })} value={String(pricingExperiments ?? 0)} delta={tr(language, { en: 'Revenue testing', pl: 'Testowanie przychodu', es: 'Pruebas de ingresos', ru: 'Тестирование выручки' })} tone="emerald" />
-        <MetricCard label={tr(language, { en: 'Smart paywall', pl: 'Inteligentny paywall', es: 'Paywall inteligente', ru: 'Умный paywall' })} value={monetizationSettings.smartPaywallEnabled ? tr(language, { en: 'On', pl: 'Wł.', es: 'Activo', ru: 'Вкл.' }) : tr(language, { en: 'Off', pl: 'Wył.', es: 'Desactivado', ru: 'Выкл.' })} delta={tr(language, { en: 'Conversion routing', pl: 'Routing konwersji', es: 'Ruta de conversión', ru: 'Маршрутизация конверсии' })} tone="violet" />
-        <MetricCard label={tr(language, { en: 'Dynamic pricing', pl: 'Dynamic pricing', es: 'Precios dinámicos', ru: 'Динамическое ценообразование' })} value={pricingSettings.dynamicPricingEnabled ? tr(language, { en: 'On', pl: 'Wł.', es: 'Activo', ru: 'Вкл.' }) : tr(language, { en: 'Off', pl: 'Wył.', es: 'Desactivado', ru: 'Выкл.' })} delta={tr(language, { en: 'Pricing system', pl: 'System cenowy', es: 'Sistema de precios', ru: 'Ценовая система' })} tone="cyan" />
+      <section id="founder-kpis" className="mt-8 grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <MetricCard label="MRR" value={`$${analytics.mrr}`} delta={tr(language, { en: 'Recurring revenue', pl: 'Przychód cykliczny', es: 'Ingresos recurrentes', ru: 'Регулярная выручка' })} tone="amber" />
+          <MetricCard label="LTV/CAC" value={String(analytics.ltvToCac)} delta={tr(language, { en: `Target ${analytics.targetLtvToCacRatio}`, pl: `Cel ${analytics.targetLtvToCacRatio}`, es: `Objetivo ${analytics.targetLtvToCacRatio}`, ru: `Цель ${analytics.targetLtvToCacRatio}` })} tone="emerald" />
+          <MetricCard label={tr(language, { en: 'High churn', pl: 'Wysoki churn', es: 'Churn alto', ru: 'Высокий churn' })} value={String(highRisk ?? 0)} delta={tr(language, { en: 'Defense queue', pl: 'Kolejka obrony', es: 'Cola de defensa', ru: 'Очередь защиты' })} tone="amber" />
+          <MetricCard label={tr(language, { en: 'CRM events', pl: 'Zdarzenia CRM', es: 'Eventos CRM', ru: 'События CRM' })} value={String(crmCount ?? 0)} delta={tr(language, { en: 'Lifecycle actions', pl: 'Akcje lifecycle', es: 'Acciones del ciclo de vida', ru: 'Lifecycle-действия' })} tone="violet" />
+          <MetricCard label={tr(language, { en: 'Queued notifications', pl: 'Powiadomienia w kolejce', es: 'Notificaciones en cola', ru: 'Уведомления в очереди' })} value={String(queuedNotifications ?? 0)} delta={tr(language, { en: 'Ready to send', pl: 'Gotowe do wysłania', es: 'Listas para enviar', ru: 'Готово к отправке' })} tone="cyan" />
+        </div>
+        <InsightPanel title={tr(language, { en: 'Owner context', pl: 'Kontekst właściciela', es: 'Contexto del fundador', ru: 'Контекст владельца' })} items={[
+          tr(language, { en: `Pricing experiments in flight: ${pricingExperiments ?? 0}. Keep this small unless MRR and purchase quality are already improving.`, pl: `Aktywne eksperymenty cenowe: ${pricingExperiments ?? 0}. Trzymaj tę liczbę nisko, dopóki MRR i jakość zakupu nie rosną.`, es: `Experimentos de precios activos: ${pricingExperiments ?? 0}. Mantén este número bajo hasta que mejoren el MRR y la calidad de compra.`, ru: `Активные ценовые эксперименты: ${pricingExperiments ?? 0}. Держи это число низким, пока не растут MRR и качество покупки.` }),
+          tr(language, { en: monetizationSettings.smartPaywallEnabled ? 'Smart paywall is active, so conversion routing can stay selective instead of fully open.' : 'Smart paywall is disabled, so premium pressure is currently weaker and should be monitored manually.', pl: monetizationSettings.smartPaywallEnabled ? 'Inteligentny paywall jest aktywny, więc routing konwersji może pozostać selektywny zamiast całkowicie otwarty.' : 'Inteligentny paywall jest wyłączony, więc presja premium jest obecnie słabsza i wymaga ręcznego monitoringu.', es: monetizationSettings.smartPaywallEnabled ? 'El paywall inteligente está activo, así que la ruta de conversión puede seguir siendo selectiva.' : 'El paywall inteligente está desactivado, así que la presión premium es más débil y debe vigilarse manualmente.', ru: monetizationSettings.smartPaywallEnabled ? 'Умный paywall активен, поэтому маршрутизация конверсии может оставаться избирательной.' : 'Умный paywall выключен, поэтому premium-давление сейчас слабее и требует ручного контроля.' }),
+          tr(language, { en: pricingSettings.dynamicPricingEnabled ? 'Dynamic pricing is enabled, so pricing motion should be reviewed together with experiments, not in isolation.' : 'Dynamic pricing is disabled, so revenue testing depends more on explicit experiments and manual overrides.', pl: pricingSettings.dynamicPricingEnabled ? 'Dynamic pricing jest włączony, więc ruch cenowy trzeba oceniać razem z eksperymentami, a nie w izolacji.' : 'Dynamic pricing jest wyłączony, więc testowanie przychodu bardziej zależy od jawnych eksperymentów i ręcznych zmian.', es: pricingSettings.dynamicPricingEnabled ? 'Los precios dinámicos están activados, así que el movimiento de precios debe revisarse junto a los experimentos.' : 'Los precios dinámicos están desactivados, así que las pruebas de ingresos dependen más de experimentos explícitos y ajustes manuales.', ru: pricingSettings.dynamicPricingEnabled ? 'Динамическое ценообразование включено, поэтому ценовое движение нужно смотреть вместе с экспериментами.' : 'Динамическое ценообразование выключено, поэтому тестирование выручки больше зависит от явных экспериментов и ручных правок.' }),
+        ]} />
       </section>
 
         </TutorialStep>
@@ -91,7 +108,7 @@ export default async function FounderCommandCenterPage() {
           description={tr(language, { en: 'This part turns insight into action so the founder lane stays operational and not only descriptive.', pl: 'Ta część zamienia wgląd w działanie, aby tor właściciela pozostał operacyjny, a nie tylko opisowy.' })}
           tone="violet"
         >
-      <section className="mt-8 grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+      <section id="founder-actions" className="mt-8 grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
         <div className="rounded-[32px] border border-white/10 bg-slate-950/60 p-8 shadow-[0_24px_100px_rgba(2,6,23,0.45)]">
           <div className="mb-5 flex items-center justify-between gap-4">
             <div>
@@ -124,7 +141,7 @@ export default async function FounderCommandCenterPage() {
           description={tr(language, { en: 'This reminder block clarifies why this page exists: fast owner judgment across revenue, risk, and execution pressure.', pl: 'Ten blok przypomina po co istnieje ta strona: szybki osąd właścicielski dla przychodu, ryzyka i presji wykonawczej.' })}
           tone="violet"
         >
-          <section className="mt-8 rounded-[32px] border border-violet-300/25 bg-[linear-gradient(135deg,rgba(88,28,135,0.32),rgba(15,23,42,0.9),rgba(59,130,246,0.12))] p-8 shadow-[0_24px_100px_rgba(88,28,135,0.18)]">
+          <section id="founder-readiness" className="mt-8 rounded-[32px] border border-violet-300/25 bg-[linear-gradient(135deg,rgba(88,28,135,0.32),rgba(15,23,42,0.9),rgba(59,130,246,0.12))] p-8 shadow-[0_24px_100px_rgba(88,28,135,0.18)]">
             <div className="text-[11px] uppercase tracking-[0.24em] text-violet-200">{tr(language, { en: 'Founder lane guide', pl: 'Przewodnik toru właściciela' })}</div>
             <h2 className="mt-2 text-3xl font-black text-white">{tr(language, { en: 'One owner view for revenue quality, defense, and execution pressure', pl: 'Jeden widok właścicielski dla jakości przychodu, obrony i presji wykonawczej' })}</h2>
             <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-200">{tr(language, { en: 'Use this lane when you need one stronger operating view without jumping between monetization, retention, CRM, and notification panels separately.', pl: 'Używaj tego toru, gdy potrzebujesz jednego mocniejszego widoku operacyjnego bez skakania osobno między panelami monetyzacji, retencji, CRM i powiadomień.' })}</p>

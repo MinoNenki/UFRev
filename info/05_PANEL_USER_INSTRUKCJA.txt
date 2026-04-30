@@ -1,0 +1,50 @@
+UFREV - PANEL USERA (CO USER MOZE ROBIC)
+
+1. Glowne mozliwosci usera
+- Logowanie i zarzadzanie kontem.
+- Korzystanie z dashboardu decyzyjnego.
+- Dodawanie URL, opisu, pliku lub screenshotu do analizy.
+- Otrzymywanie werdyktu BUY/TEST/SKIP z uzasadnieniem.
+- Podglad ryzyka, marzy i rekomendowanego kolejnego kroku.
+
+2. Dashboard usera
+User moze:
+- uruchamiac analizy,
+- sprawdzac plan i saldo tokenow,
+- korzystac z reward ads,
+- monitorowac status automatyzacji,
+- przechodzic do integracji i konta.
+
+3. Panel account
+User moze:
+- edytowac profil,
+- sprawdzic plan i limity,
+- sprawdzic role i status konta,
+- uruchomic panel polaczen kont.
+
+4. Integracje dla usera
+User moze:
+- podlaczyc Shopify,
+- podlaczyc WooCommerce,
+- korzystac z prostych lanes: Amazon/eBay/Allegro,
+- wlaczyc lean sync dla inventory/orders/pricing.
+
+5. Automatyzacje dla usera
+User moze:
+- zobaczyc, ktore automaty sa aktywne,
+- korzystac z market watch (zgodnie z planem),
+- odbierac sygnaly o rynku i konkurencji,
+- podejmowac decyzje szybciej i bezpieczniej.
+
+6. Monetyzacja usera
+User moze:
+- przejsc na wyzszy plan,
+- dokupic pakiety tokenow,
+- zdobywac tokeny przez reward ads,
+- korzystac z referral.
+
+7. Wartosc dla usera
+- Mniej chaosu i mniej zgadywania.
+- Szybsze decyzje produktowe.
+- Lepsza kontrola marzy i kosztow.
+- Widoczne „co dalej” po analizie, zamiast samego opisu AI.

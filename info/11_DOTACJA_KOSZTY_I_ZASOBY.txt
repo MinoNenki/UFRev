@@ -1,0 +1,32 @@
+DOTACJA - KOSZTY I ZASOBY (RAMA OPISOWA)
+
+1. Zasoby technologiczne
+- aplikacja webowa (frontend + backend),
+- baza danych i infrastruktura,
+- uslugi AI,
+- platnosci online,
+- testy i CI/CD.
+
+2. Zasoby organizacyjne
+- rola wlasciciela produktu,
+- rola techniczna (rozwoj i utrzymanie),
+- rola operacyjna (obsluga klienta, support, wdrozenia),
+- rola marketing/sprzedaz (pozyskanie i retencja).
+
+3. Kategorie kosztowe (do uzupelnienia pod realny budzet)
+- rozwoj oprogramowania,
+- infrastruktura i utrzymanie,
+- narzedzia i licencje,
+- marketing i sprzedaz,
+- obsluga klienta,
+- koszty administracyjne.
+
+4. Jak uzasadnic wydatki
+- kazdy koszt mapowac do konkretnej funkcji i efektu biznesowego,
+- laczyc koszt z KPI (aktywnosc, retencja, przychod, stabilnosc),
+- pokazywac efektywne wykorzystanie budzetu przez etapy rozwoju.
+
+5. Efekt inwestycji
+- szybsze dojscie do stabilnego modelu przychodowego,
+- mniejsze ryzyko bledow operacyjnych,
+- wieksza gotowosc do skalowania i komercjalizacji.

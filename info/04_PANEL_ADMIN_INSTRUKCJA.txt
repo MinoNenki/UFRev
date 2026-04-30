@@ -1,0 +1,81 @@
+UFREV - INSTRUKCJA OBSLUGI PANELU ADMINA
+
+1. Cel panelu admina
+Panel admina to centrum sterowania:
+- przychodem,
+- ryzykiem,
+- automatyzacjami,
+- integracjami,
+- jakoscia obslugi usera.
+
+2. Moduly admina
+- /admin (glowny dashboard)
+- /admin/founder
+- /admin/users
+- /admin/monetization
+- /admin/automations
+- /admin/integrations
+- /admin/support
+- /admin/reviews
+- /admin/retention
+
+3. Rekomendowana kolejnosc pracy (dzienna)
+Krok 1: Wejdz na /admin i sprawdz metryki high-level.
+Krok 2: Wejdz na /admin/monetization i sprawdz:
+- paid users,
+- checkout/purchase,
+- MRR,
+- premium gate.
+Krok 3: Wejdz na /admin/automations i sprawdz:
+- kill switch,
+- limity wydatkow,
+- min confidence,
+- routing alertow.
+Krok 4: Wejdz na /admin/integrations i sprawdz:
+- aktywne kanaly,
+- status polaczen,
+- tryb rollout (live/dry-run).
+Krok 5: Domknij support i reviews.
+
+4. Uzytkownicy i billing
+W /admin/users mozesz:
+- zmieniac role user/admin,
+- zmieniac plan,
+- zmieniac saldo tokenow AI,
+- monitorowac baze userow.
+
+5. Monetyzacja
+W /admin/monetization mozesz:
+- kontrolowac drabine planow,
+- kontrolowac pakiety tokenow,
+- ustawiac reward ads,
+- sprawdzac dane lejka monetyzacji,
+- podejmowac decyzje cenowe.
+
+6. Automatyzacje
+W /admin/automations mozesz:
+- wlaczac/wylaczac automaty,
+- uruchamiac presety,
+- ustawiac progi anti-loss,
+- ustawiac alert routing,
+- chronc budzet i marze podczas skali.
+
+7. Integracje
+W /admin/integrations mozesz:
+- wlaczac kanaly storefront/marketplace,
+- sterowac zakresem synchronizacji,
+- wlaczac tryb ostrozny (dry-run/manual approval),
+- zarzadzac rolloutem regionalnym i globalnym.
+
+8. Dobre praktyki
+- Najpierw bezpieczenstwo i marza, potem agresywny wzrost.
+- Zmieniaj 1 rzecz naraz i obserwuj skutki.
+- Korzystaj z presetow jako punktu startu.
+- Trzymaj kill switch i limity jako aktywna warstwe ochronna.
+
+9. Co raportowac co tydzien (owner view)
+- MRR/ARR i trendy platnosci,
+- konwersja checkout -> purchase,
+- aktywnosc i retencja,
+- glowne alerty ryzyka,
+- status rolloutow integracji.

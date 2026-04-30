@@ -1,10 +1,12 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { PLAN_ORDER, CREDIT_PACK_ORDER, USAGE_TOKEN_RULES, BILLING_UNIT_LABEL } from '@/lib/plans';
+import PricingCheckoutButton from '@/components/PricingCheckoutButton';
 import InsightPanel from '@/components/pro-ui/InsightPanel';
 import TutorialMode, { TutorialStep } from '@/components/pro-ui/TutorialMode';
 import { tr } from '@/lib/i18n';
 import { getLanguage } from '@/lib/i18n-server';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
 
 export const metadata: Metadata = {
   title: 'Pricing for Product Review and Ecommerce Validation',
@@ -18,6 +20,9 @@ export const metadata: Metadata = {
 
 export default async function PricingPage() {
   const language = await getLanguage();
+  const supabase = await createSupabaseServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const isAuthenticated = Boolean(user);
   const primaryPlans = PLAN_ORDER;
   const videoWeightBands = [
     {
@@ -143,7 +148,16 @@ export default async function PricingPage() {
                 <div className="mt-4 text-5xl font-black tracking-tight text-white">{plan.priceLabel}</div>
                 <div className="mt-2 text-sm text-slate-400">{plan.monthlyCredits} {tr(language, { en: 'AI tokens', pl: 'tokenów AI', de: 'AI-Tokens', es: 'tokens AI', pt: 'tokens AI', ja: 'AIトークン', zh: 'AI 代币', id: 'token AI', ru: 'AI токенов' })} / {plan.monthlyAnalyses} {tr(language, { en: 'protected analyses', pl: 'chronionych analiz', de: 'geschützte Analysen', es: 'análisis protegidos', pt: 'análises protegidas', ja: '保護された分析', zh: '受保护分析', id: 'analisis terlindungi', ru: 'защищённых анализов' })}</div>
                 <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-sm text-slate-300">{planNote(plan.key)}</div>
-                <Link href="/dashboard" className={`mt-6 block w-full rounded-2xl px-5 py-4 text-center font-semibold ${plan.key === 'pro' ? 'bg-cyan-300 text-slate-950' : 'border border-white/10 bg-white/[0.03] text-white'}`}>{plan.key === 'free' ? tr(language, { en: 'Start free', pl: 'Zacznij za darmo', de: 'Kostenlos starten', es: 'Empezar gratis', pt: 'Começar grátis', ja: '無料で開始', zh: '免费开始', id: 'Mulai gratis', ru: 'Начать бесплатно' }) : tr(language, { en: 'Choose this plan', pl: 'Wybierz ten plan', de: 'Abo kaufen', es: 'Elegir este plan', pt: 'Escolher este plano', ja: 'このプランを選ぶ', zh: '选择此方案', id: 'Pilih paket ini', ru: 'Выбрать этот план' })}</Link>
+                {plan.key === 'free'
+                  ? <Link href={isAuthenticated ? '/dashboard' : '/auth/register'} className="mt-6 block w-full rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4 text-center font-semibold text-white">{tr(language, { en: 'Start free', pl: 'Zacznij za darmo', de: 'Kostenlos starten', es: 'Empezar gratis', pt: 'Começar grátis', ja: '無料で開始', zh: '免费开始', id: 'Mulai gratis', ru: 'Начать бесплатно' })}</Link>
+                  : <PricingCheckoutButton
+                      itemKey={plan.key}
+                      isAuthenticated={isAuthenticated}
+                      checkoutLabel={tr(language, { en: 'Choose this plan', pl: 'Wybierz ten plan' })}
+                      loginLabel={tr(language, { en: 'Log in to buy', pl: 'Zaloguj się, aby kupić' })}
+                      loadingLabel={tr(language, { en: 'Redirecting...', pl: 'Przekierowanie...' })}
+                      className={`mt-6 block w-full rounded-2xl px-5 py-4 text-center font-semibold ${plan.key === 'pro' ? 'bg-cyan-300 text-slate-950' : 'border border-white/10 bg-white/[0.03] text-white'}`}
+                    />}
               </div>
             ))}
           </section>
@@ -248,7 +262,14 @@ export default async function PricingPage() {
                   <div className="text-[11px] uppercase tracking-[0.24em] text-amber-200">{pack.name}</div>
                   <div className="mt-4 text-4xl font-black tracking-tight text-white">{pack.priceLabel}</div>
                   <div className="mt-2 text-sm text-slate-400">{pack.credits} {tr(language, { en: 'one-time AI tokens', pl: 'jednorazowych tokenów AI', de: 'einmalige AI-Tokens', es: 'tokens AI de un solo pago', pt: 'tokens AI únicos', ja: '買い切り AI トークン', zh: '一次性 AI 代币', id: 'token AI sekali beli', ru: 'одноразовых AI токенов' })}</div>
-                  <Link href="/dashboard" className="mt-6 block w-full rounded-2xl bg-amber-300 px-5 py-4 text-center font-semibold text-slate-950">{tr(language, { en: 'Use with dashboard', pl: 'Użyj z dashboardem', de: 'Mit Dashboard nutzen', es: 'Usar con dashboard', pt: 'Usar com dashboard', ja: 'ダッシュボードで使う', zh: '在仪表板中使用', id: 'Gunakan di dashboard', ru: 'Использовать в панели' })}</Link>
+                  <PricingCheckoutButton
+                    itemKey={pack.key}
+                    isAuthenticated={isAuthenticated}
+                    checkoutLabel={tr(language, { en: 'Buy AI tokens', pl: 'Kup tokeny AI' })}
+                    loginLabel={tr(language, { en: 'Log in to buy', pl: 'Zaloguj się, aby kupić' })}
+                    loadingLabel={tr(language, { en: 'Redirecting...', pl: 'Przekierowanie...' })}
+                    className="mt-6 block w-full rounded-2xl bg-amber-300 px-5 py-4 text-center font-semibold text-slate-950"
+                  />
                 </div>
               ))}
             </div>

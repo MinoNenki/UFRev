@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import AnalyzeForm from '@/components/AnalyzeForm';
-import DecisionResult from '@/components/DecisionResult';
+import DecisionResult, { AdvancedDecisionReasoning } from '@/components/DecisionResult';
 import RewardAdsPanel from '@/components/RewardAdsPanel';
 import ReferralPanel from '@/components/ReferralPanel';
 import TutorialMode, { TutorialStep } from '@/components/pro-ui/TutorialMode';
@@ -147,13 +147,14 @@ export default function DashboardShell({
         title={tt(language, { en: 'Run an analysis or review the latest result', pl: 'Uruchom analizę albo przejrzyj ostatni wynik' })}
         description={tt(language, { en: 'Use the left form to send data in, then read the result panel on the right for the safest next move.', pl: 'Użyj formularza po lewej, aby wysłać dane, a potem przeczytaj panel wyniku po prawej, by zobaczyć najbezpieczniejszy kolejny ruch.' })}
       >
-        <section className="grid items-start gap-5 xl:grid-cols-[minmax(520px,0.92fr)_minmax(620px,1.08fr)] 2xl:gap-6">
+        <section className="grid items-start gap-5 2xl:grid-cols-[minmax(0,0.98fr)_minmax(0,1.02fr)] 2xl:gap-7">
         <AnalyzeForm currentLanguage={language} onResultChange={setCurrentDecision} />
 
-      <div className="min-w-0 space-y-5 xl:sticky xl:top-4 2xl:top-6">
-        <div className="mesh-panel dashboard-premium-shell glow-ring p-4 sm:p-5 xl:p-6 2xl:p-7">
+      <div className="min-w-0 space-y-5">
+        <div className="mesh-panel dashboard-premium-shell dashboard-result-shell glow-ring p-4 sm:p-5 xl:p-6 2xl:p-7">
           <div className="spotlight-sweep" />
           <div className="noise-overlay" />
+          <div className="dashboard-result-aura" />
           <div className="relative flex flex-wrap items-start justify-between gap-4">
             <div>
               <div className="text-[11px] uppercase tracking-[0.24em] text-cyan-200">
@@ -171,7 +172,7 @@ export default function DashboardShell({
               </div>
 
               <h2 className="mt-2 text-2xl font-black sm:text-3xl">{panelTitle}</h2>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300 xl:max-w-[56ch]">
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-300 xl:max-w-[72ch]">
                 {tt(language, {
                   en: 'This result area is built to give you one clear answer, explain why, and help you move forward with less doubt.',
                   pl: 'Ten obszar wyniku ma dać Ci jedną jasną odpowiedź, wyjaśnić dlaczego i pomóc ruszyć dalej z mniejszą niepewnością.',
@@ -199,7 +200,7 @@ export default function DashboardShell({
             </div>
           </div>
 
-          <div className="mt-4">
+          <div className="mt-5 rounded-[28px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(2,6,23,0.08))] p-1.5 sm:p-2">
             {currentDecision ? (
               <DecisionResult result={currentDecision} currentLanguage={language} />
             ) : (
@@ -231,6 +232,12 @@ export default function DashboardShell({
         </TutorialStep>
       </div>
       </section>
+
+      {currentDecision ? (
+        <div className="mt-7">
+          <AdvancedDecisionReasoning result={currentDecision} currentLanguage={language} />
+        </div>
+      ) : null}
       </TutorialStep>
     </TutorialMode>
   );

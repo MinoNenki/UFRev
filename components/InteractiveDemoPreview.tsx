@@ -27,7 +27,24 @@ type DemoScenario = {
   steps: DemoStep[];
 };
 
-export default function InteractiveDemoPreview({ language }: { language: Language }) {
+type LivePreviewMetrics = {
+  setupConfigured: boolean;
+  warningCount: number;
+  supportedInputCount: number;
+  supportedVideoFormats: number;
+  decisionStateCount: number;
+  liveSourceUrl: string;
+};
+
+type LivePreviewCase = {
+  productName: string;
+  verdict: string;
+  margin: string;
+  risk: string;
+  nextStep: string;
+};
+
+export default function InteractiveDemoPreview({ language, liveMetrics, liveCase }: { language: Language; liveMetrics: LivePreviewMetrics; liveCase?: LivePreviewCase | null }) {
   const operatorSteps: DemoStep[] = [
     {
       id: 'capture',
@@ -379,6 +396,51 @@ export default function InteractiveDemoPreview({ language }: { language: Languag
     violet: 'analysis-preview-violet',
     gold: 'analysis-preview-gold',
   }[activeStep.accent];
+  const setupStatusText = liveMetrics.setupConfigured
+    ? tr(language, { en: 'Setup live', pl: 'Setup live' })
+    : tr(language, { en: 'Setup incomplete', pl: 'Setup niepełny' });
+  const telemetryCards = [
+    {
+      label: tr(language, { en: 'Setup state', pl: 'Stan setupu' }),
+      value: setupStatusText,
+    },
+    {
+      label: tr(language, { en: 'Warnings', pl: 'Warningi' }),
+      value: `${liveMetrics.warningCount}`,
+    },
+    {
+      label: tr(language, { en: 'Input lanes', pl: 'Ścieżki inputu' }),
+      value: `${liveMetrics.supportedInputCount}`,
+    },
+    {
+      label: tr(language, { en: 'Video formats', pl: 'Formaty wideo' }),
+      value: `${liveMetrics.supportedVideoFormats}`,
+    },
+    {
+      label: tr(language, { en: 'Decision branches', pl: 'Gałęzie decyzji' }),
+      value: `${liveMetrics.decisionStateCount}`,
+    },
+  ];
+  const liveSourceValue = activeScenario.id === 'video'
+    ? 'creative-demo.mp4'
+    : activeScenario.id === 'decision'
+      ? 'decision-board://landing-preview'
+      : liveMetrics.liveSourceUrl;
+  const resolvedVerdict = activeScenario.id === 'operator' && activeStep.id === 'verdict' && liveCase?.verdict
+    ? liveCase.verdict
+    : activeStep.verdict;
+  const resolvedMargin = activeScenario.id === 'operator' && activeStep.id === 'verdict' && liveCase?.margin
+    ? liveCase.margin
+    : activeStep.margin;
+  const resolvedRisk = activeScenario.id === 'operator' && activeStep.id === 'verdict' && liveCase?.risk
+    ? liveCase.risk
+    : activeStep.risk;
+  const resolvedNextStep = activeScenario.id === 'operator' && activeStep.id === 'verdict' && liveCase?.nextStep
+    ? liveCase.nextStep
+    : activeStep.nextStep;
+  const resolvedTitle = activeScenario.id === 'operator' && activeStep.id === 'verdict' && liveCase?.productName
+    ? tr(language, { en: `Latest saved case: ${liveCase.productName}`, pl: `Najnowszy zapisany case: ${liveCase.productName}` })
+    : activeStep.title;
 
   return (
     <section className={`premium-panel analysis-preview-shell ${previewTone} overflow-hidden p-5 sm:p-6 xl:p-7`}>
@@ -400,8 +462,17 @@ export default function InteractiveDemoPreview({ language }: { language: Languag
       </div>
 
       <p className="max-w-3xl text-sm leading-6 text-slate-300">
-        {tr(language, { en: 'This preview now shows a fuller workflow: capture input, switch mode, run analysis, and review the decision board with margin and risk.', pl: 'Ten preview pokazuje teraz pełniejszy workflow: przechwycenie inputu, zmianę trybu, uruchomienie analizy i tablicę decyzji z marżą oraz ryzykiem.' })}
+        {tr(language, { en: 'This preview now shows a fuller workflow: capture input, switch mode, run analysis, and review the decision board with margin and risk. It also reflects live platform readiness instead of acting like a disconnected mock.', pl: 'Ten preview pokazuje teraz pełniejszy workflow: przechwycenie inputu, zmianę trybu, uruchomienie analizy i tablicę decyzji z marżą oraz ryzykiem. Dodatkowo odbija aktualną gotowość platformy zamiast udawać odłączony mock.' })}
       </p>
+
+      <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+        {telemetryCards.map((card, index) => (
+          <div key={`${card.label}-${index}`} className="analysis-telemetry-card rounded-[20px] border border-white/10 bg-white/[0.03] px-4 py-3">
+            <div className="text-[10px] uppercase tracking-[0.18em] text-slate-400">{card.label}</div>
+            <div className="mt-2 text-lg font-black tracking-[-0.03em] text-white">{card.value}</div>
+          </div>
+        ))}
+      </div>
 
       <div className="mt-4 flex flex-wrap gap-2">
         {scenarios.map((scenario, index) => {
@@ -459,7 +530,7 @@ export default function InteractiveDemoPreview({ language }: { language: Languag
             <div className={`analysis-console-3d mt-10 rounded-[24px] border border-white/10 bg-white/[0.03] p-4 ${activeScenario.id === 'video' ? 'analysis-console-video' : ''} ${activeScenario.id === 'decision' ? 'analysis-console-decision' : ''}`}>
               <div className="text-xs uppercase tracking-[0.2em] text-slate-400">{tr(language, { en: 'Source console', pl: 'Konsola źródła' })}</div>
               <div className={`mt-3 min-h-[96px] rounded-[22px] border px-4 py-4 text-[15px] font-medium leading-7 break-all ${activeIndex === 0 ? 'border-cyan-300/40 bg-cyan-300/10 text-cyan-50 shadow-[0_0_0_1px_rgba(34,211,238,0.1)]' : 'border-white/10 bg-slate-950/50 text-slate-300'}`}>
-                https://supplier.example.com/product/portable-blender
+                {liveSourceValue}
               </div>
               <div className="mt-3 grid gap-3 sm:grid-cols-2">
                 {modeOptions.map((option) => {
@@ -482,6 +553,18 @@ export default function InteractiveDemoPreview({ language }: { language: Languag
               <div className="basis-full rounded-[20px] border border-white/10 bg-slate-950/45 px-4 py-4 text-sm leading-7 text-slate-300 xl:basis-auto xl:flex-1">{activeStep.helper}</div>
             </div>
 
+            <div className="mt-4 grid gap-3 sm:grid-cols-3">
+              {[
+                tr(language, { en: `Setup: ${setupStatusText}`, pl: `Setup: ${setupStatusText}` }),
+                tr(language, { en: `${liveMetrics.supportedInputCount} supported input lanes`, pl: `${liveMetrics.supportedInputCount} obsługiwanych ścieżek inputu` }),
+                tr(language, { en: `${liveMetrics.supportedVideoFormats} supported video formats`, pl: `${liveMetrics.supportedVideoFormats} obsługiwane formaty wideo` }),
+              ].map((item) => (
+                <div key={item} className="rounded-[18px] border border-white/8 bg-white/[0.03] px-3 py-3 text-sm text-slate-300">
+                  {item}
+                </div>
+              ))}
+            </div>
+
             <div className="mt-5 h-2 rounded-full bg-white/5">
               <div className="h-2 rounded-full bg-[linear-gradient(90deg,rgba(34,211,238,1),rgba(16,185,129,0.95),rgba(168,85,247,0.95))] transition-all duration-500" style={{ width: `${progress}%` }} />
             </div>
@@ -494,19 +577,19 @@ export default function InteractiveDemoPreview({ language }: { language: Languag
             <div className="mt-10 grid gap-4 lg:grid-cols-2">
               <div className={`analysis-response-card rounded-[24px] border p-5 transition duration-300 lg:col-span-2 ${activeIndex === 3 ? 'border-violet-300/35 bg-violet-300/10' : activeStep.accent === 'gold' ? 'border-amber-200/30 bg-amber-300/10' : 'border-white/10 bg-white/[0.03]'} ${activeScenario.id === 'decision' && activeIndex === 3 ? 'analysis-response-card-decision' : ''}`}>
                 <div className="text-xs uppercase tracking-[0.2em] text-slate-400">{tr(language, { en: 'Verdict', pl: 'Werdykt' })}</div>
-                <div className="mt-3 text-[clamp(1.7rem,3vw,2.5rem)] font-black leading-[1.05] text-white">{activeStep.verdict}</div>
+                <div className="mt-3 text-[clamp(1.7rem,3vw,2.5rem)] font-black leading-[1.05] text-white">{resolvedVerdict}</div>
               </div>
               <div className="rounded-[24px] border border-white/10 bg-white/[0.03] p-5">
                 <div className="text-xs uppercase tracking-[0.2em] text-slate-400">{tr(language, { en: 'Margin', pl: 'Marża' })}</div>
-                <div className="mt-3 text-base font-semibold leading-7 break-words text-white">{activeStep.margin}</div>
+                <div className="mt-3 text-base font-semibold leading-7 break-words text-white">{resolvedMargin}</div>
               </div>
               <div className="rounded-[24px] border border-white/10 bg-white/[0.03] p-5">
                 <div className="text-xs uppercase tracking-[0.2em] text-slate-400">{tr(language, { en: 'Risk', pl: 'Ryzyko' })}</div>
-                <div className="mt-3 text-base font-semibold leading-7 break-words text-white">{activeStep.risk}</div>
+                <div className="mt-3 text-base font-semibold leading-7 break-words text-white">{resolvedRisk}</div>
               </div>
               <div className="rounded-[24px] border border-white/10 bg-white/[0.03] p-5 lg:col-span-2">
                 <div className="text-xs uppercase tracking-[0.2em] text-slate-400">{tr(language, { en: 'Next step', pl: 'Następny krok' })}</div>
-                <div className="mt-3 text-base font-semibold leading-7 break-words text-white">{activeStep.nextStep}</div>
+                <div className="mt-3 text-base font-semibold leading-7 break-words text-white">{resolvedNextStep}</div>
               </div>
             </div>
 
@@ -521,8 +604,30 @@ export default function InteractiveDemoPreview({ language }: { language: Languag
 
             <div className="mt-4 rounded-[24px] border border-white/10 bg-slate-950/45 p-5 text-sm leading-7 text-slate-300">
               <div className="text-xs uppercase tracking-[0.2em] text-slate-400">{tr(language, { en: 'What the user sees changing', pl: 'Co zmienia się na oczach usera' })}</div>
-              <div className="mt-2 text-base font-semibold leading-7 text-white">{activeStep.title}</div>
+              <div className="mt-2 text-base font-semibold leading-7 text-white">{resolvedTitle}</div>
               <div className="mt-2">{activeStep.helper}</div>
+            </div>
+
+            <div className="mt-4 grid gap-3 sm:grid-cols-3">
+              {[
+                {
+                  label: tr(language, { en: 'Live setup state', pl: 'Stan setupu live' }),
+                  value: setupStatusText,
+                },
+                {
+                  label: tr(language, { en: 'Current warning count', pl: 'Aktualna liczba warningów' }),
+                  value: `${liveMetrics.warningCount}`,
+                },
+                {
+                  label: tr(language, { en: 'Decision engine spread', pl: 'Zakres decision engine' }),
+                  value: `${liveMetrics.decisionStateCount} ${tr(language, { en: 'branches', pl: 'gałęzie' })}`,
+                },
+              ].map((card) => (
+                <div key={card.label} className="analysis-live-state-card rounded-[22px] border border-white/10 bg-white/[0.04] p-4">
+                  <div className="text-[10px] uppercase tracking-[0.18em] text-slate-400">{card.label}</div>
+                  <div className="mt-2 text-sm font-semibold leading-6 text-white">{card.value}</div>
+                </div>
+              ))}
             </div>
 
             <div className="mt-5 flex flex-wrap items-center gap-3">

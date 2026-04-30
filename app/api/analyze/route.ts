@@ -4,7 +4,7 @@ import { supabaseAdmin } from '@/lib/supabase-admin';
 import { openai, ANALYSIS_SYSTEM_PROMPT } from '@/lib/openai';
 import { calculateDecision } from '@/lib/decision-engine';
 import { normalizePlanKey, PLANS, estimateAnalysisTokenCost } from '@/lib/plans';
-import { getAutomationSettings } from '@/lib/profit-config';
+import { getAutomationSettings, getIntegrationSettings } from '@/lib/profit-config';
 import { getMonetizationSettings } from '@/lib/app-config';
 import { SECURITY_LIMITS, clampText, estimateAnalysisCostUsd, estimateTokens } from '@/lib/security';
 import { getReferralSettings } from '@/lib/app-config';
@@ -18,6 +18,8 @@ import { collectProMarketData } from '@/lib/market-connectors';
 import { convertCurrency, convertToUsd, formatMoney, getCurrencyForCountry, getCurrencyForLanguage, normalizeCurrencyCode } from '@/lib/currency';
 import { buildSystemPrompt } from '@/lib/analysis-prompt';
 import { buildMarketWatchReport, getRecentMarketWatchSnapshots, persistMarketWatchReport } from '@/lib/market-watch';
+import { isServiceBusinessPrompt } from '@/lib/analyze-helpers';
+import { buildProductSourcingLayer, buildServiceSetupLayer } from '@/lib/recommendation-layers';
 export const runtime = 'nodejs';
 
 
@@ -35,6 +37,87 @@ function finalGuard(decision: any, websiteUrl: string) {
   }
 
   return decision;
+}
+
+function applyServiceBusinessOverlay(params: {
+  decision: any;
+  currentLanguage: Language;
+  competitorUrls: string;
+  selectedCountry: string;
+  hasConfirmedPrice: boolean;
+  hasConfirmedCost: boolean;
+}) {
+  const { decision, currentLanguage, competitorUrls, selectedCountry, hasConfirmedPrice, hasConfirmedCost } = params;
+
+  decision.analysisMode = 'service_estimation';
+  decision.analysisHeadline = currentLanguage === 'pl'
+    ? 'To jest analiza lokalnego biznesu usługowego, a nie klasycznego produktu pod e-commerce.'
+    : 'This is a local service-business analysis, not a standard e-commerce product case.';
+  decision.verdict = decision.verdict === 'BUY' ? 'TEST' : decision.verdict;
+  decision.executionMode = 'manual_review';
+
+  decision.why = currentLanguage === 'pl'
+    ? [
+        'Pytanie dotyczy sprzętu, kosztu startu, regionu i kierunku wejścia, więc odpowiedź musi być operacyjna i usługowa.',
+        competitorUrls ? 'Podane linki konkurencji trzeba czytać jako benchmark usług, pakietów i lokalnego pozycjonowania.' : 'Bez benchmarku lokalnych usług wynik musi pozostać ostrożny.',
+        selectedCountry ? `Analiza została osadzona w lokalnym kontekście kraju / regionu: ${selectedCountry}.` : 'Lokalny kontekst regionu powinien prowadzić odpowiedź bardziej niż sztywny model produktu.',
+      ]
+    : [
+        'The user is asking about equipment, startup cost, region, and service direction, so the response must stay operational and service-focused.',
+        competitorUrls ? 'Competitor links should be read as local service and pricing benchmarks, not product listings.' : 'Without local service benchmarks the result has to stay conservative.',
+        selectedCountry ? `The answer should stay grounded in the selected local context: ${selectedCountry}.` : 'The local region context should drive the answer more than a rigid product model.',
+      ];
+
+  decision.issues = currentLanguage === 'pl'
+    ? [
+        'Nie wolno pokazywać 0,00 jako ceny lub kosztu, jeśli cennik i CAPEX nie zostały potwierdzone.',
+        'Myjnia mobilna, myjnia TIR i mycie elewacji to trzy różne modele operacyjne, więc nie warto startować od wszystkiego naraz.',
+        'Bez lokalnych widełek cen oraz listy sprzętu werdykt nie może udawać policzonej marży.',
+      ]
+    : [
+        'Do not show 0.00 as a price or cost when pricing and startup capex have not been confirmed.',
+        'Mobile washing, truck washing, and facade cleaning are three different operating models, so starting with all of them at once is risky.',
+        'Without local price bands and an equipment list, the result cannot pretend to have a verified margin.',
+      ];
+
+  decision.improvements = currentLanguage === 'pl'
+    ? [
+        'Wybierz jedną główną niszę startową i dopiero po pierwszych zleceniach rozszerzaj usługę.',
+        'Rozpisz starterowy zestaw sprzętu, auto, chemię, osprzęt, wodę, serwis i dojazdy jako osobne pozycje kosztowe.',
+        'Zbierz minimum 5 lokalnych benchmarków cen i na tej podstawie zbuduj 3 pakiety usług.',
+      ]
+    : [
+        'Pick one starter niche first and expand only after the first jobs validate the lane.',
+        'Break the startup stack into equipment, vehicle, chemicals, accessories, water, service, and travel costs.',
+        'Collect at least 5 local pricing benchmarks and build 3 service packages from them.',
+      ];
+
+  if (!hasConfirmedPrice) decision.pricing.currentPrice = null;
+  if (!hasConfirmedCost) decision.pricing.estimatedCost = null;
+  if (!hasConfirmedPrice || !hasConfirmedCost) {
+    decision.pricing.marginPercent = null;
+    decision.pricing.breakEvenROAS = null;
+    decision.pricing.suggestedPriceMin = null;
+    decision.pricing.suggestedPriceMax = null;
+    decision.pricing.suggestedTestPrice = null;
+  }
+
+  return decision;
+}
+
+function listEnabledIntegrationLanes(settings: Awaited<ReturnType<typeof getIntegrationSettings>>) {
+  return [
+    settings.amazonEnabled ? 'Amazon' : null,
+    settings.ebayEnabled ? 'eBay' : null,
+    settings.allegroEnabled ? 'Allegro' : null,
+    settings.alibabaEnabled ? 'Alibaba' : null,
+    settings.aliexpressEnabled ? 'AliExpress' : null,
+    settings.walmartEnabled ? 'Walmart' : null,
+    settings.etsyEnabled ? 'Etsy' : null,
+    settings.rakutenEnabled ? 'Rakuten' : null,
+    settings.shopifyEnabled ? 'Shopify' : null,
+    settings.woocommerceEnabled ? 'WooCommerce' : null,
+  ].filter(Boolean) as string[];
 }
 
 
@@ -643,6 +726,92 @@ function buildDocumentAnalysisText(decision: ReturnType<typeof buildDocumentAnal
   ].join('\n');
 }
 
+function localizeSpecialModeDecisionNarrative(params: {
+  decision: any;
+  currentLanguage: Language;
+  mode: 'cost_optimization' | 'visual_analysis' | 'document_analysis';
+  displayCurrency?: string;
+}) {
+  const { decision, currentLanguage, mode, displayCurrency } = params;
+  if (currentLanguage === 'pl') return decision;
+
+  const isEs = currentLanguage === 'es';
+  const ctaByMode = mode === 'cost_optimization'
+    ? (isEs ? 'Desbloquear análisis de costes más profundo' : 'Unlock deeper cost analysis')
+    : mode === 'visual_analysis'
+      ? (isEs ? 'Desbloquear análisis visual más profundo' : 'Unlock deeper visual analysis')
+      : (isEs ? 'Desbloquear análisis de documento más profundo' : 'Unlock deeper document analysis');
+
+  if (mode === 'cost_optimization') {
+    decision.analysisHeadline = isEs
+      ? 'Se puede optimizar el coste, pero antes hay que confirmar números clave del documento.'
+      : 'Cost optimization is possible, but key numbers in the document still need confirmation.';
+    decision.why = [
+      isEs ? 'Se detectó un contexto de factura/coste en el contenido.' : 'A cost/invoice context was detected in the content.',
+      isEs ? `La estimación usa la moneda local seleccionada (${displayCurrency || 'local currency'}).` : `The estimate uses the selected local currency (${displayCurrency || 'local currency'}).`,
+      isEs ? 'La decisión es conservadora hasta validar importes y partidas principales.' : 'The decision remains conservative until totals and key line items are verified.',
+    ];
+    decision.issues = [
+      isEs ? 'Sin desglose claro de partidas, la precisión es limitada.' : 'Without a clear line-item breakdown, precision is limited.',
+      isEs ? 'No conviene forzar una conclusión fuerte sin datos legibles.' : 'A strong conclusion should not be forced without readable data.',
+      isEs ? 'Un PDF escaneado o borroso reduce la calidad de la lectura.' : 'A scanned/blurred PDF lowers extraction quality.',
+    ];
+    decision.improvements = [
+      isEs ? 'Añade una factura más legible o un resumen corto con importes clave.' : 'Add a clearer invoice file or a short summary with key amounts.',
+      isEs ? 'Compara 2-3 alternativas de proveedor sobre la partida principal.' : 'Compare 2-3 supplier alternatives on the largest cost line.',
+      isEs ? 'Empieza con recorte pequeño y mide resultado antes de cambios grandes.' : 'Start with a small optimization step and measure before larger changes.',
+    ];
+    decision.marketSignals = [isEs ? 'Modo de optimización de costes activo.' : 'Cost-optimization mode is active.'];
+  } else if (mode === 'visual_analysis') {
+    decision.analysisHeadline = isEs
+      ? 'Análisis visual activo: la respuesta se basa en lo que realmente se ve.'
+      : 'Visual analysis mode is active: the response is based on what is actually visible.';
+    decision.why = [
+      isEs ? 'El sistema prioriza lectura visual real frente a suposiciones.' : 'The system prioritizes real visual reading over assumptions.',
+      isEs ? 'Si hay texto pequeño o borroso, se marca como incierto.' : 'If text is small or blurry, uncertainty is explicitly stated.',
+      isEs ? 'La decisión de negocio fuerte requiere datos adicionales.' : 'A stronger business decision still requires additional numeric context.',
+    ];
+    decision.issues = [
+      isEs ? 'Sin contexto de precio/coste no se debe fijar margen rígido.' : 'Without price/cost context, a rigid margin should not be forced.',
+      isEs ? 'Detalles visuales pequeños pueden reducir precisión.' : 'Small visual details can reduce precision.',
+      isEs ? 'Una sola imagen puede no reflejar todo el caso.' : 'A single screenshot/image may not represent the full case.',
+    ];
+    decision.improvements = [
+      isEs ? 'Añade contexto corto y pregunta concreta sobre la imagen/pantalla.' : 'Add short context and a concrete question about the image/screen.',
+      isEs ? 'Incluye datos de precio/coste si quieres decisión de rentabilidad.' : 'Include price/cost data if you want a profitability decision.',
+      isEs ? 'Sube una versión más nítida para mejorar lectura.' : 'Upload a clearer file version to improve visual reading quality.',
+    ];
+    decision.marketSignals = [isEs ? 'Modo visual activado.' : 'Visual mode enabled.'];
+  } else {
+    decision.analysisHeadline = isEs
+      ? 'Documento detectado: primero se valida contenido y consistencia antes de una decisión fuerte.'
+      : 'Document mode detected: content and consistency are validated before a strong decision.';
+    decision.why = [
+      isEs ? 'La lectura se centra en hechos visibles del documento.' : 'The readout focuses on visible facts from the document.',
+      isEs ? 'Se evita inventar datos que no estén en el archivo.' : 'Missing facts are not invented.',
+      isEs ? 'La conclusión sube de calidad con estructura y cifras claras.' : 'Conclusion quality increases with clearer structure and numbers.',
+    ];
+    decision.issues = [
+      isEs ? 'Si faltan cifras o plazos, la evaluación se mantiene conservadora.' : 'If figures or timeline are missing, the evaluation remains conservative.',
+      isEs ? 'Texto poco legible reduce confianza de lectura.' : 'Low text readability reduces confidence.',
+      isEs ? 'Sin benchmark o contexto adicional, la decisión puede quedarse corta.' : 'Without benchmark/additional context, the decision can stay shallow.',
+    ];
+    decision.improvements = [
+      isEs ? 'Añade resumen de objetivos, cifras y plazos del documento.' : 'Add a short summary of goals, numbers, and timeline from the document.',
+      isEs ? 'Sube una versión más legible si el archivo es escaneo.' : 'Upload a clearer version if the file is a scan.',
+      isEs ? 'Confirma datos críticos antes de ejecutar gasto o escala.' : 'Confirm critical data before spending or scaling.',
+    ];
+    decision.marketSignals = [isEs ? 'Modo documento activado.' : 'Document mode enabled.'];
+  }
+
+  decision.monetization = {
+    ...(decision.monetization || {}),
+    unlockCTA: ctaByMode,
+  };
+
+  return decision;
+}
+
 function parseVideoMetadataOutput(output: string): VideoMetadata {
   const durationMatch = output.match(/Duration:\s*(\d+):(\d+):(\d+(?:\.\d+)?)/i);
   const streamMatch = output.match(/Video:\s*([^,]+),.*?(\d{2,5})x(\d{2,5})/i);
@@ -883,8 +1052,12 @@ function buildDirectQuestionLead(params: {
   const asksPrice = /po ile|wystawia[cć]|selling price|listing price|sell price|jak[aą] cen[aę]/.test(combined);
   const asksDemand = /popyt|demand|czy się sprzeda|czy sie sprzeda|will it sell|czy będzie|czy bedzie/.test(combined);
   const asksRental = /wynajem|wypożycz|wypozycz|rental|rent out|lease/.test(combined);
+  const asksEquipment = /jaki sprzęt|jaki sprzet|sprzęt|sprzet|equipment|maszyn|generator|odkurzacz|parownic|myjk/i.test(combined);
+  const asksStartupCost = /ile to będzie kosztowa|ile to bedzie kosztowa|startup cost|budżet start|budzet start|koszt start/i.test(combined);
+  const asksDirection = /w jaki kierunek|co wybrać|co wybrac|pionier rynku|which direction|what niche|which lane/i.test(combined);
+  const serviceBusinessCase = isServiceBusinessPrompt(`${params.content} ${params.salesChannel}`);
 
-  if (!asksUnits && !asksPrice && !asksDemand && !asksRental) return '';
+  if (!asksUnits && !asksPrice && !asksDemand && !asksRental && !asksEquipment && !asksStartupCost && !asksDirection) return '';
 
   const supplierSource = looksLikeSupplierMarketplaceUrl(params.websiteUrl);
   const hasHardCost = params.cost > 0 || params.price > 0 || /unit price|price per unit|cena|cost|koszt|shipping|dostaw/i.test(combined);
@@ -892,6 +1065,28 @@ function buildDirectQuestionLead(params: {
   const quickPaybackRentLow = params.cost > 0 ? params.cost / 12 : null;
   const quickPaybackRentHigh = params.cost > 0 ? params.cost / 8 : null;
   const weekendPackage = params.cost > 0 ? params.cost / 5 : null;
+
+  if (serviceBusinessCase && params.currentLanguage === 'pl') {
+    const parts: string[] = [];
+
+    if (asksDirection) {
+      parts.push('Najbezpieczniej wejść najpierw w jedną niszę premium z dojazdem, a dopiero potem rozszerzać usługę na TIR-y albo cięższe mycie elewacji.');
+    }
+
+    if (asksEquipment) {
+      parts.push('Starter usługowy zwykle wymaga auta roboczego, wydajnej myjki lub parownicy, zbiornika / dostępu do wody, chemii, osprzętu do piany i szczotek oraz zabezpieczeń BHP.');
+    }
+
+    if (asksStartupCost) {
+      parts.push('Budżet startowy trzeba policzyć osobno dla auta, maszyny głównej, osprzętu, chemii, brandingu, dojazdów i bufora serwisowego, zamiast udawać jedną pewną kwotę.');
+    }
+
+    if (asksDemand || params.websiteUrl) {
+      parts.push('Linki konkurencji traktuj tu jako benchmark usług i cenników lokalnych, a nie jak listing produktu pod klasyczny e-commerce verdict.');
+    }
+
+    return parts.join(' ');
+  }
 
   if (params.currentLanguage === 'pl') {
     const parts: string[] = [];
@@ -1149,11 +1344,32 @@ function enhanceDecisionForUi(params: {
   uploadedFilesCount: number;
   uploadedImagesCount: number;
   intent: SmartIntent;
+  isServiceBusinessCase: boolean;
+  selectedCountry?: string;
+  targetMarket?: string;
+  resolvedDemand?: number;
+  resolvedCompetition?: number;
 }) {
-  const { decision, currentLanguage, productName, websiteUrl, competitorUrls, uploadedFilesCount, uploadedImagesCount, intent } = params;
+  const {
+    decision,
+    currentLanguage,
+    productName,
+    websiteUrl,
+    competitorUrls,
+    uploadedFilesCount,
+    uploadedImagesCount,
+    intent,
+    isServiceBusinessCase,
+    selectedCountry,
+    targetMarket,
+    resolvedDemand,
+    resolvedCompetition,
+  } = params;
+
+  const strictLanguage = currentLanguage === 'pl' || currentLanguage === 'en' || currentLanguage === 'es';
 
   if (
-    currentLanguage !== 'pl' ||
+    !strictLanguage ||
     decision.analysisMode === 'cost_optimization' ||
     decision.analysisMode === 'document_analysis' ||
     intent === 'extract_data' ||
@@ -1162,22 +1378,172 @@ function enhanceDecisionForUi(params: {
     return decision;
   }
 
-  const itemLabel = productName?.trim() ? `„${productName.trim()}”` : 'tej oferty';
+  const itemLabelPl = productName?.trim() ? `„${productName.trim()}”` : 'tej oferty';
+  const itemLabelEn = productName?.trim() ? `"${productName.trim()}"` : 'this offer';
+  const itemLabelEs = productName?.trim() ? `"${productName.trim()}"` : 'esta oferta';
   const margin = decision.pricing?.marginPercent ?? 0;
   const competitionLevel = Array.isArray(decision.issues) && decision.issues.some((item) => /competition pressure is high/i.test(item));
   const hasEvidence = Boolean(websiteUrl || competitorUrls || uploadedFilesCount > 0 || uploadedImagesCount > 0);
+  const hasHardUnitEconomics = Boolean((decision.pricing?.currentPrice ?? 0) > 0 && (decision.pricing?.estimatedCost ?? 0) > 0);
+  const region = (targetMarket || selectedCountry || '').trim();
+
+  if (isServiceBusinessCase) {
+    decision.analysisMode = 'service_estimation';
+    decision.verdict = decision.verdict === 'BUY' ? 'TEST' : decision.verdict;
+    decision.executionMode = 'manual_review';
+
+    if (currentLanguage === 'pl') {
+      decision.analysisHeadline = `To jest case usługowy lokalny${region ? ` (${region})` : ''} - zacznij od kontrolowanego wejścia, nie od pełnej skali.`;
+      decision.why = [
+        `Pytanie dotyczy uruchomienia usługi lokalnej, więc priorytetem jest popyt lokalny, cennik i operacja, a nie klasyczny e-commerce margin model.`,
+        competitorUrls ? 'Konkurencja została uwzględniona jako benchmark usług i poziomów cen.' : 'Brak linków konkurencji obniża pewność i utrudnia precyzyjny cennik startowy.',
+        `Sygnały wejściowe: popyt ${Math.round(resolvedDemand ?? 0)}/100, konkurencja ${Math.round(resolvedCompetition ?? 0)}/100.`,
+      ].slice(0, 3);
+      decision.issues = [
+        hasHardUnitEconomics ? 'Model usługi ma częściowo potwierdzone liczby, ale nadal wymaga walidacji lokalnej i testu ofert.' : 'Nie ma pełnych danych liczbowych do twardej marży, więc wynik musi pozostać ostrożny.',
+        'Szybkie wejście dużym budżetem bez testu pakietów i jakości leadów zwiększa ryzyko przepalenia.',
+        competitionLevel ? 'Konkurencja wygląda mocno, więc oferta musi mieć wyraźny wyróżnik i lepszą prezentację wartości.' : 'Brak wyraźnego benchmarku konkurencji może zaniżyć trafność decyzji.',
+      ].slice(0, 3);
+      decision.improvements = [
+        'Wybierz 1 główną usługę startową i 2 pakiety cenowe (entry + premium), zamiast ruszać od razu szeroko.',
+        'Zrób mały test lokalny (3-7 dni) i mierz: koszt leada, konwersję kontakt->zlecenie, realny czas realizacji.',
+        competitorUrls ? 'Porównaj cennik i zakres konkurencji 1:1, a potem ustaw ofertę z jasnym wyróżnikiem.' : 'Dodaj min. 3 linki lokalnej konkurencji, żeby doprecyzować cennik i pozycjonowanie.',
+      ].slice(0, 3);
+      decision.marketSignals = [
+        region ? `Kontekst lokalny ustawiony na: ${region}.` : 'Brak jednoznacznie ustawionego regionu docelowego.',
+        competitorUrls ? 'Benchmark konkurencji został podpięty do analizy.' : 'Brakuje benchmarku konkurencji w danych wejściowych.',
+        hasEvidence ? 'Analiza opiera się na realnych danych wejściowych i kontekście użytkownika.' : 'To nadal wstępna analiza - dodaj więcej danych lokalnych.',
+      ].slice(0, 3);
+      decision.adStrategy.nextStep = decision.improvements[0];
+      return decision;
+    }
+
+    if (currentLanguage === 'es') {
+      decision.analysisHeadline = `Este es un caso de servicio local${region ? ` (${region})` : ''}: empieza con validación controlada, no con escala total.`;
+      decision.why = [
+        'La pregunta es sobre abrir un servicio local, así que importa más la demanda local, el precio y la operación que un modelo e-commerce rígido.',
+        competitorUrls ? 'La competencia se usó como benchmark de servicios y niveles de precio.' : 'Faltan enlaces de competencia, por eso la confianza es más limitada.',
+        `Señales de entrada: demanda ${Math.round(resolvedDemand ?? 0)}/100, competencia ${Math.round(resolvedCompetition ?? 0)}/100.`,
+      ].slice(0, 3);
+      decision.issues = [
+        hasHardUnitEconomics ? 'Hay datos parciales, pero todavía hace falta validación local antes de escalar.' : 'No hay números completos para una margen dura, por eso la decisión debe seguir conservadora.',
+        'Escalar rápido sin test de paquetes ni calidad del lead eleva el riesgo de quemar presupuesto.',
+        competitionLevel ? 'La competencia parece fuerte, así que la oferta necesita un diferenciador claro.' : 'Sin benchmark sólido de competencia, la precisión baja.',
+      ].slice(0, 3);
+      decision.improvements = [
+        'Elige 1 servicio principal de entrada y 2 paquetes de precio (entry + premium).',
+        'Ejecuta una prueba local pequeña (3-7 días) y mide coste por lead, conversión y tiempo real de servicio.',
+        competitorUrls ? 'Compara precio y alcance de competidores 1:1 y define una propuesta diferenciada.' : 'Añade al menos 3 enlaces de competencia local para afinar precio y posicionamiento.',
+      ].slice(0, 3);
+      decision.marketSignals = [
+        region ? `Contexto local fijado en: ${region}.` : 'No hay región objetivo claramente definida.',
+        competitorUrls ? 'Benchmark de competencia incluido en la lectura.' : 'Falta benchmark de competencia en el input.',
+        hasEvidence ? 'El análisis usa datos reales del usuario.' : 'Todavía es una lectura inicial; añade más datos locales.',
+      ].slice(0, 3);
+      decision.adStrategy.nextStep = decision.improvements[0];
+      return decision;
+    }
+
+    decision.analysisHeadline = `This is a local service-business case${region ? ` (${region})` : ''}: start with controlled validation, not full scale.`;
+    decision.why = [
+      'This question is about launching a local service, so local demand, pricing, and operations matter more than a rigid e-commerce margin template.',
+      competitorUrls ? 'Competitor data was used as a local service and pricing benchmark.' : 'Missing competitor links lowers confidence for precise startup pricing.',
+      `Input signals: demand ${Math.round(resolvedDemand ?? 0)}/100, competition ${Math.round(resolvedCompetition ?? 0)}/100.`,
+    ].slice(0, 3);
+    decision.issues = [
+      hasHardUnitEconomics ? 'Some numbers are available, but local validation is still required before scale.' : 'Hard unit-economics are not fully confirmed, so the decision remains conservative.',
+      'Scaling budget too fast without package testing and lead-quality checks increases burn risk.',
+      competitionLevel ? 'Competition looks strong, so differentiation must be explicit in the first offer screen.' : 'Without a strong competitor benchmark, precision is lower.',
+    ].slice(0, 3);
+    decision.improvements = [
+      'Choose one primary starter lane and define two price packages (entry + premium).',
+      'Run a small local test (3-7 days) and measure lead cost, lead-to-job conversion, and real service time.',
+      competitorUrls ? 'Compare competitor pricing and service scope 1:1, then set a clearer differentiator.' : 'Add at least 3 local competitor URLs to tighten price and positioning logic.',
+    ].slice(0, 3);
+    decision.marketSignals = [
+      region ? `Local context set to: ${region}.` : 'No explicit local region was set.',
+      competitorUrls ? 'Competitor benchmark was included in the analysis.' : 'Competitor benchmark is missing from inputs.',
+      hasEvidence ? 'The analysis uses real user-provided context and evidence.' : 'This is still an early read; add more local evidence.',
+    ].slice(0, 3);
+    decision.adStrategy.nextStep = decision.improvements[0];
+    return decision;
+  }
+
+  if (currentLanguage === 'es') {
+    decision.analysisHeadline =
+      decision.verdict === 'BUY'
+        ? `Hay base para entrar con cuidado en ${itemLabelEs}`
+        : decision.verdict === 'AVOID'
+          ? `Por ahora es mejor frenar el movimiento sobre ${itemLabelEs}`
+          : 'Este caso necesita una prueba pequeña, no una entrada completa';
+    decision.why = [
+      hasHardUnitEconomics ? (margin >= 30 ? `El margen parece saludable (${margin}%), hay espacio para prueba segura.` : `El margen está ajustado (${margin}%), hay que controlar presupuesto y precio.`) : 'No hay margen confirmado todavía porque faltan precio y/o coste completos.',
+      competitorUrls ? 'Hay benchmark de competencia, así que la decisión no depende solo de intuición.' : 'Falta benchmark sólido de competencia, por eso la decisión sigue conservadora.',
+      hasEvidence ? 'La lectura usa evidencia real de entrada (link/archivo/imagen).' : 'Sin link o archivo, la precisión todavía es limitada.',
+    ].slice(0, 3);
+    decision.issues = [
+      competitionLevel ? 'La competencia parece fuerte; sin diferenciación clara será difícil ganar por precio o creatividad.' : 'No aparece una bandera roja crítica, pero la entrada debe ser en pasos pequeños.',
+      margin < 22 || !hasHardUnitEconomics ? 'Con margen débil o no confirmado, escalar rápido puede quemar presupuesto.' : 'El mayor riesgo sigue siendo la calidad del tráfico y el CAC real al inicio.',
+      uploadedFilesCount > 0 && uploadedImagesCount === 0 ? 'Si el archivo no trae datos de mercado completos, la decisión requiere validación adicional.' : 'Sin resultados reales de campaña no conviene escalar de inmediato.',
+    ].slice(0, 3);
+    decision.improvements = [
+      margin < 22 || !hasHardUnitEconomics ? 'Ajusta precio o reduce coste antes de aumentar tráfico.' : 'Lanza una prueba pequeña con 2-3 creatividades y mide CTR, CPC y primeras conversiones.',
+      competitionLevel ? 'Refuerza el diferenciador: bundle, garantía, prueba social, hook más fuerte o nicho más estrecho.' : 'Explica claramente por qué tu oferta gana frente a alternativas desde la primera pantalla.',
+      'No aumentes presupuesto de golpe: valida primero calidad del tráfico, conversión y devoluciones.',
+    ].slice(0, 3);
+    decision.marketSignals = [
+      websiteUrl ? 'El link de oferta fue incluido en la lectura.' : 'No se añadió link de oferta, así que la lectura depende más del texto y números.',
+      competitorUrls ? 'Los datos de competencia mejoran el posicionamiento y la lectura de precio.' : 'Añadir 2-3 links de competencia mejorará la siguiente decisión.',
+      uploadedFilesCount > 0 ? `Se incluyeron ${uploadedFilesCount} archivo(s), por lo que se usó también contexto documental.` : uploadedImagesCount > 0 ? `Se incluyeron ${uploadedImagesCount} imagen(es), por lo que se usaron señales visuales.` : 'Es una lectura rápida sin archivos adicionales; añade más contexto en la siguiente pregunta.',
+    ].slice(0, 3);
+    decision.adStrategy.nextStep = decision.improvements[0];
+    return decision;
+  }
+
+  if (currentLanguage === 'en') {
+    decision.analysisHeadline =
+      decision.verdict === 'BUY'
+        ? `There is enough signal to enter ${itemLabelEn} carefully`
+        : decision.verdict === 'AVOID'
+          ? `For now it is safer to pause around ${itemLabelEn}`
+          : 'This case needs a small controlled test, not a full rollout';
+    decision.why = [
+      hasHardUnitEconomics ? (margin >= 30 ? `Margin looks healthy (${margin}%), so there is room for a safer test.` : `Margin is tight (${margin}%), so budget and pricing need caution.`) : 'Margin is not fully confirmed yet because price and/or cost are incomplete.',
+      competitorUrls ? 'Competitor benchmarks are present, so the decision is not purely intuition-driven.' : 'Competitor benchmark is limited, so the decision remains conservative.',
+      hasEvidence ? 'The analysis uses real evidence (link/file/image), not only a plain description.' : 'Without a link or file, precision is still limited.',
+    ].slice(0, 3);
+    decision.issues = [
+      competitionLevel ? 'Competition pressure looks high, so clear differentiation is required before scaling.' : 'No single critical red flag appears, but entry should still be staged.',
+      margin < 22 || !hasHardUnitEconomics ? 'Weak or unverified margin makes aggressive scaling unsafe.' : 'The main risk remains traffic quality and real CAC after launch.',
+      uploadedFilesCount > 0 && uploadedImagesCount === 0 ? 'If files do not include complete market evidence, the conclusion still needs validation.' : 'Without real campaign outcomes, scaling immediately is still risky.',
+    ].slice(0, 3);
+    decision.improvements = [
+      margin < 22 || !hasHardUnitEconomics ? 'Raise price or reduce landed cost before increasing spend.' : 'Run a small test on 2-3 creatives and track CTR, CPC, and early conversion quality.',
+      competitionLevel ? 'Strengthen your moat: bundle, guarantee, proof, tighter hook, or narrower target segment.' : 'Show clearly why the offer wins against alternatives above the fold.',
+      'Do not increase budget immediately. Validate traffic quality, conversion, and return risk first.',
+    ].slice(0, 3);
+    decision.marketSignals = [
+      websiteUrl ? 'Offer URL was included in the analysis.' : 'No offer URL was provided, so the read relies mostly on text and numbers.',
+      competitorUrls ? 'Competitor input improved price and positioning readout.' : 'Adding 2-3 competitor links will improve the next decision quality.',
+      uploadedFilesCount > 0 ? `${uploadedFilesCount} file(s) were included, so document context was used.` : uploadedImagesCount > 0 ? `${uploadedImagesCount} image(s) were included, so visual signals were used.` : 'This is a quick read without extra files; add more context in the next prompt.',
+    ].slice(0, 3);
+    decision.adStrategy.nextStep = decision.improvements[0];
+    return decision;
+  }
 
   decision.analysisHeadline =
     decision.verdict === 'BUY'
-      ? `Są podstawy, żeby ostrożnie wejść z ${itemLabel}`
+      ? `Są podstawy, żeby ostrożnie wejść z ${itemLabelPl}`
       : decision.verdict === 'AVOID'
-        ? `Na teraz lepiej wstrzymać ruch wokół ${itemLabel}`
+        ? `Na teraz lepiej wstrzymać ruch wokół ${itemLabelPl}`
         : `To wygląda na case do małego testu, a nie pełnego wejścia`;
 
   decision.why = [
-    margin >= 30
-      ? `Marża wygląda sensownie (${margin}%), więc jest przestrzeń na bezpieczny test.`
-      : `Marża jest napięta (${margin}%), więc trzeba uważać z budżetem i ceną.`,
+    hasHardUnitEconomics
+      ? (margin >= 30
+        ? `Marża wygląda sensownie (${margin}%), więc jest przestrzeń na bezpieczny test.`
+        : `Marża jest napięta (${margin}%), więc trzeba uważać z budżetem i ceną.`)
+      : 'Brakuje pełnych danych liczbowych do twardej marży, więc decyzja musi pozostać ostrożna.',
     competitorUrls
       ? 'Masz punkt odniesienia do konkurencji, więc werdykt nie opiera się wyłącznie na przeczuciu.'
       : 'Brakuje twardszego benchmarku konkurencji, więc decyzja pozostaje ostrożna.',
@@ -1199,7 +1565,7 @@ function enhanceDecisionForUi(params: {
   ].slice(0, 3);
 
   decision.improvements = [
-    margin < 22
+    margin < 22 || !hasHardUnitEconomics
       ? 'Podnieś cenę albo zetnij koszt produktu przed większym ruchem.'
       : 'Uruchom mały test na 2–3 kreacjach i mierz CTR, CPC oraz pierwsze zakupy.',
     competitionLevel
@@ -1221,6 +1587,8 @@ function enhanceDecisionForUi(params: {
         ? `Do analizy dołączono ${uploadedImagesCount} obraz(y), więc system bierze pod uwagę również sygnały wizualne.`
         : 'To szybka analiza bez dodatkowych plików, więc warto dorzucić więcej kontekstu przy kolejnym pytaniu.',
   ].slice(0, 3);
+
+  decision.adStrategy.nextStep = decision.improvements[0];
 
   return decision;
 }
@@ -1244,6 +1612,7 @@ function buildFallbackAnalysis(params: {
   currentLanguage: Language;
   displayCurrency: string;
   decision: ReturnType<typeof calculateDecision>;
+  isServiceBusinessCase?: boolean;
 }) {
   const {
     productName,
@@ -1264,6 +1633,7 @@ function buildFallbackAnalysis(params: {
     currentLanguage,
     displayCurrency,
     decision,
+    isServiceBusinessCase,
   } = params;
 
   const directAnswerLead = buildDirectQuestionLead({
@@ -1275,36 +1645,73 @@ function buildFallbackAnalysis(params: {
     price,
     cost,
   });
+  const formatMoneyOrMissing = (value: number, missingLabel: string) => value > 0 ? formatMoney(value, currentLanguage, displayCurrency as any) : missingLabel;
+  const serviceSetup = (decision as any).serviceSetup || null;
+  const productSourcing = (decision as any).productSourcing || null;
 
-  if (currentLanguage === 'pl') {
+  if (currentLanguage === 'pl' && isServiceBusinessCase) {
     return [
-      `Werdykt: ${decision.verdict === 'BUY' ? 'warto wejść ostrożnie' : decision.verdict === 'AVOID' ? 'na teraz lepiej odpuścić' : 'najpierw zrób mały test'}.`,
-      ...(directAnswerLead ? ['', 'Szybka odpowiedź:', `- ${directAnswerLead}`] : []),
+      directAnswerLead ? `Krótka odpowiedź: ${directAnswerLead}` : `Krótka odpowiedź: ${decision.verdict === 'BUY' ? 'wejdź ostrożnie i tylko po małym teście.' : decision.verdict === 'AVOID' ? 'na teraz lepiej odpuścić.' : 'zacznij od małego testu.'}`,
       '',
-      'Powody:',
-      ...decision.why.slice(0, 3).map((item) => `- ${item}`),
+      'Linki:',
+      ...((productSourcing?.recommendedOffers || []).slice(0, 3).map((item: any) => `- ${item.title}: ${item.url}`) || []),
+      ...(websiteUrl ? [`- Główny link: ${websiteUrl}`] : []),
+      ...(!(productSourcing?.recommendedOffers || []).length && !websiteUrl ? ['- Brak potwierdzonych linków z danych wejściowych lub researchu.'] : []),
       '',
-      'Działania:',
-      ...decision.improvements.slice(0, 3).map((item) => `- ${item}`),
+      'Sprzęt:',
+      ...(serviceSetup?.equipment?.length
+        ? serviceSetup.equipment.slice(0, 4).map((item: any) => `- ${item.item}${item.estimatedCost != null ? ` (${formatMoney(item.estimatedCost, currentLanguage, displayCurrency as any)})` : ''} - ${item.purpose}`)
+        : ['- Brak potwierdzonej listy sprzętu. Najpierw zrób mały test popytu.']),
       '',
-      'Szybkie liczby:',
-      `- Cena sprzedaży: ${formatMoney(price, currentLanguage, displayCurrency as any)}`,
-      `- Koszt produktu: ${formatMoney(cost, currentLanguage, displayCurrency as any)}`,
-      `- Budżet testowy: ${formatMoney(adBudget, currentLanguage, displayCurrency as any)}`,
-      `- Marża: ${decision.pricing.marginPercent}%`,
-      `- Popyt: ${demand}/100`,
-      `- Konkurencja: ${competition}/100`,
-      `- Średnia cena konkurencji: ${competitorAvgPrice > 0 ? formatMoney(competitorAvgPrice, currentLanguage, displayCurrency as any) : 'brak danych'}`,
-      `- Obrót rynku: ${marketMonthlyUnits > 0 ? `${marketMonthlyUnits} szt./mies.` : 'brak danych'}`,
-      `- Typ analizy: ${analysisLabel(analysisType, currentLanguage)}`,
-      `- Kanał: ${salesChannel || 'nie podano'}`,
-      `- Rynek: ${targetMarket || 'nie podano'}`,
-      `- Link: ${websiteUrl || 'nie podano'}`,
-      `- Linki konkurencji: ${competitorUrls || 'nie podano'}`,
-      `- Załączone obrazy: ${uploadedImages.length}`,
+      'CAPEX:',
+      ...(serviceSetup?.capexBuckets?.length
+        ? serviceSetup.capexBuckets.slice(0, 3).map((item: any) => `- ${item.label}: ${item.low != null ? formatMoney(item.low, currentLanguage, displayCurrency as any) : 'n/d'} - ${item.high != null ? formatMoney(item.high, currentLanguage, displayCurrency as any) : 'n/d'} | ${item.note}`)
+        : [`- Start ostrożny: ${formatMoneyOrMissing(cost, 'brak potwierdzonych danych kosztowych')}`]),
+      '',
+      'Pakiety:',
+      ...(serviceSetup?.pricePackages?.length
+        ? serviceSetup.pricePackages.slice(0, 3).map((item: any) => `- ${item.name}: ${item.priceFrom != null ? formatMoney(item.priceFrom, currentLanguage, displayCurrency as any) : 'n/d'} - ${item.priceTo != null ? formatMoney(item.priceTo, currentLanguage, displayCurrency as any) : 'n/d'} | ${item.note}`)
+        : ['- Najpierw przygotuj 1 mały pakiet testowy i 1 pakiet premium dopiero po walidacji popytu.']),
+      '',
+      'Kroki:',
+      ...(serviceSetup?.starterSteps?.length
+        ? serviceSetup.starterSteps.slice(0, 3).map((item: string) => `- ${item}`)
+        : decision.improvements.slice(0, 3).map((item) => `- ${item}`)),
+      '',
+      'Ryzyka:',
+      ...decision.issues.slice(0, 2).map((item) => `- ${item}`),
+      ...((serviceSetup?.riskNotes || []).slice(0, 2).map((item: string) => `- ${item}`)),
+      ...(!(decision.issues.length || serviceSetup?.riskNotes?.length) ? ['- Brak wystarczających danych potwierdzających cenę, koszt lub popyt.'] : []),
       '',
       'Notatka źródłowa:',
       content || 'Brak dodatkowego opisu.',
+    ].join('\n');
+  }
+
+  if (currentLanguage === 'pl') {
+    return [
+      directAnswerLead
+        ? `Krótka odpowiedź: ${directAnswerLead}`
+        : `Krótka odpowiedź: ${decision.verdict === 'BUY' ? 'możesz wejść ostrożnie po małym teście.' : decision.verdict === 'AVOID' ? 'na teraz lepiej odpuścić i doprecyzować dane.' : 'zacznij od krótkiego testu i walidacji.'}`,
+      '',
+      'Dlaczego:',
+      ...decision.why.slice(0, 3).map((item) => `- ${item}`),
+      '',
+      'Ryzyka:',
+      ...decision.issues.slice(0, 3).map((item) => `- ${item}`),
+      '',
+      'Kolejne kroki:',
+      ...decision.improvements.slice(0, 3).map((item) => `- ${item}`),
+      '',
+      'Dane wejściowe:',
+      `- Cena: ${price > 0 ? formatMoney(price, currentLanguage, displayCurrency as any) : 'brak'}`,
+      `- Koszt: ${cost > 0 ? formatMoney(cost, currentLanguage, displayCurrency as any) : 'brak'}`,
+      `- Konkurencja: ${competition}/100`,
+      `- Popyt: ${demand}/100`,
+      `- Rynek docelowy: ${targetMarket || 'brak'}`,
+      ...(websiteUrl ? [`- Link oferty: ${websiteUrl}`] : []),
+      ...(competitorUrls ? [`- Linki konkurencji: ${competitorUrls}`] : []),
+      ...(productSourcing?.recommendedOffers?.length ? [...productSourcing.recommendedOffers.slice(0, 3).map((item: any) => `- Link referencyjny: ${item.url}`)] : []),
     ].join('\n');
   }
 
@@ -1335,6 +1742,12 @@ function buildFallbackAnalysis(params: {
     `- Average competitor sell price: ${competitorAvgPrice > 0 ? formatMoney(competitorAvgPrice, currentLanguage, displayCurrency as any) : 'Not provided'}`,
     `- Estimated market turnover volume: ${marketMonthlyUnits > 0 ? `${marketMonthlyUnits} units / month` : 'Not provided'}`,
     `- Uploaded images: ${uploadedImages.length}`,
+    ...((productSourcing?.recommendedOffers || []).length
+      ? ['', 'Offer shortlist:', ...(productSourcing.recommendedOffers || []).slice(0, 3).map((item: any) => `- ${item.title}: ${item.url}${item.price != null ? ` (${item.price} ${item.currency})` : ''}`)]
+      : []),
+    ...(serviceSetup
+      ? ['', `Recommended service lane: ${serviceSetup.primaryLane}`, ...(serviceSetup.starterSteps || []).slice(0, 3).map((item: string) => `- ${item}`)]
+      : []),
     '',
     'Top risks:',
     ...decision.issues.map((item) => `- ${item}`),
@@ -1345,6 +1758,50 @@ function buildFallbackAnalysis(params: {
     'Source notes:',
     content || 'No text provided.',
   ].join('\n');
+}
+
+function ensureFixedResponseSections(params: {
+  currentLanguage: Language;
+  text: string;
+  fallbackText: string;
+  isServiceBusinessCase?: boolean;
+}) {
+  if (params.currentLanguage !== 'pl') return params.text || params.fallbackText;
+
+  if (!params.isServiceBusinessCase) {
+    const normalized = (params.text || '').trim();
+    if (!normalized) return params.fallbackText;
+
+    const hasActionsHeader = /(^|\n)(Kolejne kroki:|Działania:|\*\*Działania:\*\*|\*\*Kolejne kroki:\*\*)/i.test(normalized);
+    const actionsSectionInFallback = (() => {
+      const match = params.fallbackText.match(/(?:Kolejne kroki:|Działania:)[\s\S]*$/i);
+      return match?.[0]?.trim() || '';
+    })();
+
+    if (!hasActionsHeader) {
+      return [normalized, actionsSectionInFallback].filter(Boolean).join('\n\n');
+    }
+
+    const hasActionBulletsAfterHeader = /(?:Kolejne kroki:|Działania:|\*\*Działania:\*\*|\*\*Kolejne kroki:\*\*)(?:\s*\n)+(?:[-•*]|\d+\.)/i.test(normalized);
+    if (!hasActionBulletsAfterHeader && actionsSectionInFallback) {
+      return `${normalized}\n\n${actionsSectionInFallback}`;
+    }
+
+    return normalized;
+  }
+
+  const requiredHeaders = ['Linki:', 'Sprzęt:', 'CAPEX:', 'Pakiety:', 'Kroki:', 'Ryzyka:'];
+  const normalized = (params.text || '').trim();
+  if (requiredHeaders.every((header) => normalized.includes(header))) {
+    return normalized;
+  }
+
+  const lead = normalized
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .find((line) => line && !requiredHeaders.some((header) => line.startsWith(header.replace(':', ''))));
+
+  return [lead ? `Krótka odpowiedź: ${lead.replace(/^[-*]\s*/, '')}` : '', params.fallbackText].filter(Boolean).join('\n\n');
 }
 type SmartIntent =
   | 'validate_product'
@@ -1440,6 +1897,7 @@ function buildDynamicSystemPrompt(params: {
   intent: SmartIntent;
   fileType: SmartFileType;
   currentLanguage: Language;
+  isServiceBusinessCase?: boolean;
 }) {
   const languageRule =
     params.currentLanguage === 'pl'
@@ -1498,9 +1956,12 @@ OUTPUT RULES:
 - If the user is only asking what is visible in an image, screenshot, UI, or PDF page, describe the content clearly first and do NOT force a business verdict, pricing note, or market note
 - For screenshots, dashboards, admin panels, or configuration screens: explain what is visible, what it is used for, and what looks strong or weak
 - If the user asks how many units to buy, what price to list, or whether demand exists, answer those points explicitly instead of giving a generic summary
+- If the user asks about opening a local business in a specific city/country, answer viability directly for that location with a concrete starter plan
+- If the user is researching a local service business, answer with the recommended service lane, starter equipment stack, startup-cost buckets, pricing-pack logic, and what to test first in that region
 - If hard cost or market data is missing, recommend a conservative first batch and say which numbers still need confirmation before scaling
 - Then add "Reasons" with 3 concrete bullets when that structure fits the question
 - Then add "Actions" with 3 concrete next steps focused on what to change, add, remove, or test next
+- If concrete links are available from the user input or live/public research, include the most relevant ones explicitly and say what each URL is useful for
 - Add pricing or market notes only when they are truly relevant to the user request
 - Keep every money estimate consistent with the selected display currency and country context
 - Mention uploaded files/images explicitly when relevant
@@ -1509,7 +1970,10 @@ OUTPUT RULES:
 - Never recommend aggressive scaling without a controlled test
 - If burn risk is high, be conservative
 - If confidence is low, lean TEST rather than BUY
+- Never ignore provided competition inputs; if competition value/links exist, explicitly reference them in the reasoning
 - Do not invent a new selling price, margin, or market number unless it is supported by provided data
+- Never invent marketplace or product URLs; only return links that were provided by the user or found in live/public research signals
+${params.isServiceBusinessCase ? '- This request is about a local service business. Do not force retail-unit economics, product margin language, or fake 0-value metrics. Treat competitor links as service benchmarks and answer the equipment / startup-cost / direction question directly.' : ''}
 
 ${languageRule}
 `.trim();
@@ -1652,9 +2116,10 @@ ${extractedText || (currentLanguage === 'pl'
     const structuredFacts = extractStructuredFacts(content);
     const responseStyle = chooseResponseStyle(`${productName}|${resolvedWebsiteUrlInput}|${content.slice(0, 120)}`);
     const analysisMode = detectAnalysisMode({ analysisType, websiteUrl: resolvedWebsiteUrlInput, productName, content, uploadedFiles });
+    const isServiceBusinessCase = isServiceBusinessPrompt([productName, rawContent, salesChannel, resolvedTargetMarket, resolvedCompetitorUrlsInput].filter(Boolean).join(' '));
     const intent = detectIntent([productName, content].filter(Boolean).join(' '));
     const fileType = detectFileType({ websiteUrl: resolvedWebsiteUrlInput, content, uploadedImages, uploadedFiles });
-    const dynamicSystemPrompt = buildDynamicSystemPrompt({ intent, fileType, currentLanguage });
+    const dynamicSystemPrompt = buildDynamicSystemPrompt({ intent, fileType, currentLanguage, isServiceBusinessCase });
     const analysisTokenCost = estimateAnalysisTokenCost({
       contentLength: content.length,
       uploadedImageCount: uploadedImages.length,
@@ -1666,9 +2131,10 @@ ${extractedText || (currentLanguage === 'pl'
       return NextResponse.json({ error: 'Add text, files, or images before running an analysis.' }, { status: 400 });
     }
 
-    const [profile, automationSettings, recentEventsResult, dailyEventsResult, referralSettings] = await Promise.all([
+    const [profile, automationSettings, integrationSettings, recentEventsResult, dailyEventsResult, referralSettings] = await Promise.all([
       ensureAnalysisProfile({ id: user.id, email: user.email || null }),
       getAutomationSettings(),
+      getIntegrationSettings(),
       supabaseAdmin.from('security_events').select('id, created_at').eq('user_id', user.id).eq('event_type', 'analysis_request').gte('created_at', new Date(Date.now() - 10 * 60 * 1000).toISOString()),
       supabaseAdmin.from('security_events').select('id').eq('user_id', user.id).eq('event_type', 'analysis_request').gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()),
       getReferralSettings(),
@@ -1694,10 +2160,15 @@ ${extractedText || (currentLanguage === 'pl'
     }
 
     if (analysisMode === 'visual_analysis') {
-      const decision = {
+      const decision = localizeSpecialModeDecisionNarrative({
+        decision: {
         ...buildVisualAnalysisDecision({ content, currentLanguage, productName }),
         usagePricing: { tokensCharged: analysisTokenCost, billingUnit: 'AI tokens' },
-      };
+        },
+        currentLanguage,
+        mode: 'visual_analysis',
+        displayCurrency,
+      });
       const visualUserPrompt = [
         `User question: ${rawContent || productName || (currentLanguage === 'pl' ? 'Opisz, co widać na obrazie.' : 'Describe what is visible in the image.')}`,
         uploadedFiles.length ? `Attached files: ${uploadedFiles.map((file) => file.name).join(', ')}` : '',
@@ -1755,10 +2226,15 @@ ${extractedText || (currentLanguage === 'pl'
     }
 
     if (analysisMode === 'cost_optimization') {
-      const decision = {
+      const decision = localizeSpecialModeDecisionNarrative({
+        decision: {
         ...buildCostOptimizationDecision({ content, displayCurrency, currentLanguage, productName }),
         usagePricing: { tokensCharged: analysisTokenCost, billingUnit: 'AI tokens' },
-      };
+        },
+        currentLanguage,
+        mode: 'cost_optimization',
+        displayCurrency,
+      });
       const resultText = buildCostOptimizationText(decision, displayCurrency);
       await persistAnalysisAndConsumeTokens({
         supabase,
@@ -1792,10 +2268,15 @@ ${extractedText || (currentLanguage === 'pl'
     }
 
     if (analysisMode === 'document_analysis') {
-      const decision = {
+      const decision = localizeSpecialModeDecisionNarrative({
+        decision: {
         ...buildDocumentAnalysisDecision({ content, displayCurrency, currentLanguage, productName }),
         usagePricing: { tokensCharged: analysisTokenCost, billingUnit: 'AI tokens' },
-      };
+        },
+        currentLanguage,
+        mode: 'document_analysis',
+        displayCurrency,
+      });
       const documentUserPrompt = [
         `User question: ${rawContent || productName || (currentLanguage === 'pl' ? 'Wyjaśnij, co zawiera dokument.' : 'Explain what the document contains.')}`,
         uploadedFiles.length ? `Attached files: ${uploadedFiles.map((file) => file.name).join(', ')}` : '',
@@ -1850,6 +2331,25 @@ ${extractedText || (currentLanguage === 'pl'
       selectedCountry,
       includeRentalResearch: wantsRentalModel,
     });
+    const enabledIntegrationLanes = listEnabledIntegrationLanes(integrationSettings);
+    const productSourcing = await buildProductSourcingLayer({
+      productName: productName || rawContent || resolvedWebsiteUrlInput || 'Market sourcing',
+      marketData,
+      displayCurrency,
+      enabledIntegrationLanes,
+      country: selectedCountry || resolvedTargetMarket,
+      currentLanguage,
+    });
+    const serviceSetup = isServiceBusinessCase
+      ? buildServiceSetupLayer({
+          content: [productName, rawContent, salesChannel, resolvedTargetMarket].filter(Boolean).join(' '),
+          competitorUrls: resolvedCompetitorUrlsInput,
+          marketData,
+          displayCurrency,
+          selectedCountry: selectedCountry || resolvedTargetMarket,
+          currentLanguage,
+        })
+      : null;
     const trackedUrls = Array.from(new Set([resolvedWebsiteUrlInput, ...extractUrlsFromText(resolvedCompetitorUrlsInput)].filter(Boolean)));
     const previousMarketSnapshots = trackedUrls.length ? await getRecentMarketWatchSnapshots(user.id, trackedUrls) : [];
     const marketWatchReport = buildMarketWatchReport({ marketData, previousSnapshots: previousMarketSnapshots, language: currentLanguage });
@@ -1936,11 +2436,29 @@ ${extractedText || (currentLanguage === 'pl'
       low: safeDecision.market.estimatedMonthlyTurnoverRange.low != null ? convertCurrency(safeDecision.market.estimatedMonthlyTurnoverRange.low, 'USD', displayCurrency) : null,
       high: safeDecision.market.estimatedMonthlyTurnoverRange.high != null ? convertCurrency(safeDecision.market.estimatedMonthlyTurnoverRange.high, 'USD', displayCurrency) : null,
     };
+    if (isServiceBusinessCase) {
+      applyServiceBusinessOverlay({
+        decision: safeDecision,
+        currentLanguage,
+        competitorUrls: resolvedCompetitorUrlsInput,
+        selectedCountry: selectedCountry || resolvedTargetMarket,
+        hasConfirmedPrice: resolvedManualPriceInput > 0 || resolvedCompetitorAvgPriceUsd > 0,
+        hasConfirmedCost: cost > 0,
+      });
+    }
+    safeDecision.productSourcing = productSourcing;
+    safeDecision.serviceSetup = serviceSetup;
+    safeDecision.connectorBlueprint = {
+      status: 'blueprint_ready',
+      docPath: 'docs/analysis/marketplace-connectors-architecture.md',
+    };
     safeDecision.usagePricing = { tokensCharged: analysisTokenCost, billingUnit: 'AI tokens' };
     safeDecision.marketWatch = marketWatchReport;
     safeDecision.marketSignals = Array.from(new Set([
       ...(safeDecision.marketSignals || []),
       ...marketData.sourceNotes,
+      ...marketData.resaleResearchUrls.map((url) => `Research link: ${url}`),
+      ...marketData.rentalResearchUrls.map((url) => `Service research link: ${url}`),
       ...marketData.connectorSignals.map((item) => item.note),
       ...(trackedUrls.length ? [`Market watch: ${marketWatchReport.headline}`, ...marketWatchReport.alerts, ...marketWatchReport.opportunities] : []),
       `Display currency synchronized to ${displayCurrency}${selectedCountry ? ` for ${selectedCountry}` : ''}.`,
@@ -1953,6 +2471,9 @@ ${extractedText || (currentLanguage === 'pl'
       ...(!competitionWasProvided && marketData.competitionScore != null ? [`Competition score was derived from live public market evidence: ${marketData.competitionScore}/100.`] : []),
       ...(cost <= 0 && inferredFinancials.inferredCost > 0 ? [`Product cost was inferred from the user message: ${inferredFinancials.inferredCost} ${inputCurrency}.`] : []),
       ...(price <= 0 && resolvedManualPriceInput > 0 ? [`Sell price was inferred from the user message: ${resolvedManualPriceInput} ${inputCurrency}.`] : []),
+      ...(enabledIntegrationLanes.length ? [`Enabled marketplace lanes in admin: ${enabledIntegrationLanes.join(', ')}.`] : []),
+      ...(productSourcing.recommendedOffers.length ? [`Product sourcing shortlist contains ${productSourcing.recommendedOffers.length} concrete offer link(s).`] : []),
+      ...(serviceSetup ? [`Service setup lane selected: ${serviceSetup.primaryLane}.`] : []),
       resolvedManualPriceInput > 0 || competitorAvgPrice > 0 || resolvedManualCostInput > 0 || supplierLandedCostUsd > 0 ? `Manual financial inputs were normalized from ${inputCurrency} to USD for scoring.` : 'No manual financial currency normalization was needed.',
     ])).slice(0, 12);
 
@@ -1965,7 +2486,30 @@ ${extractedText || (currentLanguage === 'pl'
       uploadedFilesCount: uploadedFiles.length,
       uploadedImagesCount: uploadedImages.length,
       intent,
+      isServiceBusinessCase,
+      selectedCountry,
+      targetMarket: resolvedTargetMarket,
+      resolvedDemand,
+      resolvedCompetition,
     });
+
+    const responseContractLines = isServiceBusinessCase
+      ? [
+          currentLanguage === 'pl' ? 'Co zwrócić:' : 'What to return:',
+          currentLanguage === 'pl' ? '- Zacznij od jednego zdania: „Krótka odpowiedź: ...”.' : '- Start with one sentence: "Short answer: ...".',
+          currentLanguage === 'pl' ? '- Potem sekcje: Linki, Sprzęt, CAPEX, Pakiety, Kroki, Ryzyka.' : '- Then sections: Links, Equipment, CAPEX, Packages, Steps, Risks.',
+          currentLanguage === 'pl' ? '- W Linkach podawaj wyłącznie potwierdzone URL-e (bez wymyślania).' : '- In Links, include only verified URLs (never invent links).',
+          currentLanguage === 'pl' ? '- W Kroki podaj 2-4 praktyczne działania, zaczynając od małego testu.' : '- In Steps, provide 2-4 practical actions, starting from a small test.',
+          currentLanguage === 'pl' ? '- Jeśli brakuje danych do marży, napisz to wprost zamiast podawać 0% jako pewnik.' : '- If margin data is missing, state it explicitly instead of presenting 0% as confirmed.',
+        ]
+      : [
+          currentLanguage === 'pl' ? 'Co zwrócić:' : 'What to return:',
+          currentLanguage === 'pl' ? '- Odpowiedz najpierw wprost na pytanie użytkownika (1-2 zdania).' : '- First answer the user question directly (1-2 sentences).',
+          currentLanguage === 'pl' ? '- Następnie sekcje: Dlaczego, Ryzyka, Kolejne kroki.' : '- Then sections: Why, Risks, Next steps.',
+          currentLanguage === 'pl' ? '- Jeśli user podał miasto/kraj, uwzględnij kontekst lokalny w decyzji.' : '- If city/country was provided, include local context in the decision.',
+          currentLanguage === 'pl' ? '- Jeśli brakuje ceny lub kosztu, nie podawaj sztywnej marży jako pewnej.' : '- If price or cost is missing, do not present a fixed margin as certain.',
+          currentLanguage === 'pl' ? '- Gdy podano konkurencję lub linki konkurencji, odnieś się do nich jawnie.' : '- When competitor input/links are provided, reference them explicitly.',
+        ];
 
     const userPrompt = [
       `Product: ${resolvedProductName}`,
@@ -1996,22 +2540,33 @@ ${extractedText || (currentLanguage === 'pl'
       `Suggested test price: ${safeDecision.pricing.suggestedTestPrice ?? 'n/a'}`,
       `Recommended plan trigger: ${safeDecision.monetization.recommendedPlan}`,
       `Response style: ${responseStyle}`,
+      isServiceBusinessCase ? 'Service-business case: yes. The user wants equipment, startup-cost logic, local viability, competitor pricing, and which service lane to choose first.' : 'Service-business case: no.',
+      enabledIntegrationLanes.length ? `Enabled integration lanes in admin: ${enabledIntegrationLanes.join(', ')}.` : 'No marketplace integration lanes are enabled in admin settings.',
       supplierContextNote,
       '',
       ...(structuredFacts.length ? ['Structured facts from uploaded files/text:', ...structuredFacts.map((item) => `- ${item}`), ''] : []),
+      productSourcing.recommendedOffers.length ? 'Product sourcing shortlist:' : '',
+      ...productSourcing.recommendedOffers.map((offer) => `- ${offer.title} | ${offer.url} | ${offer.price != null ? `${offer.price} ${offer.currency}` : 'price n/a'} | risk: ${offer.risk} | why: ${offer.whyItFits}`),
+      ...(productSourcing.notes.length ? ['', 'Product sourcing notes:', ...productSourcing.notes.map((item) => `- ${item}`)] : []),
+      ...(serviceSetup ? [
+        '',
+        'Service setup plan:',
+        `- Primary lane: ${serviceSetup.primaryLane}`,
+        ...(serviceSetup.secondaryLane ? [`- Secondary lane: ${serviceSetup.secondaryLane}`] : []),
+        `- Lane reason: ${serviceSetup.laneReason}`,
+        ...serviceSetup.equipment.map((item) => `- Equipment: ${item.item} | ${item.purpose} | ${item.priority} | ${item.estimatedCost != null ? `${item.estimatedCost} ${displayCurrency}` : 'cost n/a'}`),
+        ...serviceSetup.capexBuckets.map((item) => `- CAPEX bucket: ${item.label} | ${item.low != null ? `${item.low}` : 'n/a'}-${item.high != null ? `${item.high}` : 'n/a'} ${displayCurrency} | ${item.note}`),
+        ...serviceSetup.pricePackages.map((item) => `- Package: ${item.name} | ${item.target} | ${item.priceFrom != null ? `${item.priceFrom}` : 'n/a'}-${item.priceTo != null ? `${item.priceTo}` : 'n/a'} ${displayCurrency} | ${item.note}`),
+        ...serviceSetup.starterSteps.map((item) => `- Starter step: ${item}`),
+        ...serviceSetup.riskNotes.map((item) => `- Service risk: ${item}`),
+      ] : []),
       'Decision factors:',
       ...safeDecision.factors.map((factor: any) => `- ${factor.label}: ${factor.score}/100 (weight ${factor.weight}%) -> ${factor.explanation}`),
       '',
       'Rollout plan:',
       ...safeDecision.rolloutPlan.map((step: string) => `- ${step}`),
       '',
-      currentLanguage === 'pl' ? 'Co zwrócić:' : 'What to return:',
-      currentLanguage === 'pl' ? '- Najpierw odpowiedz wprost na dokładne pytanie użytkownika.' : '- Start by answering the exact user question directly.',
-      currentLanguage === 'pl' ? '- Potem dodaj sekcję „Powody” z 3 konkretnymi punktami opartymi na danych.' : '- Then add a block called Reasons with 3 specific bullet points based on the evidence.',
-      currentLanguage === 'pl' ? '- Następnie dodaj sekcję „Działania” z 3 praktycznymi krokami.' : '- Then add a block called Actions with 3 concrete next steps.',
-      currentLanguage === 'pl' ? '- Jeśli to ma sens, dodaj krótką uwagę o cenie i krótką uwagę rynkową.' : '- Add one short pricing note and one short market note if relevant.',
-      currentLanguage === 'pl' ? '- Wspomnij o plikach, fakturze lub obrazie, jeśli zostały użyte w analizie.' : '- Mention uploaded files, invoice data, or images explicitly when relevant.',
-      currentLanguage === 'pl' ? '- Unikaj generycznego tonu AI i trzymaj całość poniżej 170 słów.' : '- Avoid generic AI filler and keep the whole answer under 170 words.',
+      ...responseContractLines,
       '',
       'CRITICAL:',
       `- Reply only in ${languageName(currentLanguage)}.`,
@@ -2019,6 +2574,10 @@ ${extractedText || (currentLanguage === 'pl'
       `- Use only ${displayCurrency} for every amount and currency symbol.`,
       marketData.sourceNotes.length ? `Public market signals:
 ${marketData.sourceNotes.map((item) => `- ${item}`).join('\n')}` : 'No public market signals were extracted from the URLs.',
+      marketData.resaleResearchUrls.length ? `Public resale research links:
+    ${marketData.resaleResearchUrls.map((item) => `- ${item}`).join('\n')}` : 'No public resale research links were extracted.',
+      marketData.rentalResearchUrls.length ? `Public rental/service research links:
+    ${marketData.rentalResearchUrls.map((item) => `- ${item}`).join('\n')}` : 'No public rental/service research links were extracted.',
       marketData.connectorSignals.length ? `Connector signals:
 ${marketData.connectorSignals.map((item) => `- ${item.provider}: ${item.note}`).join('\n')}` : 'No connector signals available.',
       '',
@@ -2085,6 +2644,7 @@ ${marketData.connectorSignals.map((item) => `- ${item.provider}: ${item.note}`).
         currentLanguage,
         displayCurrency,
         decision: safeDecision,
+        isServiceBusinessCase,
       });
     }
 
@@ -2109,8 +2669,36 @@ ${marketData.connectorSignals.map((item) => `- ${item.provider}: ${item.note}`).
         currentLanguage,
         displayCurrency,
         decision: safeDecision,
+        isServiceBusinessCase,
       });
     }
+
+    resultText = ensureFixedResponseSections({
+      currentLanguage,
+      text: resultText,
+      isServiceBusinessCase,
+      fallbackText: buildFallbackAnalysis({
+        productName: resolvedProductName,
+        analysisType,
+        price: convertCurrency(resolvedPriceUsd, 'USD', displayCurrency),
+        cost: convertCurrency(resolvedCostUsd, 'USD', displayCurrency),
+        demand,
+        competition,
+        adBudget: convertCurrency(manualAdBudgetUsd, 'USD', displayCurrency),
+        targetMarket: resolvedTargetMarket,
+        salesChannel,
+        websiteUrl: resolvedWebsiteUrlInput,
+        competitorUrls: resolvedCompetitorUrlsInput,
+        competitorAvgPrice: resolvedCompetitorAvgPriceUsd > 0 ? convertCurrency(resolvedCompetitorAvgPriceUsd, 'USD', displayCurrency) : 0,
+        marketMonthlyUnits: resolvedMarketMonthlyUnits,
+        content,
+        uploadedImages,
+        currentLanguage,
+        displayCurrency,
+        decision: safeDecision,
+        isServiceBusinessCase,
+      }),
+    });
 
     const persistedInput = [
       userPrompt,
@@ -2196,11 +2784,16 @@ ${marketData.connectorSignals.map((item) => `- ${item.provider}: ${item.note}`).
       decision: safeDecision,
       resultText,
       usedFallback,
+      productSourcing,
+      serviceSetup,
+      connectorBlueprint: safeDecision.connectorBlueprint,
       marketData: {
         ownPriceDetected: marketData.product?.priceUsd != null ? convertCurrency(marketData.product.priceUsd, 'USD', displayCurrency) : null,
         competitorAvgPriceDetected: marketData.competitorAvgPriceUsd != null ? convertCurrency(marketData.competitorAvgPriceUsd, 'USD', displayCurrency) : null,
         marketUnitsDetected: marketData.marketMonthlyUnitsEstimate ?? null,
         sourceNotes: [...marketData.sourceNotes, ...marketData.connectorSignals.map((item) => item.note)],
+        resaleResearchUrls: marketData.resaleResearchUrls,
+        rentalResearchUrls: marketData.rentalResearchUrls,
       },
       marketWatch: marketWatchReport,
       revenueMode: premiumGateHit ? 'premium_gate' : safeDecision.monetization.paywallMode,

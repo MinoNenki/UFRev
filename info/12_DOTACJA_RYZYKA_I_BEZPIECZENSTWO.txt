@@ -1,0 +1,31 @@
+DOTACJA - RYZYKA I BEZPIECZENSTWO
+
+1. Ryzyka projektowe
+- ryzyko przeciazenia funkcjami bez priorytetyzacji,
+- ryzyko wolnego wdrazania integracji,
+- ryzyko rozjechania kosztu i przychodu przy szybkim wzroscie,
+- ryzyko operacyjne przy skalowaniu bez guardrail.
+
+2. Jak projekt ogranicza ryzyka
+- podejscie etapowe do wdrozen,
+- anti-loss i progi bezpieczenstwa,
+- limity i kill switch w automatyzacjach,
+- kontrola dostepu przez role i plan access,
+- monitoring metryk i alerty.
+
+3. Warstwa security (obecna)
+- rozdzielone sekrety dla krytycznych use-case,
+- rotacja kluczy (current/previous + kid),
+- podpisywane linki i ochrona endpointow,
+- walidacje konfiguracji i ostrzezenia setupu,
+- bezpieczne praktyki pracy z env.
+
+4. Dzialania ciagle
+- regularna rotacja kluczy i sekretow,
+- przeglad logow bezpieczenstwa,
+- testy regresji po zmianach,
+- kontrola zmian konfiguracji produkcyjnej.
+
+5. Wniosek
+Projekt ma wdrozona praktyczna warstwe ochronna i mechanizmy antyryzykowne,
+co zwieksza gotowosc do stabilnego i bezpiecznego rozwoju.

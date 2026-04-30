@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import type { Language } from '@/lib/i18n';
 import GoogleAdSenseSlot from '@/components/ads/GoogleAdSenseSlot';
 
@@ -25,7 +25,31 @@ export default function RewardAdsPanel({ currentLanguage, initialCredits, watche
   const [hasDisplayAds, setHasDisplayAds] = useState(false);
   const [displayInventory, setDisplayInventory] = useState<AdInventory | null>(null);
   const [checkingAds, setCheckingAds] = useState(true);
+  const [highlighted, setHighlighted] = useState(false);
+  const watchButtonRef = useRef<HTMLButtonElement | null>(null);
   const rewardClaimsReady = Boolean(rewardToken);
+
+  useEffect(() => {
+    function syncHashHighlight() {
+      if (typeof window === 'undefined') return;
+      const active = window.location.hash === '#reward-ads-panel';
+      setHighlighted(active);
+      if (active) {
+        window.setTimeout(() => {
+          if (watchButtonRef.current && !watchButtonRef.current.disabled) {
+            watchButtonRef.current.focus({ preventScroll: true });
+          }
+        }, 220);
+        window.setTimeout(() => setHighlighted(false), 2200);
+      }
+    }
+
+    syncHashHighlight();
+    window.addEventListener('hashchange', syncHashHighlight);
+    return () => window.removeEventListener('hashchange', syncHashHighlight);
+  }, []);
+
+  const rootClassName = `relative scroll-mt-24 overflow-hidden premium-panel p-8 transition duration-500 ${highlighted ? 'reward-panel-highlight ring-2 ring-cyan-300/40 shadow-[0_0_0_1px_rgba(34,211,238,0.18),0_0_48px_rgba(34,211,238,0.16)]' : ''}`;
 
   useEffect(() => {
     async function checkAdProviders() {
@@ -92,7 +116,7 @@ export default function RewardAdsPanel({ currentLanguage, initialCredits, watche
 
   if (checkingAds) {
     return (
-      <div className="relative overflow-hidden premium-panel p-8">
+      <div id="reward-ads-panel" className={rootClassName}>
         <div className="mb-3 inline-flex rounded-full border border-amber-300/30 bg-amber-300/10 px-4 py-2 text-sm font-medium text-amber-200">
           {tt(currentLanguage, { en: 'Reward ads', pl: 'Reklamy nagradzane', de: 'Belohnte Anzeigen', es: 'Anuncios con recompensa', pt: 'Anúncios recompensados', ja: '報酬広告', zh: '奖励广告', id: 'Iklan berhadiah', ru: 'Рекламные награды' })}
         </div>
@@ -105,7 +129,7 @@ export default function RewardAdsPanel({ currentLanguage, initialCredits, watche
 
   if (!hasRewardAds) {
     return (
-      <div className="relative overflow-hidden premium-panel p-8">
+      <div id="reward-ads-panel" className={rootClassName}>
         <div className="mb-3 inline-flex rounded-full border border-slate-400/30 bg-slate-400/10 px-4 py-2 text-sm font-medium text-slate-300">
           {tt(currentLanguage, { en: 'Reward ads', pl: 'Reklamy nagradzane', de: 'Belohnte Anzeigen', es: 'Anuncios con recompensa', pt: 'Anúncios recompensados', ja: '報酬広告', zh: '奖励广告', id: 'Iklan berhadiah', ru: 'Рекламные награды' })}
         </div>
@@ -130,7 +154,7 @@ export default function RewardAdsPanel({ currentLanguage, initialCredits, watche
   }
 
   return (
-    <div className="relative overflow-hidden premium-panel p-8">
+    <div id="reward-ads-panel" className={rootClassName}>
       <div className="mb-3 inline-flex rounded-full border border-amber-300/30 bg-amber-300/10 px-4 py-2 text-sm font-medium text-amber-200">
         {tt(currentLanguage, { en: 'Reward ads', pl: 'Reklamy nagradzane', de: 'Belohnte Anzeigen', es: 'Anuncios con recompensa', pt: 'Anúncios recompensados', ja: '報酬広告', zh: '奖励广告', id: 'Iklan berhadiah', ru: 'Рекламные награды' })}
       </div>
@@ -146,7 +170,7 @@ export default function RewardAdsPanel({ currentLanguage, initialCredits, watche
         <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-4"><div className="text-xs uppercase tracking-[0.2em] text-slate-400">{tt(currentLanguage, { en: 'Current AI tokens', pl: 'Aktualne tokeny AI', de: 'Aktuelle AI-Tokens', es: 'Tokens AI actuales', pt: 'Tokens AI atuais', ja: '現在の AI トークン', zh: '当前 AI 代币', id: 'Token AI saat ini', ru: 'Текущие AI токены' })}</div><div className="mt-2 text-2xl font-bold text-white">{credits}</div></div>
         <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-4"><div className="text-xs uppercase tracking-[0.2em] text-slate-400">{tt(currentLanguage, { en: 'Reward', pl: 'Nagroda', de: 'Belohnung', es: 'Recompensa', pt: 'Recompensa', ja: '報酬', zh: '奖励', id: 'Hadiah', ru: 'Награда' })}</div><div className="mt-2 text-2xl font-bold text-white">+{rewardCredits}</div></div>
       </div>
-      <button onClick={handleWatch} disabled={loading || watched >= dailyLimit || !rewardClaimsReady} className="mt-6 rounded-2xl bg-amber-300 px-6 py-4 font-semibold text-slate-950 disabled:opacity-60">
+      <button ref={watchButtonRef} onClick={handleWatch} disabled={loading || watched >= dailyLimit || !rewardClaimsReady} className="mt-6 rounded-2xl bg-amber-300 px-6 py-4 font-semibold text-slate-950 transition focus:outline-none focus:ring-2 focus:ring-cyan-300/50 focus:ring-offset-2 focus:ring-offset-slate-950 disabled:opacity-60">
         {!rewardClaimsReady
           ? tt(currentLanguage, { en: 'Reward secret required', pl: 'Wymagany sekret nagród', es: 'Se requiere secreto de recompensas', pt: 'Segredo de recompensa obrigatório', ru: 'Нужен секрет наград' })
           : watched >= dailyLimit

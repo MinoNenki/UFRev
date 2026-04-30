@@ -6,6 +6,16 @@ import { supabaseAdmin } from '@/lib/supabase-admin';
 
 export const runtime = 'nodejs';
 
+async function resolveCheckoutPriceId(configuredRef: string | null | undefined) {
+  if (!configuredRef) return null;
+  if (configuredRef.startsWith('price_')) return configuredRef;
+  if (!configuredRef.startsWith('prod_') || !stripe) return null;
+
+  const prices = await stripe.prices.list({ product: configuredRef, active: true, limit: 10 });
+  const preferredPrice = prices.data.find((price) => price.recurring) ?? prices.data[0] ?? null;
+  return preferredPrice?.id ?? null;
+}
+
 export async function POST(req: NextRequest) {
   if (!stripe) return NextResponse.json({ error: 'Stripe is not configured.' }, { status: 500 });
 
@@ -20,7 +30,7 @@ export async function POST(req: NextRequest) {
   const origin = process.env.NEXT_PUBLIC_SITE_URL || req.nextUrl.origin;
 
   if (subscriptionPlan && subscriptionPlan.key !== 'free') {
-    const priceId = getStripePriceIdForPlan(subscriptionPlan.key);
+    const priceId = await resolveCheckoutPriceId(getStripePriceIdForPlan(subscriptionPlan.key));
     if (!priceId) return NextResponse.json({ error: 'Missing subscription price ID in env.' }, { status: 500 });
     const session = await stripe.checkout.sessions.create({ mode: 'subscription', customer_email: user.email || undefined, line_items: [{ price: priceId, quantity: 1 }], success_url: `${origin}/dashboard?success=1`, cancel_url: `${origin}/pricing?canceled=1`, metadata: { user_id: user.id, item_key: subscriptionPlan.key, item_type: 'subscription' } });
     await supabaseAdmin.from('monetization_events').insert({ user_id: user.id, event_type: 'checkout_intent', item_key: subscriptionPlan.key, item_type: 'subscription', metadata: { origin, session_id: session.id } });
@@ -28,7 +38,7 @@ export async function POST(req: NextRequest) {
   }
 
   if (creditPack?.stripePriceEnv) {
-    const priceId = process.env[creditPack.stripePriceEnv];
+    const priceId = await resolveCheckoutPriceId(process.env[creditPack.stripePriceEnv]);
     if (!priceId) return NextResponse.json({ error: 'Missing credit pack price ID in env.' }, { status: 500 });
     const session = await stripe.checkout.sessions.create({ mode: 'payment', customer_email: user.email || undefined, line_items: [{ price: priceId, quantity: 1 }], success_url: `${origin}/dashboard?creditsPurchased=1`, cancel_url: `${origin}/pricing?canceled=1`, metadata: { user_id: user.id, item_key: creditPack.key, item_type: 'pack' } });
     await supabaseAdmin.from('monetization_events').insert({ user_id: user.id, event_type: 'checkout_intent', item_key: creditPack.key, item_type: 'pack', metadata: { origin, session_id: session.id } });

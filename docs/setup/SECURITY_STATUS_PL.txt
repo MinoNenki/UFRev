@@ -1,0 +1,68 @@
+SECURITY STATUS - UFREV (PL)
+Data: 2026-04-28
+
+1) Aktywne zabezpieczenia aplikacji
+- Podpisywane tokeny reward (HMAC SHA-256) z TTL i nonce.
+- Rotacja kluczy reward przez KID:
+  - REWARD_TOKEN_SECRET_CURRENT
+  - REWARD_TOKEN_SECRET_PREVIOUS
+  - REWARD_TOKEN_KID_CURRENT
+- Odrzucanie slabych kluczy w produkcji (minimum 32 bajty).
+- Ochrona anti-replay dla reward tokenow:
+  - hash tokenu zapisywany w security_events
+  - ponowne uzycie tokenu blokowane.
+- Rate limiting reward claims:
+  - cooldown miedzy claimami
+  - limit godzinowy.
+- Podpisane linki dla endpointow automatyzacji (cron):
+  - SIGNED_LINK_SECRET_CURRENT
+  - SIGNED_LINK_SECRET_PREVIOUS
+  - SIGNED_LINK_KID_CURRENT
+  - query params: sl_kid, sl_exp, sl_nonce, sl_sig, (opcjonalnie sl_extra)
+- Middleware prefilter dla signed links:
+  - endpoint: /api/automations/market-watch/run
+  - blokada przy brakujacych/niepoprawnych parametrach signed-link.
+- Fallback autoryzacji cron endpointu:
+  - x-cron-secret / Authorization Bearer z MARKET_WATCH_CRON_SECRET (lub CRON_SECRET).
+- Ochrona webhook Stripe sygnatura:
+  - STRIPE_WEBHOOK_SECRET
+  - constructEvent + weryfikacja podpisu.
+- Prelaunch gate (opcjonalny):
+  - PRELAUNCH_MODE, PRELAUNCH_PASSWORD, PRELAUNCH_COOKIE_NAME.
+
+2) Co zostalo uporzadkowane w env
+- .env.local uporzadkowany sekcjami.
+- Dodane sekrety rotacyjne i separacja use-case (reward vs signed links).
+- Usuniete placeholdery social z aktualnego workflow (TikTok/Meta) z .env.local.
+- .env.example zaktualizowany do modelu hardening (rotation + signed links + cron fallback).
+
+3) Jak generowac bezpieczne sekrety
+OpenSSL:
+- openssl rand -base64 48
+
+PowerShell (Windows):
+- $rng = New-Object System.Security.Cryptography.RNGCryptoServiceProvider
+- $b = New-Object byte[] 48
+- $rng.GetBytes($b)
+- [Convert]::ToBase64String($b)
+
+4) Checklista operacyjna po wdrozeniu
+- Krok 1: Ustaw w hostingu (Production + Preview):
+  - REWARD_TOKEN_SECRET_CURRENT
+  - REWARD_TOKEN_KID_CURRENT
+  - SIGNED_LINK_SECRET_CURRENT
+  - SIGNED_LINK_KID_CURRENT
+  - MARKET_WATCH_CRON_SECRET (jezeli uzywasz header auth)
+- Krok 2: (Opcjonalnie rotacja) wpisz stare klucze do *_PREVIOUS na 24-72h.
+- Krok 3: Potwierdz /setup, ze statusy security sa OK.
+- Krok 4: Przetestuj cron endpoint:
+  - signed link dziala
+  - link przeterminowany jest odrzucany
+  - zly podpis jest odrzucany.
+- Krok 5: Po oknie rotacji wyczysc *_PREVIOUS.
+
+5) Praktyka biznesowa (zalecenia)
+- Rotuj sekrety co 60-90 dni.
+- Nie uzywaj jednego sekretu do wielu celow (jest juz rozdzielone).
+- Nigdy nie commituj .env.local.
+- Jesli klucze wyciekly, natychmiast zrotuj u dostawcy.

@@ -69,4 +69,12 @@ describe('plan and token costing rules', () => {
     expect(getCreditPackByStripePriceId('price_pack')).toBe('pack19');
     expect(getCreditPackByStripePriceId('unknown')).toBeNull();
   });
+
+  it('matches Stripe products when env stores prod ids instead of price ids', () => {
+    process.env.STRIPE_PRICE_STARTER = 'prod_starter';
+    process.env.STRIPE_PRICE_PACK_39 = 'prod_pack_39';
+
+    expect(getPlanByStripePriceId('price_anything', 'prod_starter')).toBe('starter');
+    expect(getCreditPackByStripePriceId('price_anything', 'prod_pack_39')).toBe('pack39');
+  });
 });

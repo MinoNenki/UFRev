@@ -1,0 +1,49 @@
+UFREV - MOZLIWOSCI PLATFORMY (CO JEST MOZLIWE)
+
+1. Decision intelligence
+- Ocena produktu przed wydaniem budzetu.
+- Werdykt BUY/TEST/SKIP.
+- Uzasadnienie decyzji i wskazanie kolejnego kroku.
+
+2. Wielomodalna analiza
+- URL i opis produktu.
+- Dokumenty (np. PDF, tekst).
+- Material wizualny (screenshoty, obrazy).
+
+3. Ochrona marzy i anti-loss
+- Progi bezpieczenstwa,
+- limity operacyjne,
+- kill switch,
+- bezpieczne podejscie do skali.
+
+4. Market watch i konkurencja
+- Obserwacja sygnalow rynku.
+- Szybsze wykrywanie presji cenowej.
+- Wsparcie decyzji o testach i ekspansji.
+
+5. Integracje i ekspansja
+- Storefront i marketplace lanes.
+- Synchronizacja kluczowych danych (inventory/orders/pricing/listings).
+- Rozszerzanie zasiegu etapami, bez chaosu.
+
+6. Automatyzacje operacyjne
+- Alerty i digesty.
+- Routing komunikacji.
+- Presety dzialania i workflow ochronne.
+
+7. SaaS i monetyzacja
+- Plany subskrypcji.
+- Pakiety tokenow AI.
+- Reward ads i referral.
+- Paywall i premium gating.
+
+8. Zarzadzanie i kontrola
+- Panel usera do codziennej pracy.
+- Panel admina do kontroli produktu, przychodu i ryzyka.
+- Metryki owner-level do decyzji strategicznych.
+
+9. Co jest mozliwe dzieki platformie
+- Szybsza walidacja produktow i ofert.
+- Bezpieczniejsze testowanie rynku.
+- Redukcja nietrafionych decyzji zakupowych i reklamowych.
+- Bardziej przewidywalne skalowanie biznesu.

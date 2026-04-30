@@ -6,6 +6,7 @@ import InteractiveDemoPreview from '@/components/InteractiveDemoPreview';
 import DonutChart from '@/components/pro-ui/DonutChart';
 import InsightPanel from '@/components/pro-ui/InsightPanel';
 import MetricCard from '@/components/pro-ui/MetricCard';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { isSupabaseConfigured, getSetupWarnings } from '@/lib/env';
 import { tr } from '@/lib/i18n';
 import { getLanguage } from '@/lib/i18n-server';
@@ -24,6 +25,43 @@ export const metadata: Metadata = {
 export default async function HomePage() {
   const warnings = getSetupWarnings();
   const language = await getLanguage();
+  let latestPreviewCase: {
+    productName: string;
+    verdict: string;
+    margin: string;
+    risk: string;
+    nextStep: string;
+  } | null = null;
+
+  if (isSupabaseConfigured) {
+    try {
+      const supabase = await createSupabaseServerClient();
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (user) {
+        const { data: latestAnalysis } = await supabase
+          .from('analyses')
+          .select('product_name, decision_json')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        const decision = latestAnalysis?.decision_json as any;
+        if (decision) {
+          latestPreviewCase = {
+            productName: String(latestAnalysis?.product_name || 'Live analysis'),
+            verdict: String(decision.verdict || 'TEST'),
+            margin: typeof decision?.pricing?.marginPercent === 'number' ? `${decision.pricing.marginPercent}% ${tr(language, { en: 'projected margin', pl: 'prognozowanej marży' })}` : tr(language, { en: 'Margin visible in saved case', pl: 'Marża widoczna w zapisanym case' }),
+            risk: typeof decision?.burnRisk === 'string' ? String(decision.burnRisk) : tr(language, { en: 'Risk visible in saved case', pl: 'Ryzyko widoczne w zapisanym case' }),
+            nextStep: String(decision?.adStrategy?.nextStep || decision?.productSourcing?.recommendedNextStep || tr(language, { en: 'Open the saved case and continue from the next protected move.', pl: 'Otwórz zapisany case i kontynuuj od następnego chronionego ruchu.' })),
+          };
+        }
+      }
+    } catch {
+      latestPreviewCase = null;
+    }
+  }
 
   return (
     <main className="mx-auto max-w-[1600px] px-2 py-10 text-white sm:px-0 sm:py-16">
@@ -290,7 +328,18 @@ export default async function HomePage() {
             />
           </div>
 
-          <InteractiveDemoPreview language={language} />
+          <InteractiveDemoPreview
+            language={language}
+            liveMetrics={{
+              setupConfigured: isSupabaseConfigured,
+              warningCount: warnings.length,
+              supportedInputCount: 6,
+              supportedVideoFormats: 4,
+              decisionStateCount: 3,
+              liveSourceUrl: 'https://supplier.example.com/product/portable-blender',
+            }}
+            liveCase={latestPreviewCase}
+          />
         </div>
       </section>
 

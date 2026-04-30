@@ -97,6 +97,8 @@ export default async function AdminPage() {
       tone: 'violet' as const,
     },
   ];
+  const coreModules = modules.filter((item) => ['/admin/founder', '/admin/monetization', '/admin/automations', '/admin/integrations'].includes(item.href));
+  const supportModules = modules.filter((item) => !['/admin/founder', '/admin/monetization', '/admin/automations', '/admin/integrations'].includes(item.href));
 
   const tutorialSteps = [
     {
@@ -140,6 +142,24 @@ export default async function AdminPage() {
             tr(language, { en: 'Subscriptions, AI tokens, and anti-loss safeguards remain protected.', pl: 'Subskrypcje, tokeny AI i zabezpieczenia anti-loss pozostają chronione.', es: 'Las suscripciones, los tokens AI y las protecciones anti-loss siguen protegidos.', ru: 'Подписки, AI токены и anti-loss safeguards остаются защищёнными.' }),
             tr(language, { en: 'The admin layer now feels like a global SaaS control room, not a local back office.', pl: 'Warstwa admin przypomina teraz globalne centrum dowodzenia SaaS, a nie lokalne zaplecze.', es: 'La capa de administración ahora se siente como una sala de control SaaS global, no como una oficina local.', ru: 'Админ-слой теперь ощущается как глобальный SaaS control room, а не локальный бэк-офис.' }),
           ]} />
+        </div>
+      </section>
+
+      <section className="mt-8 grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
+        <InsightPanel title={tr(language, { en: 'Open first', pl: 'Otwórz najpierw', es: 'Abrir primero', ru: 'Открыть сначала' })} items={[
+          tr(language, { en: 'Founder lane when you need one executive view for KPI, retention, CRM, and pricing pressure.', pl: 'Tor właściciela, gdy potrzebujesz jednego executive widoku dla KPI, retencji, CRM i presji cenowej.', es: 'Ruta del fundador cuando necesitas una vista ejecutiva para KPI, retención, CRM y pricing.', ru: 'Линия владельца, когда нужен один executive-вид для KPI, retention, CRM и ценового давления.' }),
+          tr(language, { en: 'Revenue stack when the next decision is pricing, paywall, ads, packs, or monetization quality.', pl: 'Stos przychodu, gdy kolejna decyzja dotyczy cen, paywalla, reklam, pakietów albo jakości monetyzacji.', es: 'Stack de ingresos cuando la siguiente decisión es pricing, paywall, anuncios, packs o calidad de monetización.', ru: 'Стек выручки, когда следующее решение касается pricing, paywall, рекламы, пакетов или качества монетизации.' }),
+          tr(language, { en: 'Autopilot and global sync only after revenue rules and risk thresholds are already clear.', pl: 'Autopilot i globalny sync dopiero wtedy, gdy zasady przychodu i progi ryzyka są już jasne.', es: 'Autopiloto y sync global solo después de tener claras las reglas de ingresos y los umbrales de riesgo.', ru: 'Автопилот и глобальный sync только после того, как правила выручки и пороги риска уже ясны.' }),
+        ]} />
+        <div className="rounded-[32px] border border-white/10 bg-slate-950/60 p-8 shadow-[0_24px_100px_rgba(2,6,23,0.45)]">
+          <div className="text-[11px] uppercase tracking-[0.24em] text-cyan-200">{tr(language, { en: 'Command lanes', pl: 'Tory dowodzenia', es: 'Carriles de mando', ru: 'Командные линии' })}</div>
+          <div className="mt-4 flex flex-wrap gap-3">
+            {quickRoutes.map((item) => (
+              <Link key={`jump-${item.href}`} href={item.href} className={`rounded-2xl border px-4 py-3 text-sm font-semibold transition ${item.className}`}>
+                {item.label}
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -216,8 +236,15 @@ export default async function AdminPage() {
           description={tr(language, { en: 'These module cards are the fastest route into the admin area once you know what kind of work you need to do.', pl: 'Te karty modułów są najszybszą drogą do właściwej części panelu admina, gdy już wiesz jaki typ pracy chcesz wykonać.' })}
         >
 
-      <section className="mt-8 grid gap-6 lg:grid-cols-3">
-        {modules.map((item) => (
+      <section className="mt-8">
+        <div className="mb-5 flex items-center justify-between gap-4">
+          <div>
+            <div className="text-[11px] uppercase tracking-[0.24em] text-cyan-200">{tr(language, { en: 'Core operating lanes', pl: 'Główne tory operacyjne', es: 'Carriles operativos core', ru: 'Основные операционные линии' })}</div>
+            <h2 className="mt-2 text-3xl font-black text-white">{tr(language, { en: 'Use these four routes for the main admin loop', pl: 'Używaj tych czterech ścieżek do głównej pętli admina', es: 'Usa estas cuatro rutas para el bucle principal del admin', ru: 'Используй эти четыре маршрута для главного admin-цикла' })}</h2>
+          </div>
+        </div>
+        <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-4">
+        {coreModules.map((item) => (
           <Link key={item.href} href={item.href} className="group hover-lift rounded-[32px] border border-white/10 bg-slate-950/60 p-8 shadow-[0_24px_100px_rgba(2,6,23,0.45)] transition hover:-translate-y-1 hover:border-cyan-300/30">
             <div className="text-[11px] uppercase tracking-[0.24em] text-cyan-200">{tr(language, { en: 'Module', pl: 'Moduł', es: 'Módulo', ru: 'Модуль' })}</div>
             <h2 className="mt-4 text-3xl font-black tracking-tight text-white">{item.title}</h2>
@@ -225,6 +252,24 @@ export default async function AdminPage() {
             <div className="mt-6 text-sm font-semibold text-cyan-200 transition group-hover:translate-x-1">{tr(language, { en: 'Open module →', pl: 'Otwórz moduł →', es: 'Abrir módulo →', ru: 'Открыть модуль →' })}</div>
           </Link>
         ))}
+        </div>
+      </section>
+
+      <section className="mt-8">
+        <div className="mb-5">
+          <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">{tr(language, { en: 'Support lanes', pl: 'Tory wspierające', es: 'Carriles de soporte', ru: 'Поддерживающие линии' })}</div>
+          <h2 className="mt-2 text-2xl font-black text-white">{tr(language, { en: 'Open only when the main route is already chosen', pl: 'Otwieraj dopiero wtedy, gdy główna ścieżka jest już wybrana', es: 'Ábrelos solo cuando la ruta principal ya esté elegida', ru: 'Открывай только когда основной маршрут уже выбран' })}</h2>
+        </div>
+        <div className="grid gap-6 lg:grid-cols-3">
+        {supportModules.map((item) => (
+          <Link key={item.href} href={item.href} className="group hover-lift rounded-[32px] border border-white/10 bg-slate-950/60 p-8 shadow-[0_24px_100px_rgba(2,6,23,0.45)] transition hover:-translate-y-1 hover:border-cyan-300/30">
+            <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">{tr(language, { en: 'Support module', pl: 'Moduł wspierający', es: 'Módulo de soporte', ru: 'Поддерживающий модуль' })}</div>
+            <h2 className="mt-4 text-3xl font-black tracking-tight text-white">{item.title}</h2>
+            <p className="mt-4 text-slate-300">{item.text}</p>
+            <div className="mt-6 text-sm font-semibold text-cyan-200 transition group-hover:translate-x-1">{tr(language, { en: 'Open module →', pl: 'Otwórz moduł →', es: 'Abrir módulo →', ru: 'Открыть модуль →' })}</div>
+          </Link>
+        ))}
+        </div>
       </section>
         </TutorialStep>
       </TutorialMode>

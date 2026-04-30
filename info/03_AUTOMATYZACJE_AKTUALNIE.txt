@@ -1,0 +1,43 @@
+UFREV - AUTOMATYZACJE (AKTUALNY STAN I ZAKRES)
+
+1. Co obejmuja automatyzacje
+- cykliczne skany konkurencji,
+- alerty market watch,
+- tygodniowe digesty,
+- alerty marzy i ochrona budzetu,
+- automatyczne prosby o opinie,
+- ostrzezenia operacyjne,
+- routing alertow do kanalow komunikacji.
+
+2. Warstwa user
+- User widzi status automatyzacji i korzysci biznesowe.
+- User ma dostep do market watch (zaleznie od planu).
+- User dostaje prosty interfejs zamiast technicznego panelu.
+
+3. Warstwa admin
+- Admin ma pelne centrum sterowania automatyzacjami.
+- Gotowe presety operacyjne (np. guarded autopilot, balanced scale).
+- Zaawansowane progi i limity bezpieczenstwa, m.in.:
+  - min confidence,
+  - max safe test budget,
+  - daily spend cap,
+  - refund rate cap,
+  - CAC/AOV cap,
+  - staged rollout,
+  - kill switch.
+
+4. Routing i dostarczanie alertow
+- in-app,
+- email (Resend/SendGrid),
+- Telegram,
+- Discord webhook.
+
+5. Efekt operacyjny
+- mniej recznej pracy,
+- szybsza reakcja na zmiany rynku,
+- mocniejsza ochrona marzy,
+- stabilniejszy proces skalowania.
+
+6. Wniosek biznesowy
+- Automatyzacje sa realna warstwa premium i przewagi operacyjnej.
+- Nie tylko „ladny dodatek”, ale narzedzie do kontroli ryzyka i przychodu.

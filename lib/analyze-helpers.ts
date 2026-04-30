@@ -20,6 +20,28 @@ export function looksLikeSupplierMarketplaceUrl(url: string) {
   return /alibaba\.com|aliexpress\.com|1688\.com|made-in-china\.com|globalsources\.com/i.test(url || '');
 }
 
+export function isServiceBusinessPrompt(input: string) {
+  const text = (input || '').toLowerCase();
+  const serviceSignals = [
+    'myjni', 'mycie', 'czyszczenie', 'elewac', 'kostki brukowej', 'kostka brukowa',
+    'tir', 'truck wash', 'detailing', 'mobiln', 'mobile wash', 'parow', 'steam cleaning',
+    'usług', 'uslug', 'service business', 'lokaln', 'regional', 'woj.', 'województ', 'wojewodzt',
+  ];
+  const requestSignals = [
+    'jaki sprzęt', 'jaki sprzet', 'sprzęt', 'sprzet', 'equipment', 'maszyn',
+    'ile to będzie kosztowa', 'ile to bedzie kosztowa', 'startup cost', 'budżet start', 'budzet start',
+    'czy warto', 'opłaca', 'oplaca', 'opłacaln', 'oplacaln', 'otworzyć', 'otworzyc', 'założyć', 'zalozyc',
+    'pricing', 'cennik', 'pakiet', 'w jaki kierunek', 'co wybrać', 'co wybrac', 'pionier rynku',
+  ];
+
+  const serviceScore = serviceSignals.reduce((total, signal) => total + (text.includes(signal) ? 1 : 0), 0);
+  const requestScore = requestSignals.reduce((total, signal) => total + (text.includes(signal) ? 1 : 0), 0);
+  const hasLinks = /https?:\/\//.test(text);
+
+  const startupSignal = /otworzyć|otworzyc|założyć|zalozyc|start|uruchomi/i.test(text);
+  return serviceScore >= 2 && (requestScore >= 1 || hasLinks || startupSignal);
+}
+
 export function buildDirectQuestionLead(params: {
   content: string;
   currentLanguage: Language;
@@ -34,8 +56,12 @@ export function buildDirectQuestionLead(params: {
   const asksPrice = /po ile|wystawia[cć]|selling price|listing price|sell price|jak[aą] cen[aę]/.test(combined);
   const asksDemand = /popyt|demand|czy się sprzeda|czy sie sprzeda|will it sell|czy będzie|czy bedzie/.test(combined);
   const asksRental = /wynajem|wypożycz|wypozycz|rental|rent out|lease/.test(combined);
+  const asksEquipment = /jaki sprzęt|jaki sprzet|sprzęt|sprzet|equipment|maszyn|generator|odkurzacz|parownic|myjk/i.test(combined);
+  const asksStartupCost = /ile to będzie kosztowa|ile to bedzie kosztowa|startup cost|budżet start|budzet start|koszt start/i.test(combined);
+  const asksDirection = /w jaki kierunek|co wybrać|co wybrac|pionier rynku|which direction|what niche|which lane/i.test(combined);
+  const serviceBusinessCase = isServiceBusinessPrompt(`${params.content} ${params.salesChannel}`);
 
-  if (!asksUnits && !asksPrice && !asksDemand && !asksRental) return '';
+  if (!asksUnits && !asksPrice && !asksDemand && !asksRental && !asksEquipment && !asksStartupCost && !asksDirection) return '';
 
   const supplierSource = looksLikeSupplierMarketplaceUrl(params.websiteUrl);
   const hasHardCost = params.cost > 0 || params.price > 0 || /unit price|price per unit|cena|cost|koszt|shipping|dostaw/i.test(combined);
@@ -43,6 +69,28 @@ export function buildDirectQuestionLead(params: {
   const quickPaybackRentLow = params.cost > 0 ? params.cost / 12 : null;
   const quickPaybackRentHigh = params.cost > 0 ? params.cost / 8 : null;
   const weekendPackage = params.cost > 0 ? params.cost / 5 : null;
+
+  if (serviceBusinessCase && params.currentLanguage === 'pl') {
+    const parts: string[] = [];
+
+    if (asksDirection) {
+      parts.push('Najbezpieczniej wejść najpierw w jedną niszę premium z dojazdem, a dopiero potem rozszerzać ofertę na TIR-y albo cięższe mycie elewacji.');
+    }
+
+    if (asksEquipment) {
+      parts.push('Starter usługowy zwykle wymaga auta roboczego, wydajnej myjki lub parownicy, zbiornika / dostępu do wody, chemii, osprzętu do piany i szczotek oraz zabezpieczeń BHP.');
+    }
+
+    if (asksStartupCost) {
+      parts.push('Nie podawaj jednej sztywnej kwoty bez wybranego modelu pracy, ale policz osobno: auto, maszynę główną, osprzęt, chemię, branding, dojazdy i bufor serwisowy.');
+    }
+
+    if (asksDemand || params.websiteUrl) {
+      parts.push('Linki konkurencji traktuj tu jako benchmark usług i cenników lokalnych, a nie jak listing produktu pod klasyczny e-commerce verdict.');
+    }
+
+    return parts.join(' ');
+  }
 
   if (params.currentLanguage === 'pl') {
     const parts: string[] = [];

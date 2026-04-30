@@ -23,6 +23,8 @@ export type MarketDataSummary = {
   resaleSignalCount: number | null;
   rentalSignalCount: number | null;
   researchQuery: string | null;
+  resaleResearchUrls: string[];
+  rentalResearchUrls: string[];
   sourceNotes: string[];
 };
 
@@ -151,6 +153,8 @@ async function researchTargetMarket(params: { queryText?: string; selectedCountr
     researchQuery: seed,
     resaleSignalCount: resaleUrls.length,
     rentalSignalCount: rentalUrls.length,
+    resaleUrls: resaleUrls.slice(0, 5),
+    rentalUrls: rentalUrls.slice(0, 5),
     demandScore,
     competitionScore,
     resaleSources: resaleDomains.slice(0, 5),
@@ -380,6 +384,8 @@ export async function collectMarketData(params: { websiteUrl?: string; competito
   if (marketMonthlyUnitsEstimate) sourceNotes.push(`Market activity proxy detected from public review/rating counts: about ${marketMonthlyUnitsEstimate}.`);
   if (research?.resaleSignalCount) sourceNotes.push(`Live public resale search found ${research.resaleSignalCount} signal(s) across ${research.resaleSources.join(', ')}.`);
   if (research?.rentalSignalCount) sourceNotes.push(`Live public rental search found ${research.rentalSignalCount} signal(s) across ${research.rentalSources.join(', ')}.`);
+  if (research?.resaleUrls?.length) sourceNotes.push(`Top resale research links: ${research.resaleUrls.slice(0, 3).join(', ')}.`);
+  if (research?.rentalUrls?.length) sourceNotes.push(`Top rental/service research links: ${research.rentalUrls.slice(0, 3).join(', ')}.`);
   if (research?.demandScore != null) sourceNotes.push(`Demand score was derived from live public search evidence: ${research.demandScore}/100.`);
   if (research?.competitionScore != null) sourceNotes.push(`Competition score was derived from live public search evidence: ${research.competitionScore}/100.`);
   if (websiteUrl && product?.source === 'unavailable' && isWholesaleSupplierUrl(websiteUrl)) {
@@ -401,6 +407,8 @@ export async function collectMarketData(params: { websiteUrl?: string; competito
     resaleSignalCount: research?.resaleSignalCount ?? null,
     rentalSignalCount: research?.rentalSignalCount ?? null,
     researchQuery: research?.researchQuery ?? null,
+    resaleResearchUrls: research?.resaleUrls ?? [],
+    rentalResearchUrls: research?.rentalUrls ?? [],
     sourceNotes,
   };
 }

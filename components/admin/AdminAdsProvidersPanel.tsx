@@ -188,10 +188,11 @@ export default function AdminAdsProvidersPanel({ currentLanguage = 'en' }: { cur
           const isGoogleAdSense = provider.provider_type === 'google_adsense';
           const isGoogleAds = provider.provider_type === 'google_ads';
           const isBusy = savingProviderId === provider.id || syncingProviderType === provider.provider_type;
+          const configCount = Object.entries(draft).filter(([key, value]) => key !== 'sync' && value !== undefined && value !== null && value !== '' && value !== false).length;
 
           return (
-            <div key={provider.id} className="rounded-[28px] border border-white/10 bg-white/[0.03] p-5">
-              <div className="flex flex-wrap items-start justify-between gap-4">
+            <details key={provider.id} className="rounded-[28px] border border-white/10 bg-white/[0.03] p-5 group" open={provider.enabled && !sync?.state}>
+              <summary className="flex cursor-pointer list-none flex-wrap items-start justify-between gap-4">
                 <div className="max-w-3xl">
                   <div className="flex flex-wrap items-center gap-2">
                     <h3 className="text-xl font-bold text-white">{provider.provider_name}</h3>
@@ -201,39 +202,54 @@ export default function AdminAdsProvidersPanel({ currentLanguage = 'en' }: { cur
                     <span className={`rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] ${stateTone(sync?.state)}`}>
                       {sync?.state || tt(currentLanguage, { en: 'Not checked', pl: 'Nie sprawdzono', de: 'Nicht geprüft', es: 'Sin comprobar', ru: 'Не проверено' })}
                     </span>
+                    <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-300">
+                      {tt(currentLanguage, { en: 'Filled fields', pl: 'Uzupełnione pola', de: 'Ausgefüllte Felder', es: 'Campos completos', ru: 'Заполненные поля' })}: {configCount}
+                    </span>
                   </div>
                   <p className="mt-2 text-sm leading-6 text-slate-300">{provider.description}</p>
-                  <div className="mt-3 text-xs text-slate-500">{tt(currentLanguage, { en: 'Type:', pl: 'Typ:', de: 'Typ:', es: 'Tipo:', ru: 'Тип:' })} <span className="font-mono text-slate-300">{provider.provider_type}</span></div>
+                  <div className="mt-3 flex flex-wrap gap-2 text-xs text-slate-500">
+                    <span>{tt(currentLanguage, { en: 'Type:', pl: 'Typ:', de: 'Typ:', es: 'Tipo:', ru: 'Тип:' })} <span className="font-mono text-slate-300">{provider.provider_type}</span></span>
+                    <span>{tt(currentLanguage, { en: 'Details stay collapsed until needed.', pl: 'Szczegóły są zwinięte, dopóki nie są potrzebne.', de: 'Details bleiben eingeklappt, bis sie benötigt werden.', es: 'Los detalles permanecen plegados hasta que se necesiten.', ru: 'Детали остаются свернутыми, пока не понадобятся.' })}</span>
+                  </div>
                 </div>
 
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    type="button"
-                    onClick={() => saveProvider(provider, !provider.enabled)}
-                    disabled={isBusy}
-                    className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/[0.08] disabled:opacity-60"
-                  >
-                    {provider.enabled ? tt(currentLanguage, { en: 'Disable provider', pl: 'Wyłącz dostawcę', de: 'Anbieter deaktivieren', es: 'Desactivar proveedor', ru: 'Отключить поставщика' }) : tt(currentLanguage, { en: 'Enable provider', pl: 'Włącz dostawcę', de: 'Anbieter aktivieren', es: 'Activar proveedor', ru: 'Включить поставщика' })}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => saveProvider(provider)}
-                    disabled={isBusy}
-                    className="rounded-2xl border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-sm font-semibold text-cyan-50 transition hover:bg-cyan-300/15 disabled:opacity-60"
-                  >
-                    {savingProviderId === provider.id ? tt(currentLanguage, { en: 'Saving...', pl: 'Zapisywanie...', de: 'Speichern...', es: 'Guardando...', ru: 'Сохранение...' }) : tt(currentLanguage, { en: 'Save config', pl: 'Zapisz konfigurację', de: 'Konfiguration speichern', es: 'Guardar configuración', ru: 'Сохранить конфигурацию' })}
-                  </button>
-                  {(isGoogleAdSense || isGoogleAds) ? (
-                    <button
-                      type="button"
-                      onClick={() => syncProvider(provider)}
-                      disabled={isBusy}
-                      className="rounded-2xl border border-emerald-300/20 bg-emerald-300/10 px-4 py-2 text-sm font-semibold text-emerald-100 transition hover:bg-emerald-300/15 disabled:opacity-60"
-                    >
-                      {syncingProviderType === provider.provider_type ? tt(currentLanguage, { en: 'Syncing...', pl: 'Synchronizacja...', de: 'Synchronisiert...', es: 'Sincronizando...', ru: 'Синхронизация...' }) : tt(currentLanguage, { en: 'Sync now', pl: 'Synchronizuj teraz', de: 'Jetzt synchronisieren', es: 'Sincronizar ahora', ru: 'Синхронизировать сейчас' })}
-                    </button>
-                  ) : null}
+                <div className="flex flex-col items-start gap-2 text-sm text-slate-300 sm:items-end">
+                  <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-100 group-open:hidden">
+                    {tt(currentLanguage, { en: 'Open setup', pl: 'Otwórz konfigurację', de: 'Setup öffnen', es: 'Abrir configuración', ru: 'Открыть настройку' })}
+                  </span>
+                  <span className="hidden rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-100 group-open:inline-flex">
+                    {tt(currentLanguage, { en: 'Hide setup', pl: 'Ukryj konfigurację', de: 'Setup ausblenden', es: 'Ocultar configuración', ru: 'Скрыть настройку' })}
+                  </span>
                 </div>
+              </summary>
+
+              <div className="mt-4 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => saveProvider(provider, !provider.enabled)}
+                  disabled={isBusy}
+                  className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/[0.08] disabled:opacity-60"
+                >
+                  {provider.enabled ? tt(currentLanguage, { en: 'Disable provider', pl: 'Wyłącz dostawcę', de: 'Anbieter deaktivieren', es: 'Desactivar proveedor', ru: 'Отключить поставщика' }) : tt(currentLanguage, { en: 'Enable provider', pl: 'Włącz dostawcę', de: 'Anbieter aktivieren', es: 'Activar proveedor', ru: 'Включить поставщика' })}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => saveProvider(provider)}
+                  disabled={isBusy}
+                  className="rounded-2xl border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-sm font-semibold text-cyan-50 transition hover:bg-cyan-300/15 disabled:opacity-60"
+                >
+                  {savingProviderId === provider.id ? tt(currentLanguage, { en: 'Saving...', pl: 'Zapisywanie...', de: 'Speichern...', es: 'Guardando...', ru: 'Сохранение...' }) : tt(currentLanguage, { en: 'Save config', pl: 'Zapisz konfigurację', de: 'Konfiguration speichern', es: 'Guardar configuración', ru: 'Сохранить конфигурацию' })}
+                </button>
+                {(isGoogleAdSense || isGoogleAds) ? (
+                  <button
+                    type="button"
+                    onClick={() => syncProvider(provider)}
+                    disabled={isBusy}
+                    className="rounded-2xl border border-emerald-300/20 bg-emerald-300/10 px-4 py-2 text-sm font-semibold text-emerald-100 transition hover:bg-emerald-300/15 disabled:opacity-60"
+                  >
+                    {syncingProviderType === provider.provider_type ? tt(currentLanguage, { en: 'Syncing...', pl: 'Synchronizacja...', de: 'Synchronisiert...', es: 'Sincronizando...', ru: 'Синхронизация...' }) : tt(currentLanguage, { en: 'Sync now', pl: 'Synchronizuj teraz', de: 'Jetzt synchronisieren', es: 'Sincronizar ahora', ru: 'Синхронизировать сейчас' })}
+                  </button>
+                ) : null}
               </div>
 
               {sync?.message ? (
@@ -323,7 +339,7 @@ export default function AdminAdsProvidersPanel({ currentLanguage = 'en' }: { cur
                   {tt(currentLanguage, { en: 'This provider is seeded and can be enabled now. Live sync is not implemented yet, but the card is ready for future connector work.', pl: 'Ten provider jest już zasiany i może zostać włączony. Live sync nie jest jeszcze wdrożony, ale karta jest gotowa pod kolejne konektory.', de: 'Dieser Provider ist vorbereitet und kann aktiviert werden. Live-Sync ist noch nicht umgesetzt, aber die Karte ist für weitere Connector-Arbeit bereit.', es: 'Este proveedor ya está preparado y puede habilitarse. El live sync aún no está implementado, pero la tarjeta está lista para futuros conectores.', ru: 'Этот провайдер уже подготовлен и может быть включён. Live-sync пока не реализован, но карточка готова для следующих коннекторов.' })}
                 </div>
               ) : null}
-            </div>
+            </details>
           );
         })}
       </div>

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildDirectQuestionLead, detectIntent, normalizeAnalysisProfile } from '@/lib/analyze-helpers';
+import { buildDirectQuestionLead, detectIntent, isServiceBusinessPrompt, normalizeAnalysisProfile } from '@/lib/analyze-helpers';
 
 describe('analyze route helpers', () => {
   it('treats Polish units-price-demand questions as profit intent', () => {
@@ -36,6 +36,27 @@ describe('analyze route helpers', () => {
     expect(lead).toMatch(/wynajem|wypożycz/i);
     expect(lead).toMatch(/8–12|8-12/i);
     expect(lead).toMatch(/PLN|zł/i);
+  });
+
+  it('detects a local service-business research prompt with competitor links', () => {
+    const prompt = 'Chcę otworzyć myjnię parową, myjnię TIR i mobilną myjnię aut. Podaj jaki sprzęt będzie potrzebny, ile to będzie kosztowało i czy warto w kujawsko-pomorskim. https://ktc-truck.pl/myjnia-tir';
+    expect(isServiceBusinessPrompt(prompt)).toBe(true);
+  });
+
+  it('builds a service-focused lead for local washing business questions', () => {
+    const lead = buildDirectQuestionLead({
+      content: 'Chcę otworzyć myjnię parową i mobilną. Jaki sprzęt będzie potrzebny, ile to będzie kosztowało i w jaki kierunek iść?',
+      currentLanguage: 'pl',
+      displayCurrency: 'PLN',
+      websiteUrl: 'https://ktc-truck.pl/myjnia-tir',
+      salesChannel: 'woj. kujawsko-pomorskie',
+      price: 0,
+      cost: 0,
+    });
+
+    expect(lead).toMatch(/niszę premium|jedną niszę premium/i);
+    expect(lead).toMatch(/auta roboczego|parownicy|myjki/i);
+    expect(lead).toMatch(/cenników lokalnych|benchmark usług/i);
   });
 
   it('normalizes a missing profile to safe free-plan defaults', () => {

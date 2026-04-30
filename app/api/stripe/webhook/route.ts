@@ -20,7 +20,10 @@ async function findPlanKeyFromInvoice(invoice: Stripe.Invoice): Promise<PlanKey 
   const invoiceAny = invoice as any;
   const firstLine = invoiceAny.lines?.data?.[0] ?? null;
   const priceId = firstLine?.pricing?.price_details?.price ?? firstLine?.price?.id ?? null;
-  return getPlanByStripePriceId(priceId);
+  const productId = typeof firstLine?.price?.product === 'string'
+    ? firstLine.price.product
+    : firstLine?.price?.product?.id ?? null;
+  return getPlanByStripePriceId(priceId, productId);
 }
 
 export async function POST(req: NextRequest) {
@@ -41,8 +44,11 @@ export async function POST(req: NextRequest) {
     const stripeSubscriptionId = typeof session.subscription === 'string' ? session.subscription : null;
     const lineItems = await stripe.checkout.sessions.listLineItems(session.id, { limit: 1 });
     const priceId = lineItems.data[0]?.price?.id;
-    const planKey = getPlanByStripePriceId(priceId);
-    const packKey = getCreditPackByStripePriceId(priceId);
+    const productId = typeof lineItems.data[0]?.price?.product === 'string'
+      ? lineItems.data[0].price.product
+      : lineItems.data[0]?.price?.product?.id ?? null;
+    const planKey = getPlanByStripePriceId(priceId, productId);
+    const packKey = getCreditPackByStripePriceId(priceId, productId);
     if (userId && itemType === 'subscription' && planKey) await syncProfileFromPlan({ userId, planKey, stripeCustomerId, stripeSubscriptionId });
     if (userId && itemType === 'pack' && packKey) await supabaseAdmin.rpc('add_credit_pack', { p_user_id: userId, p_credits: CREDIT_PACKS[packKey].credits });
     if (userId) {
@@ -73,7 +79,9 @@ export async function POST(req: NextRequest) {
 
   if (event.type === 'customer.subscription.updated') {
     const subscription = event.data.object as Stripe.Subscription;
-    const planKey = getPlanByStripePriceId(subscription.items.data[0]?.price?.id ?? null);
+    const firstItem = subscription.items.data[0];
+    const productId = typeof firstItem?.price?.product === 'string' ? firstItem.price.product : firstItem?.price?.product?.id ?? null;
+    const planKey = getPlanByStripePriceId(firstItem?.price?.id ?? null, productId);
     if (planKey) {
       const { data: profile } = await supabaseAdmin.from('profiles').select('id').eq('stripe_subscription_id', subscription.id).maybeSingle();
       if (profile?.id) {

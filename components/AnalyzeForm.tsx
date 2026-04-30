@@ -452,13 +452,13 @@ export default function AnalyzeForm({
       <input type="hidden" name="displayCurrency" value={displayCurrency} />
       <input type="hidden" name="inputCurrency" value={inputCurrency} />
 
-      <div className="grid gap-5 xl:grid-cols-[minmax(0,1.02fr)_minmax(320px,0.98fr)] 2xl:gap-6">
+      <div className="grid gap-5 2xl:gap-6">
         <div>
           <div className="text-[11px] uppercase tracking-[0.24em] text-amber-100">
             {tt(currentLanguage, { en: 'New analysis', pl: 'Nowa analiza', de: 'Neue Analyse', es: 'Nuevo análisis', ja: '新しい分析', zh: '新分析', id: 'Analisis baru', ru: 'Новый анализ' })}
           </div>
 
-          <h2 className="mt-3 max-w-[10ch] text-3xl font-black leading-[0.95] text-white sm:text-4xl xl:max-w-[9ch] xl:text-[2.85rem] 2xl:text-[3.15rem]">
+          <h2 className="mt-3 max-w-[12ch] text-[clamp(1.75rem,7.6vw,3.25rem)] font-black leading-[0.95] text-white 2xl:max-w-[10ch]">
             {tt(currentLanguage, {
               en: 'Check the product before it burns your budget.',
               pl: 'Sprawdź produkt zanim spali Ci budżet.',
@@ -480,24 +480,24 @@ export default function AnalyzeForm({
             })}
           </p>
 
-          <div className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3">
+          <div className="mt-4 grid gap-2 sm:grid-cols-2 2xl:grid-cols-3">
             {analysisGuideSteps.map((item, index) => (
-              <div key={`${item}-${index}`} className="analysis-form-step-card rounded-2xl border border-white/10 bg-slate-950/45 px-3 py-3 text-sm text-slate-200 xl:px-3 xl:py-2.5">
+              <div key={`${item}-${index}`} className="analysis-form-step-card rounded-2xl border border-white/10 bg-slate-950/45 px-3 py-3 text-sm text-slate-200 2xl:px-3 2xl:py-2.5">
                 <div className="mb-2 text-[10px] uppercase tracking-[0.22em] text-amber-100">
                   {tt(currentLanguage, { en: 'Step', pl: 'Krok', de: 'Schritt', es: 'Paso' })} {index + 1}
                 </div>
-                <div className="leading-6 xl:leading-5">{item}</div>
+                <div className="leading-6 2xl:leading-5">{item}</div>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="analysis-form-control rounded-[28px] border border-amber-200/20 bg-[linear-gradient(135deg,rgba(251,191,36,0.16),rgba(15,23,42,0.42),rgba(120,53,15,0.18))] p-4 sm:p-5 xl:p-4 shadow-[0_20px_80px_rgba(245,158,11,0.10)]">
+        <div className="analysis-form-control rounded-[28px] border border-amber-200/20 bg-[linear-gradient(135deg,rgba(251,191,36,0.16),rgba(15,23,42,0.42),rgba(120,53,15,0.18))] p-4 sm:p-5 2xl:p-4 shadow-[0_20px_80px_rgba(245,158,11,0.10)]">
           <div className="text-xs uppercase tracking-[0.24em] text-amber-50">
             {tt(currentLanguage, { en: 'Try one of these', pl: 'Spróbuj jednego z tych wejść', de: 'Schnellaktionen', es: 'Acciones rápidas', ja: 'クイック操作', zh: '快捷操作', id: 'Aksi cepat', ru: 'Быстрые действия' })}
           </div>
 
-          <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:gap-2.5">
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 2xl:gap-2.5">
             <button
               type="button"
               onClick={() => applyQuickFill('product')}
@@ -531,7 +531,7 @@ export default function AnalyzeForm({
             </button>
           </div>
 
-          <div className="mt-4 grid gap-3 md:grid-cols-[1.05fr_0.95fr] xl:gap-2.5">
+          <div className="mt-4 grid gap-3 lg:grid-cols-[1.05fr_0.95fr] 2xl:gap-2.5">
             <div className="rounded-2xl border border-white/10 bg-slate-950/40 p-4">
               <label className="mb-2 block text-xs uppercase tracking-[0.18em] text-slate-300">
                 {tt(currentLanguage, { en: 'Target country', pl: 'Kraj docelowy', de: 'Zielland', es: 'País objetivo', ja: '対象国', zh: '目标国家', id: 'Negara target', ru: 'Целевая страна' })}
@@ -549,7 +549,7 @@ export default function AnalyzeForm({
             </div>
           </div>
 
-          <div className="mt-4 flex flex-wrap gap-3 xl:gap-2.5">
+          <div className="mt-4 flex flex-wrap gap-3 2xl:gap-2.5">
             <label className="analysis-form-upload inline-flex cursor-pointer items-center gap-3 rounded-2xl border border-amber-200/30 bg-black/10 px-4 py-3 text-sm font-semibold text-white">
               <input
                 ref={fileInputRef}
@@ -590,7 +590,7 @@ export default function AnalyzeForm({
           </div>
 
           <TutorialHint
-            className="mt-4 xl:mt-3"
+            className="mt-4 2xl:mt-3"
             title={tt(currentLanguage, { en: 'Mini tutorial for this analysis box', pl: 'Mini tutorial dla tego panelu analizy', de: 'Mini-Tutorial für dieses Analysefeld', es: 'Mini tutorial para este panel de análisis' })}
             description={tt(currentLanguage, { en: 'When guided mode is on, follow this short order to reach a decision faster and with less confusion.', pl: 'Gdy przewodnik jest włączony, trzymaj się tej krótkiej kolejności, aby szybciej dojść do decyzji i nie mieszać pól.', de: 'Wenn der Guide aktiv ist, folge dieser kurzen Reihenfolge für ein schnelleres und klareres Ergebnis.', es: 'Cuando el guía está activo, sigue este orden corto para llegar más rápido a una decisión.' })}
             items={analysisGuideSteps}
@@ -598,7 +598,7 @@ export default function AnalyzeForm({
           />
 
           <TutorialHint
-            className="mt-4 xl:mt-3"
+            className="mt-4 2xl:mt-3"
             title={tt(currentLanguage, { en: 'Video uploads and weighted token cost', pl: 'Uploady wideo i ważony koszt tokenów', de: 'Video-Uploads und gewichtete Token-Kosten', es: 'Vídeos y coste ponderado de tokens' })}
             description={tt(currentLanguage, { en: 'This is the usage-side reminder: video is supported, but it is billed heavier on purpose.', pl: 'To przypomnienie po stronie użycia: wideo jest obsługiwane, ale celowo rozliczane ciężej.', de: 'Das ist die Nutzungs-Erinnerung: Video wird unterstützt, aber bewusst schwerer abgerechnet.', es: 'Este es el recordatorio del lado de uso: el vídeo está soportado, pero se factura de forma más pesada a propósito.' })}
             items={videoCostGuideItems}
@@ -607,7 +607,7 @@ export default function AnalyzeForm({
         </div>
       </div>
 
-      <div className="mt-5 xl:mt-4">
+      <div className="mt-5 2xl:mt-4">
         <label className="mb-2 block text-sm text-slate-300">
           {tt(currentLanguage, {
             en: 'What do you want to check?',
@@ -622,7 +622,7 @@ export default function AnalyzeForm({
           value={content}
           onChange={(e) => setContent(e.target.value)}
           rows={6}
-          className="analysis-form-textarea min-h-[200px] w-full rounded-[24px] border border-white/10 bg-slate-950/90 px-4 py-4 text-[15px] leading-7 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] xl:min-h-[176px] xl:leading-6"
+          className="analysis-form-textarea min-h-[200px] w-full rounded-[24px] border border-white/10 bg-slate-950/90 px-4 py-4 text-[15px] leading-7 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] 2xl:min-h-[176px] 2xl:leading-6"
           placeholder={tt(currentLanguage, {
             en: `Paste a product link, add a file or describe what you want to test...
 
@@ -658,7 +658,7 @@ Ejemplos:
           })}
         />
 
-        <div className="mt-3 text-sm text-slate-400 xl:mt-2">
+        <div className="mt-3 text-sm text-slate-400 2xl:mt-2">
           {tt(currentLanguage, {
             en: 'The system chooses the right analysis automatically. Advanced fields stay optional.',
             pl: 'System sam dobiera właściwą analizę. Pola advanced pozostają opcjonalne.',
@@ -715,7 +715,7 @@ Ejemplos:
       </div>
 
       {advanced && (
-        <div className="mt-5 rounded-[28px] border border-white/10 bg-white/[0.03] p-5 xl:mt-4">
+        <div className="mt-5 rounded-[28px] border border-white/10 bg-white/[0.03] p-5 2xl:mt-4">
           <div className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-300">
             {tt(currentLanguage, { en: 'Advanced mode', pl: 'Tryb zaawansowany', de: 'Erweiterter Modus', es: 'Modo avanzado' })}
           </div>

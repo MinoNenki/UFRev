@@ -39,6 +39,11 @@ export default async function AdminAutomationsPage({ searchParams }: { searchPar
       description: tr(language, { en: 'Then move into delivery routing, one-click modes, and advanced safeguards to align automation with margin protection.', pl: 'Następnie przejdź do routingu dostarczania, trybów one-click i zaawansowanych zabezpieczeń, aby spiąć automatyzację z ochroną marży.' }),
     },
   ];
+  const automationQuickLinks = [
+    { href: '#automation-routing', label: tr(language, { en: 'Alert routing', pl: 'Routing alertów', pt: 'Roteamento de alertas', ru: 'Маршрутизация alertов' }) },
+    { href: '#automation-modes', label: tr(language, { en: 'Operating modes', pl: 'Tryby operacyjne', pt: 'Modos operacionais', ru: 'Режимы работы' }) },
+    { href: '#automation-safeguards', label: tr(language, { en: 'Advanced safeguards', pl: 'Zaawansowane zabezpieczenia', pt: 'Proteções avançadas', ru: 'Продвинутые safeguards' }) },
+  ];
 
   return (
     <main className="mx-auto max-w-[1500px] px-6 py-16 text-white">
@@ -51,6 +56,14 @@ export default async function AdminAutomationsPage({ searchParams }: { searchPar
           <p className="mt-5 max-w-4xl text-lg leading-8 text-slate-300">{tr(language, { en: 'One-click automation modes for safer growth, lighter ops work, and a cleaner global admin experience.', pl: 'Tryby automatyzacji one-click dla bezpieczniejszego wzrostu, lżejszych operacji i bardziej globalnego doświadczenia admina.', pt: 'Modos de automação com um clique para crescimento mais seguro, operações mais leves e uma experiência admin mais global.', ru: 'One-click режимы автоматизации для более безопасного роста, более лёгких операций и более глобального admin-опыта.' })}</p>
         </div>
       </section>
+
+      <div className="mt-6 flex flex-wrap gap-3">
+        {automationQuickLinks.map((item) => (
+          <a key={item.href} href={item.href} className="rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.08]">
+            {item.label}
+          </a>
+        ))}
+      </div>
 
       {(params.updated || params.error || params.deliveryUpdated || params.deliveryError) && (
         <div
@@ -82,16 +95,20 @@ export default async function AdminAutomationsPage({ searchParams }: { searchPar
           description={tr(language, { en: 'This first block compresses cadence, spend defense, confidence, and review pressure into one fast operator read.', pl: 'Ten pierwszy blok kompresuje cadence, ochronę wydatków, confidence i presję review w jeden szybki odczyt operatorski.' })}
           tone="emerald"
         >
-      <section className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-        <MetricCard label="Competitor scans" value={settings.autoCompetitorScans ? 'On' : 'Off'} delta="Recurring market checks" tone="cyan" />
-        <MetricCard label="Market alerts" value={settings.autoMarketWatchAlerts ? 'On' : 'Off'} delta="Realtime watchtower" tone="emerald" />
-        <MetricCard label="Weekly digest" value={settings.weeklyMarketDigest ? 'On' : 'Off'} delta="Recurring intelligence" tone="violet" />
-        <MetricCard label="Review requests" value={settings.autoReviewRequests ? 'On' : 'Off'} delta="Trust generation" tone="violet" />
-        <MetricCard label="Sync interval" value={`${settings.syncIntervalMinutes} min`} delta="Automation cadence" tone="amber" />
-        <MetricCard label="Min confidence" value={`${settings.minConfidenceForBuy}`} delta="BUY threshold" tone="amber" />
-        <MetricCard label="Safe test cap" value={`$${settings.maxSafeTestBudgetUsd}`} delta="Burn protection" tone="violet" />
-        <MetricCard label="Kill switch" value={settings.killSwitchEnabled ? 'Armed' : 'Off'} delta="Hard anti-loss" tone="amber" />
-        <MetricCard label="Daily spend cap" value={`$${settings.maxDailySpendUsd}`} delta="Scale ceiling" tone="emerald" />
+      <section className="mt-8 grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <MetricCard label="Competitor scans" value={settings.autoCompetitorScans ? 'On' : 'Off'} delta="Recurring market checks" tone="cyan" />
+          <MetricCard label="Market alerts" value={settings.autoMarketWatchAlerts ? 'On' : 'Off'} delta="Realtime watchtower" tone="emerald" />
+          <MetricCard label="Sync interval" value={`${settings.syncIntervalMinutes} min`} delta="Automation cadence" tone="amber" />
+          <MetricCard label="Min confidence" value={`${settings.minConfidenceForBuy}`} delta="BUY threshold" tone="amber" />
+          <MetricCard label="Daily spend cap" value={`$${settings.maxDailySpendUsd}`} delta="Scale ceiling" tone="emerald" />
+          <MetricCard label="Kill switch" value={settings.killSwitchEnabled ? 'Armed' : 'Off'} delta="Hard anti-loss" tone="amber" />
+        </div>
+        <InsightPanel title={tr(language, { en: 'Operator sequence', pl: 'Kolejność operatora', pt: 'Sequência do operador', ru: 'Порядок оператора' })} items={[
+          tr(language, { en: settings.weeklyMarketDigest ? 'Weekly digest is active, so executive updates can stay automated until manual review is needed.' : 'Weekly digest is off, so intelligence still depends on manual review or direct command-center runs.', pl: settings.weeklyMarketDigest ? 'Tygodniowy digest jest aktywny, więc aktualizacje executive mogą działać automatycznie do momentu ręcznej rewizji.' : 'Tygodniowy digest jest wyłączony, więc intelligence nadal zależy od ręcznej kontroli lub uruchomień z command center.', pt: settings.weeklyMarketDigest ? 'O digest semanal está ativo, então as atualizações executivas podem seguir automáticas até revisão manual.' : 'O digest semanal está desligado, então a inteligência ainda depende de revisão manual ou execução direta.', ru: settings.weeklyMarketDigest ? 'Недельный digest активен, поэтому executive-обновления могут идти автоматически до ручной проверки.' : 'Недельный digest выключен, поэтому intelligence всё ещё зависит от ручной проверки или прямого запуска.' }),
+          tr(language, { en: settings.autoReviewRequests ? 'Review-request automation remains visible, but it is treated as a trust layer rather than the core profit guard.' : 'Review-request automation is off, so trust generation still needs direct operator follow-up.', pl: settings.autoReviewRequests ? 'Automatyzacja próśb o opinie pozostaje aktywna, ale jest traktowana jako warstwa zaufania, a nie główna osłona zysku.' : 'Automatyzacja próśb o opinie jest wyłączona, więc budowanie zaufania nadal wymaga ręcznego domknięcia.', pt: settings.autoReviewRequests ? 'A automação de reviews continua ativa, mas é tratada como camada de confiança, não como proteção principal de lucro.' : 'A automação de reviews está desligada, então a geração de confiança ainda precisa de acompanhamento manual.', ru: settings.autoReviewRequests ? 'Автоматизация запросов отзывов остаётся активной, но рассматривается как слой доверия, а не как основная защита прибыли.' : 'Автоматизация запросов отзывов выключена, поэтому доверие всё ещё нужно закрывать вручную.' }),
+          tr(language, { en: `Safe test budget is capped at $${settings.maxSafeTestBudgetUsd}, which keeps experimentation subordinate to margin protection.`, pl: `Budżet bezpiecznych testów jest ograniczony do $${settings.maxSafeTestBudgetUsd}, co utrzymuje eksperymenty pod kontrolą ochrony marży.`, pt: `O orçamento de testes seguros está limitado a $${settings.maxSafeTestBudgetUsd}, mantendo a experimentação subordinada à proteção de margem.`, ru: `Бюджет безопасных тестов ограничен на уровне $${settings.maxSafeTestBudgetUsd}, поэтому эксперименты подчинены защите маржи.` }),
+        ]} />
       </section>
 
       <section className="mt-8">
@@ -107,7 +124,7 @@ export default async function AdminAutomationsPage({ searchParams }: { searchPar
           tone="emerald"
         >
 
-      <section className="mt-8 grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
+      <section id="automation-routing" className="mt-8 grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
         <div className="rounded-[32px] border border-white/10 bg-slate-950/60 p-8 shadow-[0_24px_100px_rgba(2,6,23,0.45)]">
           <div className="text-[11px] uppercase tracking-[0.24em] text-cyan-200">Premium alert routing</div>
           <h2 className="mt-2 text-3xl font-black">Email, Telegram, and Discord delivery</h2>
@@ -160,11 +177,13 @@ export default async function AdminAutomationsPage({ searchParams }: { searchPar
         ]} />
       </section>
 
-      <section className="mt-8 grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-        <div className="rounded-[32px] border border-white/10 bg-slate-950/60 p-8 shadow-[0_24px_100px_rgba(2,6,23,0.45)]">
-          <div className="text-[11px] uppercase tracking-[0.24em] text-cyan-200">Automation presets</div>
-          <h2 className="mt-2 text-3xl font-black">One-click operating modes</h2>
-          <div className="mt-5 grid gap-4">
+      <details id="automation-modes" className="mt-8 rounded-[32px] border border-white/10 bg-slate-950/60 p-8 shadow-[0_24px_100px_rgba(2,6,23,0.45)]">
+        <summary className="cursor-pointer list-none text-2xl font-bold text-white">{tr(language, { en: 'Open operating modes and rollout guidance', pl: 'Otwórz tryby operacyjne i guidance rolloutu', pt: 'Abrir modos operacionais e guia de rollout', ru: 'Открыть режимы работы и rollout guidance' })}</summary>
+        <div className="mt-6 grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+          <div>
+            <div className="text-[11px] uppercase tracking-[0.24em] text-cyan-200">Automation presets</div>
+            <h2 className="mt-2 text-3xl font-black">One-click operating modes</h2>
+            <div className="mt-5 grid gap-4">
             <form action="/api/admin/automations/settings" method="post" className="hover-lift rounded-[24px] border border-white/10 bg-white/[0.03] p-5">
               <input type="hidden" name="autoCompetitorScans" value="on" />
               <input type="hidden" name="autoMarketWatchAlerts" value="on" />
@@ -221,9 +240,9 @@ export default async function AdminAutomationsPage({ searchParams }: { searchPar
               <p className="mt-2 text-sm text-slate-300">Faster cadence for brands that already have some validated demand.</p>
               <button className="mt-4 rounded-2xl bg-emerald-300 px-4 py-2 text-sm font-semibold text-slate-950">Apply preset</button>
             </form>
+            </div>
           </div>
-        </div>
-        <InsightPanel title="Recommended max-profit setup" items={[
+          <InsightPanel title="Recommended max-profit setup" items={[
           'Keep competitor scans active so pricing and positioning opportunities are surfaced automatically.',
           'Use margin alerts as the default financial defense layer before scaling ad spend.',
           'Keep reward claim limits strict so free usage cannot erode subscription value.',
@@ -231,9 +250,10 @@ export default async function AdminAutomationsPage({ searchParams }: { searchPar
           'Never allow BUY verdicts to bypass your confidence, margin, and manual-review safeguards.',
           'Arm the kill switch so unsafe spend, refund, or CAC conditions hard-block scale.',
         ]} />
-      </section>
+        </div>
+      </details>
 
-      <details className="mt-8 rounded-[32px] border border-white/10 bg-slate-950/60 p-8 shadow-[0_24px_100px_rgba(2,6,23,0.45)]">
+      <details id="automation-safeguards" className="mt-8 rounded-[32px] border border-white/10 bg-slate-950/60 p-8 shadow-[0_24px_100px_rgba(2,6,23,0.45)]">
         <summary className="cursor-pointer list-none text-2xl font-bold text-white">Open advanced automation safeguards</summary>
         <form action="/api/admin/automations/settings" method="post" className="mt-6">
           <div className="grid gap-4 sm:grid-cols-2">

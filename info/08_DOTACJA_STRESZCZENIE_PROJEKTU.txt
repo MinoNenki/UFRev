@@ -1,0 +1,29 @@
+DOTACJA - STRESZCZENIE PROJEKTU
+
+Nazwa robocza projektu:
+UFREV - platforma SaaS do wspierania decyzji produktowych, cenowych i rynkowych.
+
+Opis w 1-2 zdaniach:
+Projekt rozwija platforme, ktora laczy analize AI, automatyzacje i integracje sprzedażowe,
+aby pomagac firmom podejmowac bezpieczniejsze decyzje biznesowe i ograniczac straty.
+
+Co jest juz wykonane:
+- dzialajacy produkt webowy,
+- konta uzytkownikow,
+- panel user i panel admin,
+- monetyzacja przez Stripe,
+- backend i dane w Supabase,
+- warstwa bezpieczenstwa (sekrety, podpisy, rotacja),
+- testy i walidacja techniczna.
+
+Co projekt rozwija dalej:
+- dalsza profesjonalizacja integracji i automatyzacji,
+- wzrost skali i jakosci warstwy analitycznej,
+- usprawnienie procesow operacyjnych i raportowych,
+- rozwoj funkcji wspierajacych ekspansje rynkowa.
+
+Wartosc dla gospodarki/firm:
+- redukcja nietrafionych decyzji,
+- poprawa rentownosci testow produktowych,
+- szybsza reakcja na zmiany rynku,
+- lepsze wykorzystanie danych w codziennej pracy.

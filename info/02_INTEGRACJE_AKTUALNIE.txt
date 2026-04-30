@@ -1,0 +1,55 @@
+UFREV - INTEGRACJE (AKTUALNY STAN I ZAKRES)
+
+1. Integracje user (uproczony flow)
+- Shopify (realne polaczenie i walidacja endpointu).
+- WooCommerce (realne polaczenie i walidacja endpointu).
+- Marketplace lanes dla usera:
+  - Amazon,
+  - eBay,
+  - Allegro.
+- Social paid validation jest celowo poza uproszczonym flow usera.
+
+2. Integracje admin (warstwa rozszerzona)
+- Storefront:
+  - Shopify,
+  - WooCommerce.
+- Global marketplace:
+  - Amazon,
+  - eBay,
+  - Alibaba,
+  - AliExpress,
+  - Walmart,
+  - Etsy,
+  - Rakuten.
+- EU/region:
+  - Allegro,
+  - Cdiscount,
+  - eMAG,
+  - OTTO,
+  - Zalando.
+
+3. Zakres synchronizacji
+- inventory,
+- orders,
+- pricing,
+- listings,
+- returns,
+- traffic.
+
+4. Zabezpieczenia i rollout
+- dry-run mode,
+- manual approval,
+- limity publikacji,
+- limit zmian ceny,
+- bufor stanow magazynowych,
+- kontrola tempa listingow.
+
+5. Jak z tego korzystac praktycznie
+- Najpierw podlacz storefront (Shopify lub WooCommerce).
+- Potem wlacz 1-2 najwazniejsze marketplace lanes.
+- Na start trzymaj rollout ostrozny: dry-run + manual approval.
+- Rozszerzaj zakres sync dopiero po stabilizacji.
+
+6. Wniosek biznesowy
+- Integracje sa gotowe warstwowo: od prostego user flow do mocnego panelu operacyjnego admina.
+- To pozwala rosnac bez chaosu i bez ryzykownego „all in” od pierwszego dnia.
