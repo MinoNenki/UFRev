@@ -115,8 +115,8 @@ export default async function HomePage() {
           <div>
             <div className="glass-chip mb-4 border-cyan-300/30 bg-cyan-300/10 text-cyan-100 shadow-[0_14px_40px_rgba(34,211,238,0.12)]">
               {tr(language, {
-                en: 'Built for everyday users, shops, startups, and firms before they spend more money',
-                pl: 'Dla zwykłych userów, sklepów, startupów i firm zanim wydadzą kolejne pieniądze',
+                en: 'AI decision engine for dropshipping, e-commerce & startups',
+                pl: 'Silnik decyzji AI dla dropshippingu, e-commerce i startupów',
                 de: 'Decision Intelligence zur Verlustreduktion und Chancenfindung',
                 es: 'Inteligencia de decisión para reducir pérdidas y encontrar upside',
                 pt: 'Inteligência de decisão criada para reduzir perdas e encontrar upside',
@@ -127,34 +127,34 @@ export default async function HomePage() {
               <HeroWordReveal
                 durationMs={15000}
                 text={tr(language, {
-                  en: 'Check whether a product, cost, invoice, or business idea makes sense before you spend more.',
-                  pl: 'Sprawdź, czy produkt, koszt, faktura albo pomysł na biznes ma sens, zanim wydasz więcej pieniędzy.',
-                  de: 'Erkenne, ob ein Produkt, Angebot oder eine Rechnung deinen nächsten Schritt verdient.',
-                  es: 'Descubre si un producto, oferta o factura merece tu siguiente movimiento.',
-                  pt: 'Saiba se um produto, oferta ou fatura merece o seu próximo passo.',
-                  ru: 'Пойми, заслуживает ли продукт, предложение или счёт твоего следующего шага.',
+                  en: 'Stop losing money on bad products.',
+                  pl: 'Przestań tracić pieniądze na złe produkty.',
+                  de: 'Hör auf, Geld mit schlechten Produkten zu verlieren.',
+                  es: 'Deja de perder dinero con productos equivocados.',
+                  pt: 'Para de perder dinheiro com produtos errados.',
+                  ru: 'Перестань терять деньги на плохих продуктах.',
                 })}
               />
             </h1>
             <p className="mt-6 max-w-3xl text-[1.04rem] leading-8 text-slate-300 sm:text-[1.12rem] sm:leading-9">
               {tr(language, {
-                en: `${SITE.shortName} gives one simple flow for individual clients, stores, dropshipping, startups, and firms: add a URL, offer, invoice, screenshot, supplier page, or file and get a decision you can use immediately. BUY, TEST, SKIP, lower the cost, renegotiate, or fix the margin with a safer next step.`,
-                pl: `${SITE.shortName} daje jeden prosty flow dla zwykłych klientów, sklepów, dropshippingu, startupów i firm: wrzuć URL, ofertę, fakturę, screenshot, stronę dostawcy albo plik i od razu dostaniesz decyzję, na której da się działać. BUY, TEST, SKIP, obniż koszt, renegocjuj albo popraw marżę z bezpieczniejszym kolejnym krokiem.`,
-                de: `${SITE.shortName} verwandelt URLs, PDFs, Screenshots, Rechnungen und Startup-Ideen in eine klare Entscheidung: BUY, TEST, AVOID, senken, neu verhandeln oder optimieren. Deutliche Urteile, sicherere Startpläne und stärkere Anti-Loss-Schutzregeln schaffen sofortigen Mehrwert.`,
-                es: `${SITE.shortName} convierte URLs, PDFs, capturas, facturas e ideas de startup en una decisión concreta: BUY, TEST, AVOID, reducir, renegociar u optimizar. Veredictos claros, planes más seguros y reglas anti-pérdida hacen que el producto sea útil desde el día uno.`,
-                pt: `${SITE.shortName} transforma URLs, PDFs, capturas de ecrã, faturas e ideias de startup numa decisão concreta: COMPRAR, TESTAR, EVITAR, reduzir, renegociar ou otimizar. Vereditos claros, planos mais seguros e regras anti-loss mais fortes tornam o produto útil desde o primeiro dia.`,
-                ru: `${SITE.shortName} превращает URL, PDF, скриншоты, счета и идеи стартапов в конкретное решение: ПОКУПАТЬ, ТЕСТИРОВАТЬ, ИЗБЕГАТЬ, снижать, пересматривать условия или оптимизировать. Чёткие вердикты, более безопасные планы запуска и усиленные anti-loss правила защиты дают ценность с первого дня.`,
+                en: 'Analyze any product before you spend money. Get an AI decision: BUY, TEST, or SKIP — with real margin, risk insights, and a safer next step.',
+                pl: 'Przeanalizuj każdy produkt zanim wydasz pieniądze. Dostań decyzję AI: BUY, TEST lub SKIP — z realną marżą, analizą ryzyka i bezpieczniejszym kolejnym krokiem.',
+                de: 'Analysiere jedes Produkt bevor du Geld ausgibst. Erhalte eine KI-Entscheidung: BUY, TEST oder SKIP — mit echten Margen- und Risikoeinblicken.',
+                es: 'Analiza cualquier producto antes de gastar dinero. Obtén una decisión AI: BUY, TEST o SKIP — con margen real e insights de riesgo.',
+                pt: 'Analisa qualquer produto antes de gastar dinheiro. Obtém uma decisão AI: BUY, TEST ou SKIP — com margem real e análise de risco.',
+                ru: 'Анализируй любой продукт до того, как тратить деньги. Получай AI-решение: ПОКУПАТЬ, ТЕСТИРОВАТЬ или ПРОПУСТИТЬ — с реальной маржой и анализом рисков.',
               })}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/dashboard" className="rounded-2xl bg-[linear-gradient(135deg,rgba(34,211,238,1),rgba(16,185,129,0.95),rgba(59,130,246,0.96))] px-6 py-4 font-semibold text-slate-950 shadow-[0_22px_70px_rgba(34,211,238,0.28)] transition duration-300 hover:scale-[1.02] hover:shadow-[0_28px_80px_rgba(34,211,238,0.34)]">
                 {tr(language, {
-                  en: 'Check a product now',
-                  pl: 'Sprawdź produkt teraz',
-                  de: 'Dashboard öffnen',
-                  es: 'Abrir panel',
-                  pt: 'Abrir dashboard',
-                  ru: 'Открыть панель',
+                  en: '👉 Analyze product now — free',
+                  pl: '👉 Analizuj produkt teraz — za darmo',
+                  de: '👉 Produkt jetzt analysieren — kostenlos',
+                  es: '👉 Analizar producto ahora — gratis',
+                  pt: '👉 Analisar produto agora — grátis',
+                  ru: '👉 Анализировать продукт сейчас — бесплатно',
                 })}
               </Link>
               <Link href="/pricing" className="rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-4 font-semibold transition duration-300 hover:-translate-y-[1px] hover:bg-white/5 hover:shadow-[0_18px_45px_rgba(2,6,23,0.24)]">
@@ -340,6 +340,61 @@ export default async function HomePage() {
             }}
             liveCase={latestPreviewCase}
           />
+        </div>
+      </section>
+
+      <section className="mt-8 rounded-[32px] border border-red-500/20 bg-[linear-gradient(135deg,rgba(239,68,68,0.08),rgba(15,23,42,0.9),rgba(2,6,23,0.95))] p-8 shadow-[0_20px_60px_rgba(239,68,68,0.08)]">
+        <div className="text-center">
+          <div className="glass-chip mx-auto mb-4 inline-block border-red-400/30 bg-red-400/10 text-red-200">
+            {tr(language, { en: '⚠️ The real problem', pl: '⚠️ Prawdziwy problem', de: '⚠️ Das echte Problem', es: '⚠️ El problema real', pt: '⚠️ O problema real', ru: '⚠️ Настоящая проблема' })}
+          </div>
+          <h2 className="text-[clamp(1.8rem,3vw,2.8rem)] font-black leading-tight text-white">
+            {tr(language, {
+              en: 'Most e-commerce founders lose money before finding a winning product.',
+              pl: 'Większość e-commerce founders traci pieniądze zanim znajdzie zwycięski produkt.',
+              de: 'Die meisten E-Commerce-Gründer verlieren Geld, bevor sie ein Gewinnprodukt finden.',
+              es: 'La mayoría de fundadores de e-commerce pierde dinero antes de encontrar un producto ganador.',
+              pt: 'A maioria dos fundadores de e-commerce perde dinheiro antes de encontrar um produto vencedor.',
+              ru: 'Большинство основателей e-commerce теряют деньги до того, как находят выигрышный продукт.',
+            })}
+          </h2>
+        </div>
+        <div className="mt-8 grid gap-4 md:grid-cols-3">
+          {[
+            {
+              icon: '🔥',
+              title: tr(language, { en: 'Testing blindly', pl: 'Testowanie na ślepo', de: 'Blindes Testen', es: 'Probar a ciegas', pt: 'Testar às cegas', ru: 'Слепое тестирование' }),
+              text: tr(language, { en: 'Running ads on products without knowing the margin or risk first.', pl: 'Reklamy na produkty bez znajomości marży i ryzyka.', de: 'Werbung schalten ohne Marge und Risiko zu kennen.', es: 'Lanzar anuncios sin conocer el margen o el riesgo.', pt: 'Lançar anúncios sem conhecer a margem ou o risco.', ru: 'Запуск рекламы без знания маржи и риска.' }),
+            },
+            {
+              icon: '💸',
+              title: tr(language, { en: 'Burning ad budget', pl: 'Przepalanie budżetu reklamowego', de: 'Werbebudget verbrennen', es: 'Quemar presupuesto publicitario', pt: 'Queimar orçamento de anúncios', ru: 'Сжигание рекламного бюджета' }),
+              text: tr(language, { en: 'Spending thousands on ads before validating if the product actually converts.', pl: 'Tysiące wydane na reklamy zanim sprawdzi się, czy produkt w ogóle konwertuje.', de: 'Tausende für Werbung ausgeben, bevor man prüft ob das Produkt konvertiert.', es: 'Gastar miles en anuncios antes de validar si el producto convierte.', pt: 'Gastar milhares em anúncios antes de validar se o produto converte.', ru: 'Тысячи на рекламу до проверки конверсии продукта.' }),
+            },
+            {
+              icon: '🎲',
+              title: tr(language, { en: 'Guessing instead of knowing', pl: 'Zgadywanie zamiast wiedzy', de: 'Raten statt Wissen', es: 'Adivinar en vez de saber', pt: 'Adivinhar em vez de saber', ru: 'Догадки вместо знаний' }),
+              text: tr(language, { en: 'No data on competition, real demand, or margin before you invest time and money.', pl: 'Brak danych o konkurencji, realnym popycie i marży przed inwestycją czasu i pieniędzy.', de: 'Keine Daten zu Konkurrenz, Nachfrage oder Marge vor dem Invest.', es: 'Sin datos de competencia, demanda real o margen antes de invertir.', pt: 'Sem dados de concorrência, procura real ou margem antes de investir.', ru: 'Нет данных о конкуренции, спросе и марже до инвестирования.' }),
+            },
+          ].map((item) => (
+            <div key={item.title} className="rounded-[24px] border border-red-400/15 bg-red-400/5 p-5">
+              <div className="text-2xl">{item.icon}</div>
+              <div className="mt-3 text-lg font-bold text-white">{item.title}</div>
+              <p className="mt-2 text-sm leading-7 text-slate-300">{item.text}</p>
+            </div>
+          ))}
+        </div>
+        <div className="mt-6 text-center">
+          <p className="text-lg font-semibold text-slate-200">
+            {tr(language, {
+              en: "👉 You don't need more tools. You need better decisions.",
+              pl: '👉 Nie potrzebujesz więcej narzędzi. Potrzebujesz lepszych decyzji.',
+              de: '👉 Du brauchst keine weiteren Tools. Du brauchst bessere Entscheidungen.',
+              es: '👉 No necesitas más herramientas. Necesitas mejores decisiones.',
+              pt: '👉 Não precisas de mais ferramentas. Precisas de melhores decisões.',
+              ru: '👉 Тебе не нужно больше инструментов. Тебе нужны лучшие решения.',
+            })}
+          </p>
         </div>
       </section>
 
