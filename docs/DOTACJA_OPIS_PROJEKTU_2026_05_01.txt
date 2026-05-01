@@ -1,0 +1,166 @@
+UFREV.COM — OPIS PROJEKTU POD DOTACJĘ / GRANT
+Data: 1 maja 2026
+================================================
+
+NAZWA PROJEKTU:
+UFREV — AI Decision Engine dla e-commerce, dropshippingu i MŚP
+
+STRONA INTERNETOWA:
+https://ufrev.com
+
+WŁAŚCICIEL:
+Jakub Lewandowski
+Email: kubalew92@gmail.com
+Tel: +48 737 839 493
+Adres: Dworcowa 39, 87-122 Grębocin, Polska
+NIP: PL1234563218
+
+================================================
+1. OPIS PROJEKTU (KRÓTKI — DO FORMULARZY)
+================================================
+
+UFREV to platforma SaaS klasy globalnej, która pomaga właścicielom sklepów e-commerce,
+dropshipperom i małym firmom podejmować lepsze decyzje biznesowe dzięki sztucznej
+inteligencji — zanim wydadzą pieniądze na testowanie produktów lub kampanie reklamowe.
+
+Platforma analizuje produkty, oferty, faktury, dokumenty i materiały wideo, generując
+jasny werdykt: BUY (kup), TEST (testuj) lub SKIP (odpuść) — wraz z estymacją marży,
+poziomem ryzyka i rekomendowanym kolejnym krokiem.
+
+================================================
+2. PROBLEM KTÓRY ROZWIĄZUJE
+================================================
+
+Właściciele sklepów e-commerce i dropshipperzy regularnie tracą pieniądze na:
+- testowanie produktów bez znajomości marży i popytu,
+- kampanie reklamowe na produkty bez potencjału sprzedażowego,
+- złe decyzje zakupowe przy braku danych rynkowych,
+- zbyt wysokie koszty operacyjne widoczne dopiero po fakcie.
+
+Szacuje się, że ponad 80% nowych produktów wprowadzanych do dropshippingu nie przynosi zysku.
+UFREV daje użytkownikom narzędzie, które pozwala weryfikować decyzje PRZED wydaniem budżetu.
+
+================================================
+3. INNOWACYJNOŚĆ ROZWIĄZANIA
+================================================
+
+UFREV różni się od innych narzędzi AI tym, że:
+
+a) Jest SILNIKIEM DECYZJI, nie chatbotem.
+   Zamiast generować ogólne treści, daje jednoznaczny werdykt z uzasadnieniem.
+
+b) Ma wbudowany system ANTI-LOSS.
+   Guardrails marżowe, kill switch, staged rollout i blokady przy zbyt słabych danych
+   chronią użytkownika przed kosztownymi błędami.
+
+c) Obsługuje WIELE FORMATÓW WEJŚCIOWYCH.
+   URL produktu, opis tekstowy, PDF, screenshot, obraz, plik wideo (MP4/MOV/WEBM/AVI).
+
+d) Uwzględnia REALNE DANE RYNKOWE.
+   Sygnały popytu, analiza konkurencji, trend scoring, break-even ROAS.
+
+e) Jest WIELOJĘZYCZNY od dnia 1.
+   Obsługuje: PL, EN, DE, ES, PT, RU — z myślą o rynku europejskim i globalnym.
+
+f) Ma KOMPLETNY EKOSYSTEM SaaS.
+   Panel użytkownika, automatyzacje, integracje (Shopify, WooCommerce, Amazon, Allegro
+   i inne), system referral, reward ads, multi-plan monetyzacja.
+
+================================================
+4. STAN ZAAWANSOWANIA PROJEKTU
+================================================
+
+ETAP: MVP → Produkcja (faza wdrożenia i pozyskiwania pierwszych klientów)
+
+✅ Platforma jest ONLINE pod domeną https://ufrev.com
+✅ Pełna infrastruktura techniczna uruchomiona (Vercel + Supabase + Stripe + Cloudflare)
+✅ System płatności LIVE (Stripe) — przyjmuje prawdziwe płatności
+✅ Konto Stripe zweryfikowane (KYC) — gotowe do wypłat na konto mBank PLN
+✅ System rejestracji, logowania i kont użytkowników
+✅ Silnik AI zintegrowany z OpenAI GPT-4o
+✅ 4 plany subskrypcyjne + pakiety jednorazowe tokenów AI
+✅ Panel administracyjny z KPI właściciela (MRR, ARR, LTV, CAC, retention)
+✅ Wielojęzyczność (6 języków)
+✅ Testy automatyczne (Vitest)
+
+================================================
+5. TECHNOLOGIA
+================================================
+
+- Frontend: Next.js 14 (React), TypeScript, Tailwind CSS
+- Backend: Next.js API Routes (serverless, Vercel)
+- Baza danych: Supabase (PostgreSQL) z Row Level Security
+- Silnik AI: OpenAI GPT-4o (text + vision + document)
+- Płatności: Stripe Checkout + Webhooks
+- Hosting: Vercel (global edge network)
+- DNS/CDN: Cloudflare
+- Bezpieczeństwo: HTTPS, OWASP Top 10, webhook signature verification
+
+================================================
+6. MODEL BIZNESOWY
+================================================
+
+SaaS z wielopoziomową monetyzacją:
+
+Plan Free:     podstawowy dostęp, ograniczone analizy
+Plan Starter:  rozszerzone analizy (docelowo ok. 19 USD/mies.)
+Plan Pro:      pełne analizy + integracje (docelowo ok. 29 USD/mies.)
+Plan Scale:    full system + priority AI (docelowo ok. 79 USD/mies.)
+
+Dodatkowe przychody:
+- jednorazowe pakiety tokenów AI (9 / 19 / 39 USD)
+- reward ads (tokeny za obejrzane reklamy)
+- system referral (poleceni = tokeny i dostęp)
+
+Rynek docelowy (TAM):
+- e-commerce founders i dropshipperzy (globalnie 26M+ aktywnych sklepów Shopify)
+- MŚP poszukujące narzędzi AI do optymalizacji kosztów
+- startupy na etapie walidacji produktu
+
+================================================
+7. CELE ROZWOJOWE (NA CO MOGĄ BYĆ PRZEZNACZONE ŚRODKI Z DOTACJI)
+================================================
+
+a) Marketing i pozyskiwanie pierwszych płacących klientów
+   - kampanie TikTok, YouTube Shorts, Reddit
+   - content marketing i SEO
+   - płatne kampanie Google/Meta dla segmentu e-commerce
+
+b) Rozwój produktu — kolejne funkcje
+   - rozbudowa silnika analizy o dane cenowe w czasie rzeczywistym
+   - API publiczne dla integratorów
+   - mobilna wersja dashboardu (PWA)
+   - rozbudowa integracji (więcej platform sprzedażowych)
+
+c) Infrastruktura i skalowalność
+   - upgrade Supabase do wyższego planu
+   - monitoring i observability (Sentry, Datadog)
+   - load testing i przygotowanie na większy ruch
+
+d) Ekspansja językowa i rynkowa
+   - dedykowane kampanie na rynku DACH (DE, AT, CH)
+   - lokalizacja dla rynku hiszpańskojęzycznego i brazylijskiego
+
+================================================
+8. DLACZEGO TEN PROJEKT ZASŁUGUJE NA WSPARCIE
+================================================
+
+1. Jest GOTOWY — nie jest pomysłem na papierze, działa pod ufrev.com.
+2. Ma REALNY PROBLEM do rozwiązania — udokumentowane straty w e-commerce.
+3. Jest INNOWACYJNY TECHNICZNIE — połączenie silnika decyzji AI z systemem anti-loss.
+4. Ma MODEL PRZYCHODU — płatności live, zweryfikowane konto, gotowa infrastruktura.
+5. Ma POTENCJAŁ GLOBALNY — wielojęzyczny, integracje z globalnymi platformami.
+6. Właściciel PONIÓSŁ JUŻ KOSZTY — infrastruktura, licencje AI, czas developmentu.
+7. Środki z dotacji przyspieszą FAZĘ GO-TO-MARKET, nie budowanie od zera.
+
+================================================
+9. KONTAKT
+================================================
+
+Jakub Lewandowski
+https://ufrev.com
+kubalew92@gmail.com
++48 737 839 493
+Grębocin, Polska
+
+================================================

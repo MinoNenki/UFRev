@@ -1,0 +1,93 @@
+UFREV.COM — AKTUALNY STATUS PLATFORMY
+Data: 1 maja 2026
+================================================
+
+1. STATUS PRODUKCYJNY
+------------------------------------------------
+Platforma jest ONLINE i działa pod domeną: https://ufrev.com
+Hosting: Vercel (Production) — Status: READY
+GitHub: MinoNenki/UFRev — gałąź main
+Baza danych: Supabase (produkcja)
+Płatności: Stripe (tryb LIVE — konto zweryfikowane)
+Webhook Stripe: https://ufrev.com/api/stripe/webhook — AKTYWNY
+DNS: Cloudflare — poprawna konfiguracja (A + CNAME → Vercel)
+
+2. CO JEST ZROBIONE I DZIAŁA
+------------------------------------------------
+✅ Strona główna (landing page) z sekcją Hero, Problem, How it works, Pricing
+✅ System rejestracji i logowania (Supabase Auth)
+✅ Dashboard użytkownika z analizami AI
+✅ Silnik analizy AI — werdykty BUY / TEST / SKIP
+✅ Analiza produktu z URL / opisu / PDF / screenshotu / wideo
+✅ Analiza kosztów i faktur
+✅ Logika anti-loss (guardrails marży, kill switch, staged rollout)
+✅ Panel administracyjny właściciela (Founder Command Center)
+✅ KPI panel: MRR, ARR, ARPPU, LTV/CAC, retention, monetization view
+✅ Plany subskrypcyjne + pakiety tokenów AI (Stripe Checkout)
+✅ Webhook Stripe obsługujący: checkout.session.completed, customer.subscription.updated, invoice.payment_succeeded
+✅ Paywall i logika dostępu do funkcji premium
+✅ Reward Ads i system referral
+✅ System automatyzacji biznesowych
+✅ Integracje sprzedażowe (Shopify, WooCommerce, Amazon, eBay, Allegro i inne)
+✅ MarketWatch — sygnały popytu i rynku
+✅ Analiza wideo (MP4, MOV, WEBM, AVI)
+✅ Analiza wizualna AI (screenshoty, zdjęcia produktów)
+✅ Odczyt PDF i dokumentów
+✅ System wielojęzyczny: PL, EN, DE, ES, PT, RU
+✅ Sekcja przykładowych werdyktów (Example Verdicts)
+✅ System opinii użytkowników (Reviews)
+✅ Support, Privacy Policy, Terms of Service
+✅ What-If scenarios w wynikach analizy
+✅ Recheck — ponowna analiza zaktualizowanych danych
+✅ Share Result Button — udostępnianie werdyktów
+
+3. TECHNOLOGIA (STACK)
+------------------------------------------------
+Frontend:      Next.js 14.2.30 (App Router, React Server Components)
+Styling:       Tailwind CSS
+Backend:       Next.js API Routes (serverless)
+Baza danych:   Supabase (PostgreSQL)
+Auth:          Supabase Auth
+AI Engine:     OpenAI GPT-4o (+ vision, document, video layer)
+Płatności:     Stripe (Checkout + Webhooks)
+Hosting:       Vercel (Production)
+DNS/CDN:       Cloudflare
+Język:         TypeScript (100%)
+Testy:         Vitest
+
+4. PLANY I MONETYZACJA
+------------------------------------------------
+Plan Free:     ograniczone analizy, bez automatyzacji
+Plan Starter:  podstawowe analizy, bez integracji  
+Plan Pro:      pełne analizy, integracje, automations
+Plan Scale:    full system, priorytetowe AI, wszystkie funkcje
+
+Pakiety tokenów: jednorazowe doładowania AI (bez subskrypcji)
+Reward Ads:    dodatkowe tokeny za obejrzenie reklam
+Referral:      tokeny i dostęp za poleconych użytkowników
+
+5. BEZPIECZEŃSTWO
+------------------------------------------------
+- HTTPS enforced (Vercel + Cloudflare)
+- Supabase RLS (Row Level Security) na wszystkich tabelach
+- Stripe webhook signature verification (whsec_)
+- Zmienne środowiskowe wyłącznie w Vercel (nie w repo)
+- Dynamic rendering dla tras wrażliwych
+- OWASP Top 10 compliance w logice API
+
+6. OSTATNIE ZMIANY (commit history)
+------------------------------------------------
+8a8e74c  feat: improve hero copy and add Problem section to landing page
+e22ec02  docs: add verified Vercel import checklist and env requirements
+d415e51  fix: force dynamic rendering for problematic routes
+d7b793a  feat: stripe live checkout + webhook + dynamic routes
+
+7. WŁAŚCICIEL
+------------------------------------------------
+Jakub Lewandowski
+Email: kubalew92@gmail.com
+Telefon: +48 737 839 493
+Adres: Dworcowa 39, 87-122 Grębocin, PL
+NIP: PL1234563218
+Konto bankowe: mBank (PLN)
+================================================
