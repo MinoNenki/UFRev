@@ -1,17 +1,10 @@
-'use client';
-
 import Link from 'next/link';
+import { getLanguage } from '@/lib/i18n-server';
 import { SITE } from '@/lib/site';
 import { tr } from '@/lib/i18n';
-import { useEffect, useState } from 'react';
 
-export default function CookiesPage() {
-  const [language, setLanguage] = useState('en');
-
-  useEffect(() => {
-    const lang = localStorage.getItem('language') || 'en';
-    setLanguage(lang);
-  }, []);
+export default async function CookiesPage() {
+  const language = await getLanguage();
 
   const sections = [
     {

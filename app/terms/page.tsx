@@ -29,7 +29,7 @@ export default async function TermsPage() {
       title: tr(language, { en: '3. NO LIABILITY FOR USER DECISIONS', pl: '3. BEZ ODPOWIEDZIALNOŚCI ZA DECYZJE UŻYTKOWNIKA', es: '3. SIN RESPONSABILIDAD POR DECISIONES DEL USUARIO', ru: '3. БЕЗ ОТВЕТСТВЕННОСТИ ЗА РЕШЕНИЯ ПОЛЬЗОВАТЕЛЯ' }),
       body: tr(language, {
         en: 'We are NOT LIABLE for: financial losses, business failures, decisions based on our analysis, accuracy of AI recommendations, consequences of relying on outputs, or missed opportunities. You accept FULL RESPONSIBILITY for all decisions and actions.',
-        pl: 'Nie odpowiadamy za: straty finansowe, niepowodzenia biznesu, decyzje na podstawie naszej analizy, dokładość rekomendacji AI, skutki polegania na wynikach ani utracone okazje. Akceptujesz PEŁNĄ ODPOWIEDZIALNOŚĆ za wszystkie decyzje i działania.',
+        pl: 'Nie odpowiadamy za: straty finansowe, niepowodzenia biznesu, decyzje na podstawie naszej analizy, dokładność rekomendacji AI, skutki polegania na wynikach ani utracone okazje. Akceptujesz PEŁNĄ ODPOWIEDZIALNOŚĆ za wszystkie decyzje i działania.',
         es: 'NO SOMOS RESPONSABLES POR: pérdidas financieras, fracasos empresariales, decisiones basadas en nuestro análisis, precisión de recomendaciones de IA, consecuencias de depender de nuestros resultados ni oportunidades perdidas. ACEPTAS RESPONSABILIDAD TOTAL por todas tus decisiones y acciones.',
         ru: 'Мы НЕ ОТВЕТСТВЕННЫ ЗА: финансовые убытки, бизнес-провалы, решения на основе нашего анализа, точность рекомендаций ИИ, последствия полагаться на результаты или упущенные возможности. Ты ПРИНИМАЕШЬ ПОЛНУЮ ОТВЕТСТВЕННОСТЬ за все решения и действия.',
       }),
