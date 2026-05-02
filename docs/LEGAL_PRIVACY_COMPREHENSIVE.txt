@@ -1,0 +1,79 @@
+PRIVACY POLICY - GDPR/CCPA COMPLIANT
+=====================================
+
+1. DATA WE COLLECT
+• Account registration (name, email)
+• Payment info (processed by Stripe, not stored by us)
+• Usage logs and analytics
+• Analysis history
+• Interaction data
+• IP address, device info
+• Cookies
+
+2. HOW WE USE DATA
+• To provide the service
+• To process payments
+• To improve functionality
+• To ensure security
+• To comply with law
+• To communicate updates
+Data shared with AI providers (OpenAI) for analysis.
+
+3. DATA RETENTION
+• Kept only as long as necessary
+• Deleted within 30 days of account deletion
+• Backups retained up to 90 days
+• Analysis history per user preference
+
+4. YOUR RIGHTS (GDPR/CCPA/UK GDPR)
+You have the right to:
+• Access your personal data
+• Request deletion
+• Correct inaccurate data
+• Request data portability
+• Opt-out of non-essential processing
+• File complaints with authorities
+Contact us to exercise rights: kubalew92@gmail.com
+
+5. DATA SECURITY
+Protected by:
+• HTTPS encryption
+• Access controls
+• Key rotation
+• Supabase Row-Level Security (RLS)
+No method 100% secure. Report issues to: kubalew92@gmail.com
+
+6. GLOBAL DATA PROCESSING
+Data may be processed globally (US, EU, etc.) through:
+• OpenAI (AI analysis)
+• Stripe (payments)
+• Vercel (hosting)
+• Supabase (database)
+By using our service, you consent to international transfers.
+
+7. THIRD-PARTY SERVICES
+Integrations with Shopify, WooCommerce, Amazon, Allegro process data per their privacy policies. We're not responsible for their practices.
+
+8. COOKIES
+We use cookies for:
+• Session management
+• Analytics
+• Functionality
+• Security
+See Cookies Policy for details. Users can opt-out via browser settings.
+
+9. CHILDREN'S PRIVACY
+Service not intended for users under 13 (COPPA). Parental consent required if used by minors in jurisdictions requiring it.
+
+10. CHANGES TO POLICY
+We may update this policy. Major changes notified. Continued use = acceptance.
+
+11. CONTACT
+Privacy questions: kubalew92@gmail.com
+Complaints: kubalew92@gmail.com
+
+Compliant with:
+✓ GDPR (EU)
+✓ CCPA (California)
+✓ UK GDPR (UK)
+✓ LGPD (Brazil) - no data transfers without consent

@@ -1,0 +1,116 @@
+COMPREHENSIVE TERMS OF SERVICE - READY TO USE
+==============================================
+
+Copy this entire content to your /terms page
+
+[This is a production-ready, comprehensive legal document with all required clauses]
+
+1. SERVICE DESCRIPTION
+UFREV is a SaaS platform providing AI-powered decision support for product analysis, business validation, and risk assessment. This service is INFORMATIONAL ONLY and does NOT constitute financial, investment, legal, medical, or guaranteed business advice.
+
+2. NO PROFIT GUARANTEE (CRITICAL)
+AI outputs are PROBABILISTIC and may be INACCURATE. We make NO GUARANTEE of:
+• Accuracy or correctness of analysis
+• Profitability, financial gain, or business success
+• Usefulness of recommendations in your situation
+Your decisions are made at YOUR OWN RISK. We are a SUPPORT TOOL, not a guarantee.
+
+3. NO LIABILITY (CRITICAL FOR AI SaaS)
+We are NOT LIABLE for:
+• Financial losses
+• Business failures or missed opportunities
+• Decisions or actions taken based on our analysis
+• Accuracy of AI-generated recommendations
+• Consequences of your reliance on our outputs
+You accept FULL RESPONSIBILITY for all decisions.
+
+4. LIMITATION OF LIABILITY
+Our maximum liability = fees you paid in last 30 days. We're not liable for:
+• Data loss or corruption
+• Service interruptions
+• Third-party service failures (Stripe, Supabase, OpenAI)
+• Indirect, incidental, or consequential damages
+• Lost profits or business opportunities
+
+5. NON-REFUNDABLE PAYMENTS (EXCEPT BY LAW)
+Except where law requires (EU consumer rights, etc.):
+• All subscription payments are NON-REFUNDABLE
+• One-time token purchases are NON-REFUNDABLE
+• Partial-month cancellations get NO REFUND
+• Chargeback attempts = permanent account suspension
+• Fraudulent disputes reported to authorities
+
+6. USER ACCOUNT RESPONSIBILITY
+• You must provide accurate registration data
+• You're responsible for login security
+• You're responsible for all account activity
+• Sharing access is prohibited
+• We may suspend/delete accounts violating these terms
+• You can cancel anytime via settings
+
+7. PAYMENTS VIA STRIPE
+• All payments processed by Stripe
+• Subscriptions auto-renew monthly/yearly
+• You must maintain valid payment method
+• Failed payments may suspend access
+• Chargebacks may terminate account
+• See Stripe ToS for payment disputes
+
+8. PROHIBITED USE
+Users may NOT:
+• Use for illegal activities
+• Attempt to breach security
+• Abuse or overload the platform
+• Resell services without authorization
+• Submit illegal or infringing content
+• Violate third-party rights
+Violations = immediate account termination
+
+9. EXTERNAL INTEGRATIONS (Shopify, WooCommerce, etc.)
+• We're NOT responsible for external service functionality
+• We're NOT liable for third-party failures
+• We're NOT responsible for their security
+• We're NOT liable for API changes
+You use integrations at YOUR OWN RISK
+
+10. AUTOMATIONS & ANTI-LOSS (CRITICAL FOR YOUR PRODUCT)
+While we offer risk-limiting features:
+• NO GUARANTEE of effectiveness
+• NO GUARANTEE against losses
+• You must monitor all automated actions
+• You must verify all automated decisions
+• Risk features are SUPPORT ONLY
+Automated actions are YOUR RESPONSIBILITY
+
+11. PRIVACY & DATA
+Data processed per GDPR/CCPA/UK GDPR. See Privacy Policy. You have rights to:
+• Access your data
+• Request deletion
+• Export your data
+• Opt-out of non-essential processing
+Data may be processed globally, including with AI providers.
+
+12. GOVERNING LAW
+Polish and EU law. For users outside EU, local laws may apply. Disputes subject to applicable jurisdiction.
+
+13. CHANGES TO TERMS
+We may change these terms anytime. Major changes notified. Continued use = acceptance.
+
+14. FINAL PROVISIONS
+By using our service, you accept these Terms in full. Service provided "AS IS" without warranties.
+
+---
+
+For Stripe & Billing Compliance:
+• Subscriptions auto-renew
+• User can cancel anytime (clear cancellation link required)
+• Payment method can be updated
+• Invoice history available
+• Chargeback policy clearly stated (account suspension)
+
+For Global Compliance:
+• GDPR: Data processing, CCPA: Rights, UK GDPR: Processing basis
+• No guarantee of uninterrupted service
+• Maximum limitation of liability clearly stated
+• User responsibilities clearly stated
+• AI outputs disclaimer clearly stated

@@ -1,0 +1,71 @@
+COOKIES POLICY
+==============
+
+1. WHAT ARE COOKIES?
+Cookies are small text files stored on your device. Used for functionality, analytics, and security.
+
+2. TYPES OF COOKIES WE USE
+
+Essential Cookies (Required)
+• Session cookies - keep you logged in
+• Security cookies - prevent fraud
+• Functionality cookies - remember preferences
+These cookies are NECESSARY for service operation.
+
+Analytics Cookies (Optional)
+• Track page usage
+• Measure feature popularity
+• Understand user behavior
+These help us improve the service.
+
+Marketing Cookies (Optional, if applicable)
+• Track conversion
+• Measure ad effectiveness
+Only if you interact with ads or referral links.
+
+3. THIRD-PARTY COOKIES
+Services using cookies:
+• Stripe (payments)
+• OpenAI API (if logging)
+• Vercel Analytics (if enabled)
+• Supabase Auth (sessions)
+See their privacy policies for details.
+
+4. COOKIE CONSENT
+By using our site, you consent to:
+✓ Essential cookies (required)
+✓ Analytics cookies (can be disabled)
+✓ Marketing cookies (can be disabled)
+
+We display a cookie banner on first visit. You can:
+• Accept all cookies
+• Reject non-essential cookies
+• Manage preferences
+
+5. HOW TO CONTROL COOKIES
+In your browser:
+• Chrome: Settings > Privacy > Cookies
+• Firefox: Preferences > Privacy > Cookies
+• Safari: Preferences > Privacy > Cookies
+• Edge: Settings > Privacy > Cookies
+
+Clear cookies anytime - you'll be logged out.
+
+6. COOKIE DURATION
+• Session cookies: deleted when you close browser
+• Persistent cookies: deleted manually or after 12 months
+• Essential cookies: kept for 24 months (security)
+
+7. CHANGES TO POLICY
+We may update this policy. Changes notified via banner or email.
+
+8. CONTACT
+Questions about cookies: kubalew92@gmail.com
+
+---
+
+COOKIE BANNER TEXT (for your website):
+
+"We use cookies to improve your experience. Essential cookies are required. You can manage preferences."
+
+[Accept All] [Reject Non-Essential] [Manage Preferences]
