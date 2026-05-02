@@ -80,6 +80,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <Link href="/reviews">{tr(language,{en:'Reviews',pl:'Opinie',de:'Bewertungen',es:'Reseñas',pt:'Avaliações',ru:'Отзывы'})}</Link>
               <Link href="/support">{tr(language,{en:'Support',pl:'Wsparcie',de:'Support',es:'Soporte',pt:'Suporte',ru:'Поддержка'})}</Link>
               <Link href="/privacy">{tr(language,{en:'Privacy',pl:'Prywatność',de:'Datenschutz',es:'Privacidad',pt:'Privacidade',ru:'Конфиденциальность'})}</Link>
+              <Link href="/cookies">{tr(language,{en:'Cookies',pl:'Cookies',de:'Cookies',es:'Cookies',pt:'Cookies',ru:'Cookies'})}</Link>
               <Link href="/terms">{tr(language,{en:'Terms',pl:'Regulamin',de:'AGB',es:'Términos',pt:'Termos',ru:'Условия'})}</Link>
             </div>
           </div>

@@ -27,6 +27,7 @@ export default function AuthForm({ mode }: Props) {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [referralCode, setReferralCode] = useState('');
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   useEffect(() => {
     const ref = searchParams.get('ref') || localStorage.getItem('referral_code') || '';
@@ -40,6 +41,12 @@ export default function AuthForm({ mode }: Props) {
     e.preventDefault();
     setLoading(true);
     setMessage(null);
+
+    if (mode === 'register' && !termsAccepted) {
+      setMessage('You must accept the Terms of Service, Privacy Policy, and Cookies Policy to register.');
+      setLoading(false);
+      return;
+    }
 
     if (mode === 'register') {
       const { error } = await supabase.auth.signUp({ email, password, options: { data: referralCode ? { referral_code: referralCode } : {} } });
@@ -81,7 +88,32 @@ export default function AuthForm({ mode }: Props) {
           <h2 className="text-3xl font-bold">{mode === 'login' ? 'Log in' : 'Create account'}</h2>
           <input className="w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 outline-none ring-0" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
           <input className="w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 outline-none ring-0" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
-          <button className="w-full rounded-2xl bg-cyan-300 px-4 py-3 font-semibold text-slate-950 transition hover:opacity-90" disabled={loading}>
+          {mode === 'register' && (
+            <label className="flex items-start gap-3 text-sm text-slate-300 rounded-lg border border-slate-700/50 bg-slate-950/50 p-3">
+              <input
+                type="checkbox"
+                required
+                className="w-4 h-4 rounded mt-0.5 flex-shrink-0"
+                checked={termsAccepted}
+                onChange={(e) => setTermsAccepted(e.target.checked)}
+              />
+              <span>
+                I accept the{' '}
+                <Link href="/terms" className="text-cyan-300 hover:underline" target="_blank" rel="noopener noreferrer">
+                  Terms of Service
+                </Link>
+                , 
+                <Link href="/privacy" className="text-cyan-300 hover:underline" target="_blank" rel="noopener noreferrer">
+                  {' '}Privacy Policy
+                </Link>
+                , and
+                <Link href="/cookies" className="text-cyan-300 hover:underline" target="_blank" rel="noopener noreferrer">
+                  {' '}Cookies Policy
+                </Link>
+              </span>
+            </label>
+          )}
+          <button className="w-full rounded-2xl bg-cyan-300 px-4 py-3 font-semibold text-slate-950 transition hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed" disabled={loading || (mode === 'register' && !termsAccepted)}>
             {loading ? 'Please wait...' : mode === 'login' ? 'Log in' : 'Create account'}
           </button>
           {message && <p className="text-sm text-slate-300">{message}</p>}
