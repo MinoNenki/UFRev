@@ -22,6 +22,7 @@ export default function AuthForm({ mode }: Props) {
   const supabase = createSupabaseBrowserClient();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const emailRedirectTo = `${SITE.url.replace(/\/$/, '')}/auth/confirm`;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -49,10 +50,17 @@ export default function AuthForm({ mode }: Props) {
     }
 
     if (mode === 'register') {
-      const { error } = await supabase.auth.signUp({ email, password, options: { data: referralCode ? { referral_code: referralCode } : {} } });
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo,
+          data: referralCode ? { referral_code: referralCode } : {},
+        },
+      });
       if (error) setMessage(getAuthErrorMessage(error.message));
       else {
-        setMessage('Account created. Check your email for confirmation, or log in immediately if email confirmation is disabled in Supabase.');
+        setMessage(`Account created. Check your email and confirm your account. After clicking the link, you will return to a branded ${SITE.shortName} confirmation page.`);
         router.push('/auth/login');
         router.refresh();
       }

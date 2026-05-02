@@ -12,3 +12,6 @@ artifacts/
 *.zip
 *.zip.*
 .env copy.local
+
+.vercel
+.env*.local
