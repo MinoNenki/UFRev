@@ -29,20 +29,26 @@ export async function POST(req: NextRequest) {
   const creditPack = CREDIT_PACKS[itemKey as keyof typeof CREDIT_PACKS];
   const origin = process.env.NEXT_PUBLIC_SITE_URL || req.nextUrl.origin;
 
-  if (subscriptionPlan && subscriptionPlan.key !== 'free') {
-    const priceId = await resolveCheckoutPriceId(getStripePriceIdForPlan(subscriptionPlan.key));
-    if (!priceId) return NextResponse.json({ error: 'Missing subscription price ID in env.' }, { status: 500 });
-    const session = await stripe.checkout.sessions.create({ mode: 'subscription', customer_email: user.email || undefined, line_items: [{ price: priceId, quantity: 1 }], success_url: `${origin}/dashboard?success=1`, cancel_url: `${origin}/pricing?canceled=1`, metadata: { user_id: user.id, item_key: subscriptionPlan.key, item_type: 'subscription' } });
-    await supabaseAdmin.from('monetization_events').insert({ user_id: user.id, event_type: 'checkout_intent', item_key: subscriptionPlan.key, item_type: 'subscription', metadata: { origin, session_id: session.id } });
-    return NextResponse.json({ url: session.url });
-  }
+  try {
+    if (subscriptionPlan && subscriptionPlan.key !== 'free') {
+      const priceId = await resolveCheckoutPriceId(getStripePriceIdForPlan(subscriptionPlan.key));
+      if (!priceId) return NextResponse.json({ error: `Missing subscription price ID for plan: ${subscriptionPlan.key}` }, { status: 500 });
+      const session = await stripe.checkout.sessions.create({ mode: 'subscription', customer_email: user.email || undefined, line_items: [{ price: priceId, quantity: 1 }], success_url: `${origin}/dashboard?success=1`, cancel_url: `${origin}/pricing?canceled=1`, metadata: { user_id: user.id, item_key: subscriptionPlan.key, item_type: 'subscription' } });
+      await supabaseAdmin.from('monetization_events').insert({ user_id: user.id, event_type: 'checkout_intent', item_key: subscriptionPlan.key, item_type: 'subscription', metadata: { origin, session_id: session.id } });
+      return NextResponse.json({ url: session.url });
+    }
 
-  if (creditPack?.stripePriceEnv) {
-    const priceId = await resolveCheckoutPriceId(process.env[creditPack.stripePriceEnv]);
-    if (!priceId) return NextResponse.json({ error: 'Missing credit pack price ID in env.' }, { status: 500 });
-    const session = await stripe.checkout.sessions.create({ mode: 'payment', customer_email: user.email || undefined, line_items: [{ price: priceId, quantity: 1 }], success_url: `${origin}/dashboard?creditsPurchased=1`, cancel_url: `${origin}/pricing?canceled=1`, metadata: { user_id: user.id, item_key: creditPack.key, item_type: 'pack' } });
-    await supabaseAdmin.from('monetization_events').insert({ user_id: user.id, event_type: 'checkout_intent', item_key: creditPack.key, item_type: 'pack', metadata: { origin, session_id: session.id } });
-    return NextResponse.json({ url: session.url });
+    if (creditPack?.stripePriceEnv) {
+      const priceId = await resolveCheckoutPriceId(process.env[creditPack.stripePriceEnv]);
+      if (!priceId) return NextResponse.json({ error: `Missing credit pack price ID for: ${creditPack.key} (env: ${creditPack.stripePriceEnv})` }, { status: 500 });
+      const session = await stripe.checkout.sessions.create({ mode: 'payment', customer_email: user.email || undefined, line_items: [{ price: priceId, quantity: 1 }], success_url: `${origin}/dashboard?creditsPurchased=1`, cancel_url: `${origin}/pricing?canceled=1`, metadata: { user_id: user.id, item_key: creditPack.key, item_type: 'pack' } });
+      await supabaseAdmin.from('monetization_events').insert({ user_id: user.id, event_type: 'checkout_intent', item_key: creditPack.key, item_type: 'pack', metadata: { origin, session_id: session.id } });
+      return NextResponse.json({ url: session.url });
+    }
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error('[stripe/checkout] error:', message);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 
   return NextResponse.json({ error: 'Invalid product.' }, { status: 400 });
