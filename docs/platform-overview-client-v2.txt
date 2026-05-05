@@ -1,0 +1,176 @@
+UFREV.com — CO DOSTAJESZ JAKO UŻYTKOWNIK
+Aktualizacja: 5 maja 2026 | Wersja prosta dla klienta końcowego
+================================================
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CO TO JEST UFREV?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+UFREV to AI, który odpowiada na jedno pytanie:
+"Czy to ma sens biznesowo — i co zrobić dalej?"
+
+Wrzucasz produkt, usługę, pomysł, link, plik lub zdjęcie.
+Dostajesz konkretny werdykt z liczbami, ryzykami i krokami.
+
+Nie ma zgadywania. Nie ma ogólnych odpowiedzi.
+Masz decyzję, marżę, ryzyko i plan.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CO MOŻESZ ANALIZOWAĆ — KAŻDY TEMAT NA ŚWIECIE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PRODUKTY DO SPRZEDAŻY:
+• Link z Alibaba/AliExpress → czy to opłacalny produkt?
+• Listing Amazon/eBay/Allegro → czy mam szansę przy tej konkurencji?
+• Opis produktu → ile mogę zarobić, jaka marża po kosztach?
+• Zdjęcie produktu → jak wygląda vs konkurencja, czy nada się do reklamy?
+
+USŁUGI I BIZNESY:
+• "Chcę otworzyć myjnię parową w Krakowie — co muszę mieć i ile zarobię?"
+• "Czy opłaca się założyć firmę sprzątającą?"
+• "Ile kosztuje start agencji social media?"
+• Dowolna usługa z dowolnej branży na świecie
+
+ONLINE BIZNESY:
+• "Dropshipping — który produkt wybrać i gdzie sprzedawać?"
+• "Amazon FBA — czy ten produkt wygra z obecnymi sprzedawcami?"
+• "Print-on-demand — jaka nisza i jaki kanał?"
+• "SaaS startup — czy ten pomysł ma sens rynkowy?"
+
+DOKUMENTY I PLIKI:
+• PDF umowy → co podpisuję, jakie ryzyka?
+• Faktura → gdzie mogę obciąć koszty?
+• Wniosek o dotację → czy jest kompletny, co uzupełnić?
+• Biznesplan → czy liczby są realistyczne?
+
+OBRAZY I WIDEO:
+• Screenshot sklepu → co poprawić, żeby sprzedawał lepiej?
+• Zdjęcie produktu → czy to dobra kreatura reklamowa?
+• Wideo reklamowe → czy hook jest wystarczająco mocny?
+• Screenshot kampanii → co jest nie tak z wynikami?
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+JAK TO DZIAŁA — 3 KROKI
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+KROK 1 — WRZUCASZ
+Wklej link, napisz pytanie, dodaj plik PDF, zdjęcie lub wideo.
+Możesz też wpisać opis produktu lub pomysłu słowami.
+
+KROK 2 — AI ANALIZUJE
+System sprawdza: popyt, marżę, konkurencję, ryzyko, platformę, sprzęt, koszty.
+Używa wiedzy o każdej branży i każdym rynku na świecie.
+
+KROK 3 — DOSTAJESZ WYNIK
+• Werdykt: BUY / TEST / AVOID
+• Konkretne liczby (marża %, cena floor, break-even)
+• Główne ryzyka (2-3 konkretne, nie ogólniki)
+• Następne kroki (co zrobić dziś lub w tym tygodniu)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PRZYKŁADY — CO DOSTANIESZ W ODPOWIEDZI
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PRZYKŁAD 1: Produkt z Alibaba
+Input: "Link AliExpress — oczyszczacz powietrza, koszt $18, chcę sprzedawać na Allegro"
+Output:
+→ Werdykt: TEST
+→ Marża szacowana: ~38% netto po kosztach wysyłki, prowizji Allegro i reklamie
+→ Cena floor: ~129 PLN, target: ~179 PLN, premium: ~229 PLN
+→ Ryzyki: wysoki zwrot w tej kategorii (do 15%), sezonowość (zimowe szczyty)
+→ Akcja: kup 20 sztuk testowo, wylistuj na Allegro Smart za 159 PLN, mierz CTR przez 2 tygodnie
+
+PRZYKŁAD 2: Usługa
+Input: "Chcę założyć mobilną myjnię parową w Warszawie"
+Output:
+→ Werdykt: TEST (dobry pomysł, ale sprawdź lokalny rynek)
+→ Sprzęt starter: parownica 2000-4000 PLN, auto robocze (lub używane combi), chemia 500 PLN
+→ Startup cost: 8,000-15,000 PLN (starter lane)
+→ Przychód: 2,000-3,500 PLN/mies przy 10-15 zleceniach (50% capacity)
+→ Break-even: ok. 4-6 miesięcy
+→ Akcja: dodaj profil Google My Business, ogłoszenie OLX, testuj w weekendy przez miesiąc
+
+PRZYKŁAD 3: Faktura
+Input: Upload rachunku za prąd 1,200 PLN
+Output:
+→ Tryb: Optymalizacja kosztów
+→ Wykryto: największa pozycja to energia nocna — potencjał 15% oszczędności
+→ Szacowane oszczędności: ~180 PLN/mies przez zmianę taryfy
+→ Akcja: zadzwoń do dostawcy po taryfę G12, porównaj ofertę Polenergia i Enea
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FUNKCJE — CO JEST W TWOIM KONCIE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+DASHBOARD:
+• Szybki dostęp do analizy
+• Historia poprzednich analiz
+• Status planu i saldo tokenów AI
+• Market Watch — obserwowane produkty/konkurenci
+
+ANALIZA AI:
+• Analiza produktu (URL, opis, zdjęcie, PDF, wideo)
+• Analiza kosztowa (faktura, rachunek, koszty stałe)
+• Analiza dokumentu (umowa, wniosek, biznesplan)
+• Analiza wizualna (screenshot, kreatura reklamowa)
+• What-If scenariusze (co jeśli zmienię cenę/kanał/rynek)
+• Recheck — ponowna analiza po zmianie danych
+
+MARKET WATCH (Pro/Scale):
+• Śledzenie cen produktów i konkurentów
+• Alerty o zmianach cen
+• Tygodniowy digest rynku na email
+
+AUTOMATYZACJE (Scale):
+• Automatyczne skany konkurencji
+• Alerty marży i bezpieczeństwa
+• Prośby o opinie po analizach
+
+KONTO:
+• Plan, historia analiz, tokeny
+• Kod referral — polecaj i zarabiaj tokeny
+• Reward Ads — obejrzyj reklamę, dostań tokeny
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PLANY I CENY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+FREE:       0 PLN    | 3 analizy/mies | Podstawowe funkcje
+STARTER:   19 PLN/m  | 30 analiz/mies | PDF, obrazy, historia
+PRO:       49 PLN/m  | 100 analiz/m   | Wideo, Market Watch, scenariusze
+SCALE:     99 PLN/m  | Nielimitowane  | Automatyzacje, API, priorytet
+
+JEDNORAZOWE (bez subskrypcji):
+Pack 9:    9 PLN     | Kilka analiz na próbę
+Pack 19:  19 PLN     | Projekt, research przed decyzją
+Pack 39:  39 PLN     | Pełny research przed dużą decyzją
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DLA KOGO JEST UFREV?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Sprzedawcy online (Allegro, Amazon, eBay, własny sklep)
+✅ Dropshipperzy szukający produktów z marżą
+✅ Osoby otwierające usługowy biznes (myjnia, sprzątanie, gastronomia, uroda)
+✅ Freelancerzy i agencje wyceniające usługi
+✅ Właściciele sklepów optymalizujący koszty
+✅ Inwestorzy i founderzy walidujący pomysły
+✅ Każdy, kto chce podjąć lepszą decyzję biznesową
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DLACZEGO UFREV ZAMIAST ZWYKŁEGO AI?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ZWYKŁY AI (ChatGPT, Gemini itp.):
+- Daje ogólne odpowiedzi
+- Nie zna Twojego kontekstu biznesowego
+- Nie liczy marży ani break-even
+- Nie daje konkretnego werdyktu
+- Nie chroni przed złą decyzją
+
+UFREV:
+- Daje konkretny werdykt z liczbami
+- Zna realia każdej branży i rynku
+- Liczy marżę po wszystkich kosztach (z wysyłką i prowizją)
+- Flaguje ryzyko kapitału i burn risk
+- Kończy każdą analizę konkretnym krokiem na dziś

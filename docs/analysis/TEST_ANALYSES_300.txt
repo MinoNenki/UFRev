@@ -1,0 +1,566 @@
+UFREV — 300 TESTOWYCH ANALIZ (LOSOWE TYPY)
+Cel: Walidacja jakości promptu dla każdej kategorii i formatu wejścia
+Data: 5 maja 2026
+Instrukcja: Każdy z tych inputów można wkleić bezpośrednio do UFREV i sprawdzić wynik.
+Uwaga: * = uwzględnij koszt wysyłki w analizie | ** = z linkiem marketplace
+================================================
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SEKCJA 1: PRODUKTY Z ALIBABA / ALIEXPRESS (50 testów) **
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1.  Produkt: LED strip lights 5m, koszt Alibaba $3.20/szt + $1.80 wysyłka do PL.
+    Chcę sprzedawać na Allegro. Czy to opłacalne?*
+
+2.  Link: aliexpress.com/item/123456789 — elektryczny otwieracz do puszek, $8.50.
+    Wysyłka do PL: $2.10. Cel: Allegro + własny sklep. Ocena?*
+
+3.  Produkt z 1688.com: torba termiczna do pizzy, cena zakupu $4.50/szt.
+    MOQ 50 szt. Shipping sea freight ok. $1.20/szt. Rynek: DE, PL. Test 50 szt czy ryzyko?*
+
+4.  AliExpress: inteligentna lampa biurkowa z USB, $12.90 + $3.50 DHL.
+    Amazon PL potencjalna cena: 79-99 PLN. Marża i sensowność?*
+
+5.  Alibaba: składane krzesło kempingowe, $6.80, wysyłka kontenerowa ~$1.50/szt.
+    Sezon: kwiecień-wrzesień. Platforma: Allegro. Ile zamówić na start?*
+
+6.  AliExpress: elektroniczny termometr do ucha dla dzieci, $5.40 + $2.80 wysyłka.
+    Konkurencja na Allegro: 80-150 PLN. Czy to dobry produkt?*
+
+7.  Alibaba: yoga mat antypoślizgowa TPE, $7.20 MOQ 30 szt + $2.10 wysyłka/szt.
+    Target: Allegro + Instagram. Trend rosnący czy malejący?*
+
+8.  AliExpress: powerbank 20000mAh z wyświetlaczem LCD, $14.50 + $4.20.
+    Amazon DE target price: 25-35 EUR. Czy to warto?*
+
+9.  1688: kubek termiczny 500ml ze stali nierdzewnej, $2.80/szt, MOQ 100.
+    Shipping: $0.90/szt sea. Personalizacja logo możliwa. Private label?*
+
+10. AliExpress: ładowarka samochodowa USB-C 65W, $6.40 + $3.00 shipping.
+    Konkurencja mocna na Amazon. Czy wejść własną marką?*
+
+11. Alibaba: mata do myszy XXL z podstawką bambusową, $3.90 + $1.60.
+    Etsy/Amazon Handmade potential. Własne logo za dopłatą $0.30. Ocena?*
+
+12. AliExpress: inteligentna waga kuchenna Bluetooth, $9.80 + $3.20.
+    Allegro: 59-89 PLN. Kategoria zdrowie. BUY czy TEST?*
+
+13. 1688: silikonowe formy do pieczenia (zestaw 5 szt), $1.80/set, MOQ 200.
+    Target: Allegro, Etsy. Packaging included. Marża przy 29 PLN?*
+
+14. AliExpress: przewód USB-C do MagSafe 2m, $3.20 + $1.90.
+    Bardzo konkurencyjna kategoria. Czy jeszcze można zarobić?*
+
+15. Alibaba: zestaw narzędzi do naprawy zegarków (147 szt), $11.20 + $2.80.
+    Nisza B2B + hobby. Amazon: 49-79 PLN. Ocena?*
+
+16. AliExpress: elektryczna szczoteczka do zębów dla dzieci, $7.60 + $3.10.
+    Allegro: 69-99 PLN. Cel: pakiety świąteczne. Sezonowość?*
+
+17. 1688: papier do notatek sticky notes 100szt, $0.40/pack, MOQ 500.
+    Branding własny możliwy. Target: firmy, szkoły. B2B direct. Sens?*
+
+18. AliExpress: halogen solarny 100W czujnik ruchu, $18.50 + $5.20.
+    Amazon: 79-129 PLN. Czy wejść w tę kategorię?*
+
+19. Alibaba: kask rowerowy kids, $8.90 + $2.40, certyfikat CE dostępny.
+    Allegro: 49-89 PLN. Bezpieczeństwo produktu — jaki jest risk?*
+
+20. AliExpress: portable blender USB, $9.40 + $3.60.
+    Viral na TikTok. Amazon i Allegro. Czy popyt nadal wysoki?*
+
+21. 1688: smycz odblaskowa dla psów, $0.90/szt, MOQ 200.
+    Target: Allegro, Zooplus. Private label. Ocena marży?*
+
+22. AliExpress: uchwyt magnetyczny na telefon do samochodu, $2.80 + $1.40.
+    Bardzo nasycona kategoria. Można jeszcze zarobić?*
+
+23. Alibaba: drewniany organizer na biurko 6-przegródkowy, $4.50 + $1.80.
+    Etsy, Allegro. Konfiguracja: natural/black/white. Marża i platforma?*
+
+24. AliExpress: elektryczna pompka do materacy 12V, $12.30 + $4.10.
+    Sezon: maj-sierpień. Allegro, Amazon. Ile trzymać w magazynie?*
+
+25. 1688: maska anty-PM2.5 z filtrem węglowym, $0.80/szt, MOQ 300.
+    Target: Allegro (zima). Czy certyfikat FFP2 wymagany? Ryzyko?*
+
+26. AliExpress: lampa solarna ogrodowa LED 200W, $22.40 + $7.50.
+    Amazon DE: 35-55 EUR. Ocena sezonowości i marży?*
+
+27. Alibaba: żelazko parowe pionowe do ubrań, $14.80 + $4.20.
+    Allegro: 79-149 PLN. Czy warto rywalizować z Philipsem?*
+
+28. AliExpress: zestaw akwareli profesjonalnych 48 kolorów, $8.90 + $3.00.
+    Etsy, Allegro. Trend: art supplies rosnący. Ocena?*
+
+29. 1688: ściągacz do tapety elektryczny, $16.50 + $3.80.
+    B2B: malarze, firmy budowlane. Allegro, OLX ogłoszenia. Potencjał?*
+
+30. AliExpress: wodoodporny zegarek sportowy, $11.20 + $3.50.
+    Amazon: 35-65 EUR. Kategoria bardzo nasycona. Wchodzić czy nie?*
+
+31. Alibaba: papierowe torby na zakupy z logo, $0.25/szt MOQ 1000.
+    B2B: piekarnie, butiki, restauracje. Direct sales. Model i marża?*
+
+32. AliExpress: kamera IP WiFi zewnętrzna 4MP, $19.80 + $6.20.
+    Allegro: 149-249 PLN. Instalacja: DIY. Potencjał i ryzyko?*
+
+33. 1688: serwis herbaty ceramiczny 6-osobowy, $12.40 + $4.80.
+    Etsy, Amazon Handmade. Unboxing content potential. Ocena?*
+
+34. AliExpress: poduszka do siedzenia z pianki memory, $6.80 + $3.20.
+    Allegro: 49-89 PLN. Kategoria home & office. BUY czy TEST?*
+
+35. Alibaba: żywica epoksydowa 1kg zestaw, $8.50 + $3.10.
+    Etsy: DIY/craft niche, rosnący trend. Własna marka? Ocena?*
+
+36. AliExpress: elektryczna grzałka do stóp, $13.40 + $4.60.
+    Sezon: październik-marzec. Allegro. Ile zamówić przed zimą?*
+
+37. 1688: worki na śmieci biodegradowalne 100szt, $1.20/pack, MOQ 200.
+    Eco trend. Allegro, Amazon. Private label za $0.20 extra. Sens?*
+
+38. AliExpress: trójkąt LED RGB gaming, $24.50 + $7.80.
+    Twitch/gaming nisza. Amazon, Media Markt. Marża i pozycjonowanie?*
+
+39. Alibaba: rower trójkołowy dla dzieci 2-5 lat, $28.50 + $9.50.
+    Allegro: 179-299 PLN. Ciężka kategoria, zwroty? Ocena?*
+
+40. AliExpress: opaski elastyczne do ćwiczeń 5-pack, $3.20 + $1.60.
+    Fitness nisza, Amazon FBA. Ocena pod private label?*
+
+41. 1688: ozdoby bożonarodzeniowe szklane, $1.40/set MOQ 100.
+    Sezon Q4. Amazon, Etsy. Kiedy zamawiać i ile? Ocena sezonowa?*
+
+42. AliExpress: przenośny głośnik BT IP67, $16.90 + $5.40.
+    Amazon: 35-70 EUR. Kategoria elektronika — ocena ryzyk?*
+
+43. Alibaba: zawieszka zapachowa do samochodu drewniana, $0.60/szt MOQ 200.
+    Auto accessories. Allegro, detailing shops. B2B direct. Potencjał?*
+
+44. AliExpress: pistolet do klejenia na gorąco mini, $5.80 + $2.40.
+    DIY/crafts. Allegro, Castorama marketplace. Marża?*
+
+45. 1688: papierowy taśmociąg kraft 48mm, $0.35/roll MOQ 500.
+    B2B: sklepy, e-commerce pakowanie. Hurt bezpośredni. Model?*
+
+46. AliExpress: nóż kuchenny Damascus stalowy, $22.80 + $7.20.
+    Etsy, Amazon. Premium nisza. Private label branding. Ocena?*
+
+47. Alibaba: materac dmuchany dla gości 203x152cm, $18.40 + $6.80.
+    Allegro, Amazon. Sezonowość: lato + turystyka. Plan?*
+
+48. AliExpress: kabel HDMI 2.1 8K 3m, $4.80 + $2.20.
+    Allegro, Amazon. Commodity product. Czy jest jeszcze marża?*
+
+49. 1688: papier pakowy kraft w rolce 10m, $0.60/roll MOQ 200.
+    Eco packaging trend. Etsy sellers, boutiques. Model B2B/B2C?*
+
+50. AliExpress: bielizna termoaktywna komplet damski, $9.80 + $3.80.
+    Fashion — wysoki zwrot risk. Amazon PL. Analiza risk/reward?*
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SEKCJA 2: AMAZON / EBAY — ANALIZA LISTINGÓW (50 testów) **
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+51.  Amazon: Ninja Blender 1000W, BSR #234 w Kitchen. Cena: $79.99.
+     Czy warto wejść z własnym blenderem (koszt $18, shipping $5)?*
+
+52.  eBay listing: iPhone 14 case carbon fiber. 2,847 sprzedanych.
+     Cena: $12.99. MOQ Alibaba: $1.20/szt + $0.80 ship. Analiza?*
+
+53.  Amazon UK: resistance bands set 5 szt. #56 BSR. £14.99.
+     Sourcing: $3.20 + $1.40 ship. FBA fees ~£5. Marża po FBA?*
+
+54.  eBay: vintage lamp retro Edison 40W. 890 sprzedanych/mies.
+     Cena: $24.99. Alibaba source: $4.80 + $2.20. Ocena?*
+
+55.  Amazon DE: elektrischer Schneeräumer. BSR #87. Cena €89.
+     Sezon: listopad-luty. Sourcing: $22 + $8 ship. BUY?*
+
+56.  eBay UK: dog grooming kit 7-piece. 3,400 sprzedanych.
+     Cena: £16.99. Alibaba: $3.40 + $1.80. FBA possible?*
+
+57.  Amazon IT: cuscino memory foam cervicale. BSR #145. €29.99.
+     Rynek Italy expanding. Koszt: $6.80 + $2.80. Wejść?*
+
+58.  eBay: mechanical keyboard TKL. 567 sprzedanych/mies. $54.99.
+     Alibaba: $18 + $6 ship. Niche: gaming. Ocena?*
+
+59.  Amazon FR: tapis de yoga premium 6mm. BSR #67. €24.99.
+     Sourcing: $7.20 + $2.10. FBA France. Warto?*
+
+60.  eBay motors: LED bar light 40". 1,240 sprzedanych.
+     Cena: $45.99. Alibaba: $12.80 + $5.40. Off-road niche?*
+
+61.  Amazon PL: filtr do wody Brita 3-pack. BSR #23. 99 PLN.
+     Własny filtr: koszt $4.20 + $1.80 ship. Konkurencja z Brita?*
+
+62.  eBay: succulent plant 4" pot. 5,600 sprzedanych/mies.
+     Niski AOV $5.99. Logistyka rośliny. Marża możliwa?*
+
+63.  Amazon: smart plug WiFi EU. BSR #189. $14.99.
+     Alibaba: $2.40 + $1.20. Certyfikat CE wymagany. Ocena?*
+
+64.  eBay: vintage record player BT. 423 sprzedanych. $69.99.
+     Alibaba: $24 + $8 ship. Lifestyle niche. Analiza?*
+
+65.  Amazon UK: candle making kit starter. BSR #34. £24.99.
+     DIY trend. Koszt $6.40 + $2.60 ship. FBA UK viable?*
+
+66.  eBay: fishing lures set 30pcs. 8,200 sprzedanych/mies.
+     Cena: $9.99. Alibaba: $1.20 + $0.80. Commodity or still OK?*
+
+67.  Amazon DE: Duftkerze Soja 250ml. BSR #112. €19.99.
+     Private label możliwy. Koszt produkcji $3.80. Ocena?*
+
+68.  eBay: portable power station 300Wh. 234 sprzedanych/mies. $189.
+     Alibaba: $68 + $22 ship. Wysoki AOV. Marża i ryzyko?*
+
+69.  Amazon: kids learning tablet 7". BSR #78. $29.99.
+     Sourcing: $8.50 + $3.20. Kids electronics — zwrot risk wysoki?*
+
+70.  eBay: vintage movie posters lot 10. 1,890 sprzedanych. $19.99.
+     POD model możliwy. Brak inventory. Koszt druku $3.20. Ocena?*
+
+71.  Amazon ES: auriculares inalámbricos. BSR #234. €29.99.
+     Alibaba: $8.40 + $3.20. FBA Spain. Czy rynek Hiszpania warto?*
+
+72.  eBay: 3D printer resin 500ml. 2,100 sprzedanych. $24.99.
+     Alibaba: $6.80 + $2.40. Niche rosnący. Subscriptions możliwe?*
+
+73.  Amazon UK: beard grooming kit premium. BSR #145. £22.99.
+     Men's grooming trend. Koszt $5.60 + $2.20. FBA UK?*
+
+74.  eBay: antique compass brass. 678 sprzedanych/mies. $14.99.
+     Decor/gift niche. Alibaba: $2.80 + $1.40. Etsy też viable?*
+
+75.  Amazon: stand up desk converter. BSR #567. $49.99.
+     WFH trend. Alibaba: $14.50 + $6.80. FBA US — ocena?*
+
+76.  eBay: car LED interior lights 4pcs. 12,400 sprzedanych. $8.99.
+     Commodity. Alibaba: $1.20 + $0.60. Czy nadal marża jest?*
+
+77.  Amazon IT: sottopentola silicone set 6. BSR #89. €14.99.
+     Sourcing: $2.80 + $1.20. FBA Italy. Ocena?*
+
+78.  eBay: camping hammock ultralight. 3,200 sprzedanych. $22.99.
+     Alibaba: $4.80 + $2.40. Outdoor niche. Marża?*
+
+79.  Amazon FR: carnet de notes bullet journal. BSR #67. €12.99.
+     POD lub Alibaba $2.40. Stationery niche France. Warto?*
+
+80.  eBay: vintage typewriter décor. 456 sprzedanych. $34.99.
+     Heavy item — shipping expensive. Alibaba $12 + $15 ship. Sens?*
+
+81.  Amazon DE: Hundegeschirr reflektierend. BSR #123. €19.99.
+     Pet trend. Sourcing $3.20 + $1.40. FBA Germany viable?*
+
+82.  eBay: projector mini 1080p. 1,120 sprzedanych. $49.99.
+     Alibaba: $16.80 + $6.20. Electronics risk. Ocena?*
+
+83.  Amazon: water bottle insulated 32oz. BSR #34. $24.99.
+     Very saturated. Koszt $4.20 + $1.80. Private label still?*
+
+84.  eBay: puzzle 1000pcs landscape. 2,890 sprzedanych. $14.99.
+     Games/toys. Alibaba: $2.80 + $2.20 (heavy). Marża?*
+
+85.  Amazon UK: essential oil diffuser 500ml. BSR #89. £19.99.
+     Wellness trend. Koszt $4.80 + $2.40. FBA UK ocena?*
+
+86.  eBay: telescoping flagpole 20ft. 234 sprzedanych. $49.99.
+     Niche: patriotic, events. Alibaba $14 + $12 ship. Ocena?*
+
+87.  Amazon: desk cable organizer kit. BSR #245. $16.99.
+     WFH + gaming. Koszt $2.80 + $1.20. Private label?*
+
+88.  eBay: kombucha brewing kit starter. 567 sprzedanych. $29.99.
+     Trend rosnący. Sourcing $8.40 + $3.60. Fermentation niche?*
+
+89.  Amazon DE: Reiseadapter Weltreisestecker. BSR #67. €15.99.
+     Travel accessory. Alibaba $2.40 + $1.20. CE wymagane. Sens?*
+
+90.  eBay: metal detector beginner. 890 sprzedanych. $54.99.
+     Hobby niche. Alibaba $16.80 + $7.20. Ocena całości?*
+
+91.  Amazon: aromatherapy shower steamers 6-pack. BSR #178. $19.99.
+     Bath & body trend. POD/private label. Koszt $3.60. Analiza?*
+
+92.  eBay: miniature terracotta pots 20pcs. 4,500 sprzedanych. $12.99.
+     Craft/gardening. Alibaba $1.80 + $1.40. Etsy alt viable?*
+
+93.  Amazon UK: knee compression sleeve. BSR #123. £14.99.
+     Health/sports. Alibaba $2.40 + $1.20. FBA UK. Ocena?*
+
+94.  eBay: digital hygrometer thermometer. 7,800 sprzedanych. $8.99.
+     Commodity. Alibaba $1.20 + $0.80. Czy wciąż marża?*
+
+95.  Amazon: car organizer back seat kids. BSR #234. $19.99.
+     Family/travel niche. Alibaba $3.80 + $1.80. Ocena?*
+
+96.  eBay: handmade leather journal A5. 1,230 sprzedanych. $24.99.
+     Premium feels. Alibaba semi-handmade $4.80 + $2.60. Etsy alt?*
+
+97.  Amazon DE: Silikon-Eiswürfelform. BSR #45. €9.99.
+     Kitchen. Very cheap. Alibaba $0.80 + $0.60. Volumen strategy?*
+
+98.  eBay: reusable grocery bags 5-pack. 9,800 sprzedanych. $9.99.
+     Eco/commodity. Alibaba $0.80 + $0.60. Marża na masową sprzedaż?*
+
+99.  Amazon: handheld garment steamer. BSR #167. $34.99.
+     Alibaba $8.80 + $4.20. Laundry care niche. FBA US analiza?*
+
+100. eBay: neon sign custom LED. 678 sprzedanych. $49.99.
+     Custom product. Made-to-order. Alibaba: $12 + $8 ship. Marża?*
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SEKCJA 3: USŁUGI — BIZNESY LOKALNE I MOBILNE (50 testów)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+101. Chcę otworzyć mobilną myjnię parową w Warszawie. Jakie mam szanse, co kupić i ile zarobię?
+102. Firma sprzątająca biura w Krakowie — ile kosztuje start i kiedy break-even?
+103. Detailing samochodowy mobile w Poznaniu — ceny, sprzęt, czy się opłaca?
+104. Dog grooming mobile w Łodzi — ile zarobię i jaki sprzęt jest potrzebny?
+105. Chcę otworzyć food truck z burgerami w Trójmieście. Koszt startu i marża?
+106. Firma malarska — pokoje i mieszkania. Warszawa. Ocena opłacalności i cenniki.
+107. Kurs gotowania dla korporacji — catering + warsztaty. Model B2B. Sens?
+108. Mobilna kawiarnia (samochód-kawiarnia) w centrum Wrocławia. Start i revenue?
+109. Montaż paneli fotowoltaicznych — solo technik. Polska. Certyfikaty, koszt startu, zarobki.
+110. Usługi ogrodnicze — koszenie, pielęgnacja, Kraków. Sprzęt i seasonality.
+111. Naprawa telefonów — punkt stacjonarny w galerii. Koszty najmu vs mobile workshop.
+112. Studio fotografi produktowej dla e-commerce. Warszawa. Cenniki, sprzęt, klienci.
+113. Barber shop single-chair w centrum Wrocławia. Koszty najmu, ceny, break-even.
+114. Paznokcie hybrydowe — home salon vs wynajęty fotel. Która opcja lepsza?
+115. Korepetycje matematyka i fizyka online. Stawki, platformy, jak zacząć?
+116. Szkolenia Excel/Google Sheets dla firm. B2B online i stacjonarnie. Model pricing.
+117. Usługi hydrauliczne mobilne — awaria 24h. Warszawa. Koszt startu i pricing.
+118. Elektryka instalacyjna — praca solo vs zatrudnianie. Polska 2026. Ocena.
+119. Klimatyzacja — montaż i serwis. Mazowsze. Sezonowość i koszt startu.
+120. Wypożyczalnia sprzętu budowlanego — małe narzędzia. Model pricing i ROI.
+121. Catering dietetyczny meal prep — Kraków dostawa. Revenue model i kuchnia.
+122. Pizzeria na telefon (dark kitchen) — Łódź. Koszty, Glovo/Uber Eats marże.
+123. Sala zabaw dla dzieci — wynajem sali urodzinowej. Koszt wyposażenia i revenue.
+124. Studio pilates 10 mat w Poznaniu. Cena wynajmu, abonament, break-even.
+125. Fizjoterapia mobilna w domu pacjenta. Czy lepiej niż gabinet stacjonarny?
+126. Tłumaczenia techniczne EN/DE/PL — freelance. Stawki, klienci, platformy.
+127. Wirtualna asystentka dla zagranicznych klientów. Jak wyceniać i gdzie znajdować?
+128. Social media management dla local businesses. Pakiety, pricing, jak zacząć.
+129. SEO dla małych firm lokalnych. Model retainer vs projekt. Pricing PL market.
+130. Tworzenie stron WordPress dla restauracji. Pricing, czas wykonania, upsell.
+131. Zarządzanie reklamami Meta Ads dla sklepów. Model agencji. Pricing i marża.
+132. Copywriting landing pages — e-commerce. Stawki polskie vs zagraniczne. Upwork?
+133. Montaż mebli IKEA i innych — mobile. Allegro ogłoszenia vs Google My Business.
+134. Mycie okien zewnętrznych — wysokie budynki (abseiling). Certyfikaty? Pricing?
+135. Dezynfekcja i odkażanie pomieszczeń. Post-COVID popyt. Sprzęt i pricing.
+136. Wynajem limuzyny z kierowcą — śluby, events. Koszt zakupu vs leasing.
+137. DJ na wesela i eventy. Sprzęt (starter vs pro), cenniki, jak zacząć?
+138. Organizacja wesel — koordynator. Bez własnego obiektu. Model pricing.
+139. Sesje foto noworodkowe i ciążowe. Sprzęt, tło, ceny, jak budować klientów?
+140. Wideofilmowanie wesel 4K z dronem. Czy wciąż rynek nienasycony w 2026?
+141. Przeprowadzki lokalne — van. Koszt zakupu vs wynajem auta na start.
+142. Cyklinowanie i lakierowanie podłóg drewnianych. Sprzęt, pricing, rynek.
+143. Tynkowanie i glazurnictwo — solo. Czy wciąż opłacalne przy kosztach materiałów?
+144. Budowa ogrodzeń i bram automatycznych. B2B + B2C. Model i marża.
+145. Instalacja monitoringu CCTV dla firm. Sprzęt, certyfikaty, pricing B2B.
+146. Nauka jazdy (szkoła prawa jazdy) — franczyza vs własna. Koszty i zarobki.
+147. Usługi veterynarne mobilne — szczepienia, badania w domu. Jak działać solo?
+148. Grooming koty — nisza vs psy. Mniejsza konkurencja = wyższa cena?
+149. Wynajem sprzętu eventowego — namioty, oświetlenie. Koszt i model pricing.
+150. Serwis rowerowy mobilny (cargo bike warsztat) — miasta rowerowe PL. Potencjał?
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SEKCJA 4: ONLINE BIZNESY I MODELE CYFROWE (50 testów)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+151. Dropshipping przez własny sklep Shopify — elektronika akcesoria. Czy warto w 2026?
+152. Print-on-demand Etsy — kubki z personalizowanymi cytatami. Nisza i marża?
+153. Amazon FBA: bamboo kitchen utensils set. Analiza niszy i FBA fees.
+154. YouTube kanał o finansach osobistych PL. CPM, monetyzacja, czas do $1k/mies.
+155. Newsletter płatny B2B — analizy rynku e-commerce. Substack vs własny. Model?
+156. Kurs online "Jak sprzedawać na Allegro" — platforma, pricing, traffic.
+157. Affiliate marketing Amazon Associates PL — nisza produkty outdoor. ROI?
+158. Sklep POD Redbubble — grafiki minimalistyczne geometryczne. Potencjał?
+159. Freelance web design — klienci lokalni PL. Stawki i kanały pozyskania.
+160. Agencja TikTok Ads — obsługa sklepów e-commerce. Model i pricing.
+161. SaaS idea: automatyzacja faktur dla freelancerów. Walidacja rynkowa?
+162. Dropshipping przez Allegro — sprzęt ogrodniczy. Jak działa i jakie ryzyko?
+163. OnlyFans agency management — model biznesowy bez tworzenia treści.
+164. Amazon Merch on Demand — T-shirty niche gaming. Potencjał pasywny?
+165. Sprzedaż gotowych stron Shopify — turnkey stores na Flippa. Marża?
+166. Chrome Extension SaaS — price tracker dla Amazon. Monetyzacja freemium.
+167. Discord community premium — ecommerce mastermind. Pricing i jak zacząć?
+168. E-book "100 produktów do dropshipping 2026" — promocja i pricing.
+169. Własny podcast i Patreon — personal finance niche EN. Break-even timeline?
+170. Marketplace stron internetowych — pośrednictwo kupno/sprzedaż (jak Flippa).
+171. Kurs copywriting sprzedażowy online PL — Udemy vs własna platforma.
+172. Subagent AI automation (n8n, Make, Zapier) dla SME. Pricing freelance.
+173. PLR content bundle — szablony social media Canva dla agencji. Sprzedaż?
+174. Własna marka kosmetyczna private label — sklep D2C. Koszt i timeline.
+175. Dropshipping produkty wellness — collagen, biohacking. EU market 2026.
+176. TikTok Shop — jak działa komisja, czy to opłacalne dla sprzedawcy?
+177. Kurs języka polskiego online dla obcokrajowców. Gdzie sprzedawać, ile zarabiać?
+178. Usługi konsultingowe SaaS pricing — fractional CMO. Stawki i jak zacząć.
+179. Agencja influencer marketing — łączenie marek z nano-influencerami. Model?
+180. Sklep Etsy — ręcznie robione świece sojowe naturalne. Marża i skalowalność.
+181. Gotowe motywy WordPress premium — sprzedaż na ThemeForest. Dochód pasywny?
+182. Obsługa kont Amazon dla sprzedawców PL — VA service. Stawki i klienci.
+183. Pośrednictwo importu z Chin dla małych firm PL — model i legal aspects.
+184. Sprzedaż używanych ubrań SzafaIG/Vinted/Depop — skalowalność po kilku mies?
+185. Własny chatbot AI dla restauracji — zamówienia i rezerwacje. B2B SaaS?
+186. Kursy video Canva dla small business owners — Udemy vs Teachable.
+187. Blog afiliacyjny w niszy crypto hardware wallets. Czas do $500/mies?
+188. Wynajem maszyn (3D printer service) — print on demand B2B. Koszt i ROI?
+189. Platforma kursów dla branży budowlanej — certyfikaty BHP online. Potencjał?
+190. Handel walutami — trading bot gotowe rozwiązania. Ryzyko i realność?
+191. Zarządzanie marketplace Amazon/Allegro dla zewnętrznych klientów — agencja.
+192. Kurs "Jak fotografować produkty smartfonem" — $29 ebook + kurs. Niche?
+193. Automatyzacja email marketing dla e-commerce — Klaviyo consulting. Model?
+194. Platforma łącząca freelancerów PL z klientami — dlaczego to trudne?
+195. Gaming YouTube channel EN — speedruns niche. Monetization timeline?
+196. Sprzedaż recept na 3D modele (STL files) na Etsy/Cults3d. Potencjał?
+197. Instagram automation agency — zarządzanie profilami lokalnych firm.
+198. Kurs "Jak napisać wnioski o dotacje EU" — B2B, cennik, kanał?
+199. Flipowanie domen expired — kupno na GoDaddy, sprzedaż Sedo. Model?
+200. Platforma bookowania usług lokalnych (jak Fresha, Planity) dla PL. SaaS?
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SEKCJA 5: DOKUMENTY, FAKTURY, GRANTY (30 testów)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+201. Faktura za prąd 3 fazy w hali produkcyjnej, 8,400 PLN/mies. Gdzie szukać oszczędności?
+202. Rachunek za gaz dla restauracji, 2,200 PLN/mies. Jak zoptymalizować?
+203. Faktura abonamentowa Telekomunikacja dla firmy 5-osobowej: 1,800 PLN/mies.
+204. Wniosek o dotację PARP 2026 — startup technologiczny. Co sprawdzić?
+205. Umowa najmu lokalu usługowego 120m². Co negocjować? Jakie ryzyka?
+206. Biznesplan dla inwestora seed — aplikacja mobilna fitness. Czy liczby są realistyczne?
+207. Faktura od agencji marketingowej: Meta Ads management 5,000 PLN/mies. Warto?
+208. Kosztorys remont mieszkania 50m² — 35,000 PLN. Czy to normalna cena?
+209. Umowa z dostawcą usług IT (SLA, support 24h). Jakie klauzule są problematyczne?
+210. Wniosek kredyt inwestycyjny dla firmy produkcyjnej 2M PLN. Ocena kompletności.
+211. Faktura za SEO od agencji: 3,000 PLN/mies. Czy jest sens płacić?
+212. Zestaw faktur za media dla biura: prąd 420 PLN + internet 280 PLN + telefon 350 PLN.
+213. Oferta leasingu maszyny CNC 180,000 PLN. 60 rat, WIBOR + 3.2%. Ocena?
+214. Umowa franczyzy — kawiarnia w galerii. Opłata wstępna 80,000 PLN. Ryzyka?
+215. Przetarg publiczny na usługi ochrony 12 miesięcy, wartość 240,000 PLN. Opłacalność?
+216. Faktura materiały budowlane projekt 450m². Czy ceny są rynkowe?
+217. Wniosek unijny NCBiR dla startupu deep-tech. Jakie sekcje są najsłabsze?
+218. Polisa OC firmy transportowej — 12,000 PLN/rok. Czy za dużo?
+219. Faktura kancelarii prawnej: 15,000 PLN za umowę spółki. Normalnie?
+220. Plan finansowy dla kawiarni rok 1-3. Czy projekcje przychodów są realistyczne?
+221. Faktura za usługi hostingowe AWS: $2,400/mies. Gdzie można ciąć koszty?
+222. Regulamin sklepu e-commerce — co brakuje, jakie RODO ryzyka?
+223. Faktura dystrybutora: 500 szt produktu × 18.40 PLN = 9,200 PLN. Czy cena jest OK?
+224. Umowa z influencerem — 5 postów za 8,000 PLN. Co sprawdzić i czy warto?
+225. Raport audytu finansowego firmy — co to znaczy pozycja "rezerwy"?
+226. Faktura za logistykę i fulfillment: 4.80 PLN/paczka × 2,000 paczek. Alternatywy?
+227. Biznesplan food truck — sezon 6 miesięcy, czy warto? Ocena projekcji.
+228. Wniosek grant UE digitalizacja MŚP 200,000 EUR. Co może nie przejść?
+229. Faktura za reklamę Google Ads: 8,000 PLN, konwersje 12 szt. ROAS ocena.
+230. Umowa agencyjna dystrybucja — wyłączność na rynek PL. Jakie pułapki?
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SEKCJA 6: MARKETING, REKLAMA, CONTENT (30 testów)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+231. Mam sklep Allegro — okulary przeciwsłoneczne. Jak pisać tytuły i opis żeby sprzedawać więcej?
+232. Screenshot kampanii Meta Ads: CTR 0.8%, CPM 42 PLN, ROAS 1.4. Co poprawić?
+233. Chcę robić TikTok dla sklepu z gadżetami. Jaka strategia contentu?
+234. Mój Instagram food truck: 800 followers, 2% engagement. Jak rosnąć?
+235. Reklama Google: słowo "kup tablet dziecko" — czy warto licytować? CPC ~8 PLN.
+236. Pomysł na hook TikTok: "Sprawdzam czy ten produkt z Chin naprawdę działa". Ocena?
+237. Jak pisać opisy produktów na Allegro żeby trafiać wyżej w wyszukiwarce?
+238. Mam landing page dla usługi detailing. Konwersja 0.8%. Jak poprawić?
+239. Brief dla copywritera — nowy produkt suplement kolagen. Kluczowe punkty sprzedaży?
+240. Czy email marketing ma sens dla sklepu z gadżetami ($3-15 AOV)?
+241. Jak ustawić retargeting na Facebook dla sklepu z biżuterią?
+242. Mam 10k PLN na testy reklam. Jak rozdzielić między Meta, Google i TikTok?
+243. Influencer marketing: nano (5k followers) vs mega (500k). Co lepsze dla small brand?
+244. SEO: czy warto pisać blog dla sklepu z elektroniką? ROI i timeline?
+245. Analiza creative: zdjęcie produktu białe tło vs lifestyle. Co lepiej konwertuje?
+246. Mam sklep Shopify z 200 sesji/dzień i 0.5% konwersją. Co zoptymalizować?
+247. WhatsApp Business dla małej firmy usługowej. Czy i jak wdrożyć?
+248. SMS marketing dla kawiarni — czy wciąż działa w 2026?
+249. Jak zbudować program lojalnościowy dla sklepu online bez dużego budżetu?
+250. Pinterest dla sklepu z dekoracjami domu. Czy to dobry kanał?
+251. YouTube Shorts vs TikTok — dla jakiego rodzaju biznesu co lepsze?
+252. Podcast dla agencji marketingowej — czy to buduje klientów B2B?
+253. LinkedIn Ads dla SaaS B2B — czy to opłacalne przy małym budżecie 2k PLN/mies?
+254. Jak mierzyć ROI z content marketingu? Jakie KPI śledzić?
+255. Brief dla agencji SEO — co musi zawierać żeby dostać dobrą ofertę?
+256. Jak napisać cold email do potencjalnego klienta B2B? Struktura i przykład.
+257. Chatbot na stronie www — czy zwiększa konwersje dla sklepów usługowych?
+258. Mapa konkurencji: 5 sklepów z kolczykami na Etsy. Jak się wyróżnić?
+259. Czy Google Shopping opłaca się dla sklepu z gadżetami 20-80 PLN?
+260. Analiza strony głównej konkurenta: ufrev-competitor.com. Co jest lepsze, co gorsze?
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SEKCJA 7: RÓŻNE TEMATY — GLOBALNY ZASIĘG (40 testów)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+261. Chcę zainwestować 50,000 PLN w jakiś biznes. Gdzie w Polsce jest teraz najlepszy ROI?
+262. Czy myjnia bezdotykowa jest lepszą inwestycją niż myjnia parowa mobilna?
+263. Jak wycenić moją firmę usługową (przychód 300k PLN/rok) przed sprzedażą?
+264. Otwieram biuro rachunkowe online — jak zdobyć pierwszych 10 klientów?
+265. Mam 5,000 PLN — dropshipping czy freelancing — co szybciej zarobi?
+266. Praca w Niemczech jako dekarz — stawki, jak znaleźć klientów jako Polak?
+267. Czy warto teraz otwierać sklep stacjonarny? Koszty vs online w 2026.
+268. Flip mieszkania w Warszawie — gdzie kupić żeby zyskać 15-20%?
+269. Franchising McDonal's vs własna restauracja — co bardziej opłacalne?
+270. Czy inwestycja w fotowoltaikę 30kWp dla firmy zwróci się w 5 lat?
+271. Mam pensję 6,000 PLN netto — jak zacząć side hustle żeby zarabiać +2,000?
+272. Startup idea: aplikacja dla seniorów do zarządzania lekami. Walidacja?
+273. Eksport polskiej żywności do UK po Brexicie — jak i co sprzedawać?
+274. E-commerce w Indiach dla polskiego sprzedawcy — czy to ma sens?
+275. Jak zacząć sprzedawać na Amazon US z Polski — koszty i czas od startu?
+276. Czy warto wchodzić z e-commerce na rynek emiracki (UAE) — co sprzedawać?
+277. Japonia rynek — które polskie produkty mogą odnieść sukces?
+278. Mam 200,000 PLN do zainwestowania — nieruchomości vs biznes vs giełda?
+279. Jak zbudować sieć franczyzową mojego biznesu sprzątającego? Koszty prawne?
+280. Czy warto pisać książkę biznesową — przychody z wydawnictwa vs self-publish?
+281. Jak negocjować z chińskim dostawcą na Alibaba — co mówić, co sprawdzać?
+282. Import elektroniki z Korei Południowej — cła, procedury, czas.
+283. Biznes wynajem krótkoterminowy Airbnb Kraków Stare Miasto — czy opłacalny?
+284. Wchodzę w recycling elektrośmieci — certyfikaty, rynek, marże.
+285. Rolnicze uprawy lawendy — eksport olejku, kosmetyki. Rynek EU 2026.
+286. Akwaria ozdobne dla restauracji i hoteli — B2B serwis. Jak zacząć?
+287. Czy blockchain może pomóc w logistyce importu z Chin? Konkretne narzędzia?
+288. Aplikacja AI do zarządzania inwentarzem dla gastronomii — wycena MVP.
+289. Jak otworzyć sklep stacjonarny z azjatyczną żywnością w mieście 100k osób?
+290. Mam 10 let doświadczenie w HR — jak monetyzować wiedzę online w 2026?
+291. Pralnia samoobsługowa — koszt uruchomienia 3 stanowisk, ROI, lokalizacja.
+292. Escape room 3 pokoje — Wrocław centrum. Inwestycja i payback period?
+293. Czy warto otwierać siłownię crossfit w 2026? Koszty i saturacja rynku.
+294. Hotel dla zwierząt — pensjonat dla psów i kotów. Jak wyceniać i co kupić?
+295. Start biura podróży w niszy "digital nomads" — co oferować i jak zarabiać?
+296. Produkcja własnego rumu rzemieślniczego — licencje, inwestycja, rynek PL.
+297. Czy opłaca się założyć żłobek prywatny w 2026? Dofinansowanie i koszty.
+298. Smart parking system dla osiedli — IoT B2B. Koszt wdrożenia i sprzedaż.
+299. Mam 3 lata doświadczenie w spawalnictwie — jak zarabiać 15,000 PLN/mies?
+300. MEGA TEST: Przelicz mój cały pomysł biznesowy: sklep online + usługa detailing
+     mobilna + kurs online jak dbać o lakier samochodu. 3 revenue streams razem.
+     Koszt startu, potencjał, kolejność wdrożenia, ryzyko.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+INSTRUKCJA TESTOWANIA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+JAK KORZYSTAĆ Z TEGO PLIKU:
+1. Wklej dowolny z powyższych inputów do pola analizy UFREV
+2. Sprawdź czy odpowiedź jest konkretna (zawiera liczby, nazwy platform, marże)
+3. Sprawdź czy nie jest pusta lub ogólna ("to zależy od wielu czynników...")
+4. Sprawdź czy język odpowiedzi = język pytania (PL → PL, EN → EN)
+5. Sprawdź czy dla produktów z * są uwzględnione koszty wysyłki w marży
+
+OCZEKIWANE MINIMUM DOBREJ ODPOWIEDZI:
+✅ Odpowiedź na konkretne pytanie w pierwszych 1-3 zdaniach
+✅ Przynajmniej 1 konkretna liczba (%, PLN, szt, miesięcy)
+✅ Przynajmniej 1 named platform/narzędzie (Allegro, Amazon, Google My Business itd.)
+✅ Werdykt lub rekomendacja na koniec
+✅ 1-3 konkretne kroki "co zrobić teraz"
+
+FLAGI BŁĘDNYCH ODPOWIEDZI:
+❌ "To zależy od wielu czynników" (bez konkretu)
+❌ Pusta odpowiedź lub błąd
+❌ Język mieszany (polskie pytanie → angielska odpowiedź)
+❌ Brak jakichkolwiek liczb przy pytaniach finansowych
+❌ "Skonsultuj się z ekspertem" bez żadnych informacji własnych

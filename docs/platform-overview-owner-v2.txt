@@ -1,0 +1,421 @@
+UFREV.com — KOMPLETNY OPIS PLATFORMY DLA WŁAŚCICIELA
+Aktualizacja: 5 maja 2026 | Wersja 2.0 PRO
+================================================
+
+╔══════════════════════════════════════════════════════════════╗
+║  STAN NA DZIŚ: PLATFORMA JEST LIVE, PŁATNOŚCI DZIAŁAJĄ,     ║
+║  PROMPT GLOBALNY WDROŻONY, GA4 AKTYWNE                      ║
+╚══════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. CZYM JEST UFREV — WŁAŚCIWA DEFINICJA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+UFREV (Ultra Future Review) to globalny silnik decyzji biznesowych oparty o AI.
+
+Platforma nie jest chatbotem. Jest narzędziem, które:
+- analizuje KAŻDY produkt, usługę, pomysł, dokument, obraz, link lub wideo
+- daje konkretny werdykt biznesowy: BUY / TEST / AVOID
+- chroni kapitał użytkownika przed złymi decyzjami
+- oblicza marżę, ryzyko, break-even i następny krok
+- obsługuje globalny zasięg — każda kategoria produktów i usług na świecie
+
+Główna propozycja wartości:
+"Zanim wydasz pieniądze — zapytaj UFREV."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2. CO POSIADASZ JAKO WŁAŚCICIEL — PEŁNA LISTA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+A. INFRASTRUKTURA (LIVE PRODUKCJA)
+──────────────────────────────────
+✅ Domena:        https://ufrev.com (aktywna, DNS via Cloudflare)
+✅ Hosting:       Vercel Production — auto-deploy z GitHub (branch: main)
+✅ Baza danych:   Supabase PostgreSQL — produkcja
+✅ Auth:          Supabase Auth — rejestracja, logowanie, email confirm
+✅ Email:         Resend SMTP — branded noreply@ufrev.com
+✅ Płatności:     Stripe LIVE — wszystkie 6 produktów skonfigurowane
+✅ Webhook:       https://ufrev.com/api/stripe/webhook — aktywny
+✅ AI Engine:     OpenAI GPT-4o (vision + document + video)
+✅ Analytics:     Google Analytics 4 — G-1MYCXJLDF2 — aktywne
+✅ Repozytorium:  GitHub — MinoNenki/UFRev — branch main
+
+B. STOS TECHNOLOGICZNY
+──────────────────────
+- Frontend:    Next.js 14.2.30 (App Router, React Server Components)
+- Styling:     Tailwind CSS
+- Język:       TypeScript 100%
+- Backend:     Next.js API Routes (serverless na Vercel)
+- Baza:        Supabase (PostgreSQL + Auth + Storage)
+- AI:          OpenAI GPT-4o + GPT-4o-mini (fallback)
+- Płatności:   Stripe (Checkout + Webhooks + Customer Portal)
+- Testy:       Vitest
+- i18n:        PL / EN / DE / ES / PT / RU / JA / ZH / ID
+
+C. WSZYSTKIE AKTYWNE PRICE IDS (STRIPE LIVE)
+──────────────────────────────────────────────
+- Starter 19:     price_1TSJ3RR53XuH2tCzKLXqhAyA
+- Pro 49:         price_1TSJ3QR53XuH2tCzDBe78WEs
+- Scale 99:       price_1TSJ3TR53XuH2tCzFi9XrPXj
+- Pack 9:         price_1TSJ3PR53XuH2tCzpLr01ErE
+- Pack 19:        price_1TSJ3OR53XuH2tCzC86tLYAr
+- Pack 39:        price_1TSJ3SR53XuH2tCzjRjTxQoH
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+3. SILNIK AI — CO POTRAFI TERAZ (PO UPGRADE PROMPTU)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+GLOBALNY PRO PROMPT obejmuje KAŻDĄ kategorię na świecie:
+
+PRODUKTY FIZYCZNE:
+- Elektronika i tech (smartfony, laptopy, drony, smart home, audio, gaming)
+- Moda (odzież, obuwie, torby, biżuteria, zegarki, streetwear, luksus)
+- Dom i ogród (meble, wyposażenie, narzędzia, oświetlenie, storage)
+- Motoryzacja (akcesoria, części, detailing, tuning, opony)
+- Zdrowie i uroda (kosmetyki, suplementy, urządzenia, fitness)
+- Sport i outdoor (siłownia, camping, rowery, sporty wodne, zimowe)
+- Dziecko i zabawki (odzież, edukacja, bezpieczeństwo, wózki)
+- Jedzenie i napoje (pakowane, suplementy, specjalizowane, organic)
+- Zwierzęta (karma, akcesoria, zdrowie, pielęgnacja)
+- Materiały biurowe i B2B (opakowania, sprzęt przemysłowy, bhp)
+- Surowce (metale, tekstylia, chemia, plastik, drewno, rolnictwo)
+
+PRODUKTY CYFROWE:
+- Software & SaaS (CRM, marketing, HR, księgowość, produktywność)
+- Aplikacje mobilne (iOS, Android, gry, narzędzia)
+- Kursy online i e-learning (wideo kursy, coaching, certyfikaty)
+- Pliki do pobrania (szablony, presety, fonty, grafiki, ebooki, PLR)
+- Subskrypcje i społeczności (newslettery, licencje, dostępy)
+- Domeny i strony WWW (aged domains, turnckey sites, affiliate)
+
+USŁUGI — KAŻDA KATEGORIA:
+- Dom: sprzątanie, parowa, myjnia okien, hydraulika, elektryka, HVAC, remonty
+- Auto: mechanika, blacharnia, detailing, myjnia, opony, tapicerka
+- Uroda: salon, barber, paznokcie, rzęsy, masaż, laser, tattoo, spa
+- Jedzenie: restauracja, kawiarnia, food truck, ghost kitchen, catering
+- Zdrowie: fizjoterapia, trener, dieta, dentysta, weterynarz, psycholog
+- Edukacja: korepetycje, języki, prawo jazdy, muzyka, kodowanie
+- IT: web dev, apps, MSP, cybersec, cloud, AI/automatyzacje, SEO
+- Marketing: social media, Meta/Google Ads, SEO, email, PR, CRO
+- Finanse: księgowość, podatki, consulting, CFO, prawnik, broker
+- Kreatywne: foto, video, grafika, copywriting, podcast, muzyka
+- Logistyka: kurier, przeprowadzki, spedycja, 3PL, FBA prep
+- Produkcja: 3D printing, CNC, tekstylia, food processing, spawanie
+- Rolnictwo: uprawy, hodowla, hydroponika, fotowoltaika, recycling
+
+ONLINE MODELE BIZNESOWE:
+- Dropshipping, Print-on-demand, Amazon FBA/FBM
+- Allegro seller, Private label, Wholesale/liquidation
+- Affiliate marketing, YouTube/TikTok monetization
+- Newsletter, Digital agency, Freelancing, SaaS startup
+
+CO AI DAJE DLA KAŻDEJ KATEGORII:
+- Poziom popytu (wysoki/średni/niski/sezonowy) z uzasadnieniem
+- Zakres marży: [koszt] → [cena detaliczna] = [% marży]
+- Najlepsza platforma sprzedaży (z wyjaśnieniem dlaczego)
+- Top 2-3 ryzyka w tej kategorii
+- Rekomendowany test: ile sztuk, jaki budżet, jaka cena
+- Lista sprzętu dla usług (starter vs pro z widełkami cenowymi)
+- Break-even i potencjał miesięczny na 50%/80%/100% wydajności
+- Werdykt: BUY / TEST / AVOID
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+4. MONETYZACJA — PEŁNA STRUKTURA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PLANY SUBSKRYPCYJNE:
+┌──────────────┬────────────┬──────────────────────────────────────┐
+│ Plan         │ Cena/mies  │ Co zawiera                           │
+├──────────────┼────────────┼──────────────────────────────────────┤
+│ Free         │ 0 PLN      │ 3 analizy/mies, podstawowe funkcje   │
+│ Starter      │ 19 PLN     │ 30 analiz/mies, PDF, obrazy          │
+│ Pro          │ 49 PLN     │ 100 analiz/mies, wideo, market watch │
+│ Scale        │ 99 PLN     │ Nielimitowane, automatyzacje, API     │
+└──────────────┴────────────┴──────────────────────────────────────┘
+
+PAKIETY JEDNORAZOWE (kredyty AI):
+┌──────────────┬────────────┬──────────────────────────────────────┐
+│ Pakiet       │ Cena       │ Kiedy używać                         │
+├──────────────┼────────────┼──────────────────────────────────────┤
+│ Pack 9       │ 9 PLN      │ Testowanie platformy, 1-razowe użycie│
+│ Pack 19      │ 19 PLN     │ Projekt, kilka analiz naraz           │
+│ Pack 39      │ 39 PLN     │ Research przed większą decyzją        │
+└──────────────┴────────────┴──────────────────────────────────────┘
+
+MECHANIZMY OCHRONY MARŻY:
+- Kosztowne analizy (wideo, duże PDF) wymagają wyższego planu
+- Token cost kalkulowany przed wywołaniem AI
+- Rate limiting: 10/10min (Free), 20/10min (Pro), 40/10min (Scale)
+- Plan gating dla automatyzacji i integracji
+- Kill switch dla nierentownych wywołań
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+5. PANEL ADMINA — CO MOŻESZ KONTROLOWAĆ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Masz dostęp do pełnego panelu na /admin (chronionego rolą admin):
+
+USERS & BILLING:
+- Lista wszystkich użytkowników z planem, tokenami, datą rejestracji
+- Zmiana planu, dodawanie tokenów, blokowanie konta
+- Historia płatności (Stripe Customer ID linkowany)
+- Zarządzanie rolami (user / admin / tester)
+
+MONETIZATION:
+- KPI dashboard: MRR, ARR, ARPPU, LTV/CAC, retention
+- Widok aktywnych subskrypcji i konwersji
+- Revenue analytics z podziałem na plany
+- Churn engine — sygnały ryzyka rezygnacji
+
+AUTOMATYZACJE:
+- Włączanie/wyłączanie automations per plan
+- Konfiguracja market watch batch jobs
+- Alert routing i digesty tygodniowe
+
+INTEGRACJE:
+- Status połączeń z marketplace (Shopify, Amazon, eBay, Allegro itd.)
+- Konfiguracja klucza per integration
+- Sync status i health monitoring
+
+SUPPORT & REVIEWS:
+- Support inbox — zgłoszenia użytkowników
+- Review moderation — moderacja opinii
+- CRM events — historia interakcji z klientem
+
+ADS:
+- Konfiguracja dostawców reklam (Google AdSense, inne)
+- Włączanie/wyłączanie reward ads
+- Podgląd wyświetleń i potencjalnego przychodu
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+6. ANALYTICS — CO MIERZYSZ (GA4 AKTYWNE)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Measurement ID: G-1MYCXJLDF2
+
+AUTOMATYCZNIE ŚLEDZONE ZDARZENIA:
+- page_view — każda strona
+- view_pricing — wejście na /pricing
+- begin_checkout — kliknięcie przycisku zakupu
+- checkout_redirect — przekierowanie do Stripe
+- checkout_error — błąd checkout (do optymalizacji)
+- purchase — powrót po udanej płatności (?success=1)
+- sign_up — rejestracja nowego użytkownika
+- login — logowanie istniejącego użytkownika
+
+CO MOŻESZ ZOBACZYĆ W GA4:
+- Lejek konwersji: landing → pricing → checkout → purchase
+- Źródła ruchu: organic, paid, direct, referral, social
+- Zachowanie użytkowników: session duration, bounce rate
+- Top strony, top eventy, top geografie
+- Real-time analytics (kto jest teraz na stronie)
+
+WAŻNE — OZNACZ W GA4 DASHBOARD:
+W GA4 Admin → Conversions oznacz jako konwersje:
+1. sign_up
+2. begin_checkout
+3. purchase
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+7. ARCHITEKTURA LEJKA PRZYCHODOWEGO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[Ruch organiczny/paid] 
+    ↓
+[Landing page — hero, problem, how it works]
+    ↓
+[Rejestracja (Free) — 3 darmowe analizy]
+    ↓
+[Użycie platformy — pierwszy werdykt, pierwsze wow]
+    ↓
+[Paywall — limit analiz lub premium feature]
+    ↓
+[Upgrade do Starter 19 / Pro 49 / Scale 99]
+    ↓
+[Reward Ads + Referral → więcej użytkowników]
+    ↓
+[Retencja — automatyzacje, market watch, alerty]
+
+Dodatkowa ścieżka:
+[Pack 9 / Pack 19 / Pack 39] — dla użytkowników, którzy nie chcą subskrypcji
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+8. BEZPIECZEŃSTWO — WARSTWY OCHRONY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+OCHRONA API:
+- Rate limiting per user/IP (osobno dla Free/Starter/Pro/Scale/Admin)
+- Limity dzienne i 10-minutowe wywołań analizy
+- Walidacja rozmiaru pliku i typu MIME przed AI
+- Estymacja token cost przed wywołaniem modelu
+- Clamp na długość pól tekstowych (zapobiega przepełnieniu kontekstu)
+
+OCHRONA DOSTĘPU:
+- Supabase RLS (Row Level Security) na tabelach
+- Middleware Next.js — ochrona tras /dashboard, /admin, /account
+- Rola admin wymagana dla /admin/*
+- Signed reward token — zapobiega fałszywym nagrodami reklamowym
+
+OCHRONA FINANSOWA:
+- Kill switch na analizach bez wystarczających tokenów
+- Plan gating — drahie funkcje tylko na wyższych planach
+- Webhook Stripe — synchronizacja statusu subskrypcji w czasie rzeczywistym
+- Tabele logów błędów bezpieczeństwa w Supabase
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+9. MARKET WATCH — MODUŁ OBSERWACJI RYNKU
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Co potrafi market watch:
+- Śledzenie URL-i produktów i konkurencji
+- Wykrywanie zmian cen
+- Obserwacja dostępności produktów
+- Historia skanów i trendów
+- Zapisywanie watchlist per użytkownik
+- Tygodniowe digesty rynku (email automation)
+- Wykrywanie okazji (cena spada) i ryzyk (cena rośnie)
+- Sygnały popytu z kanałów social i marketplace
+
+Dostępność: Pro i Scale
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+10. INTEGRACJE — AKTYWNE I GOTOWE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+GLOBALNE MARKETPLACE:
+- Amazon, eBay, AliExpress, Alibaba, Walmart, Etsy, Rakuten
+
+EUROPEJSKIE:
+- Allegro (PL), Cdiscount (FR), eMAG (RO/BG), OTTO (DE), Zalando (EU)
+
+SOCIAL & AD:
+- Meta Ads, TikTok, X Ads, Instagram Shopping
+
+ECOMMERCE:
+- Shopify, WooCommerce
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+11. WIELOJĘZYCZNOŚĆ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Platforma obsługuje 9 języków:
+PL (Polski) | EN (English) | DE (Deutsch) | ES (Español) | PT (Português)
+RU (Русский) | JA (日本語) | ZH (中文) | ID (Bahasa Indonesia)
+
+AI automatycznie dopasowuje język odpowiedzi do języka użytkownika.
+Waluta i referencje rynkowe dostosowują się do kraju użytkownika.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+12. TRYBY ANALIZY — PEŁNA LISTA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+TRYB 1: ANALIZA PRODUKTU (product_analysis)
+- Ocena popytu, marży, ryzyka i skalowalności
+- Werdykt: BUY / TEST / AVOID
+- Rekomendacja batch testowego i budżetu
+- Sugestia platformy sprzedaży
+
+TRYB 2: ANALIZA KOSZTOWA (cost_optimization)
+- Odczyt faktur, rachunków, kosztów
+- Identyfikacja najdroższych pozycji
+- Szacunek oszczędności z widełkami
+- Sugestia 2-3 kroków cięcia kosztów
+
+TRYB 3: ANALIZA DOKUMENTU (document_analysis)
+- Odczyt PDF: umowy, wnioski, oferty, biznesplany
+- Ekstrakcja kluczowych faktów, dat, kwot
+- Flagowanie brakujących sekcji i ryzyk
+- Ocena kompletności i spójności
+
+TRYB 4: ANALIZA WIZUALNA (visual_analysis)
+- Odczyt zdjęć produktów, screenów, kreatur reklamowych
+- Ocena jakości wizualnej i potencjału reklamowego
+- Opis UI/paneli/dashboardów
+- Zalecenia poprawy
+
+TRYB 5: ANALIZA WIDEO
+- Ekstrakcja klatek kluczowych
+- Ocena haka (pierwsze 3 sekundy)
+- Analiza CTA, tempa, jakości
+- Sugestie konkretnych poprawek
+
+TRYB 6: WHAT-IF / SCENARIUSZE
+- "Co jeśli zmienię cenę o +20%?"
+- "Co jeśli zmienię kanał na TikTok?"
+- Symulacje wpływu zmiennych na wynik
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+13. AUTOMATYZACJE — AKTYWNE WORKFLOW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+- Skan konkurencji (scheduled)
+- Alerty marży (email/notification)
+- Prośby o opinię (post-analysis trigger)
+- Guardraile reklamowe (przed skalowaniem)
+- Tygodniowy digest rynku (email automation)
+- Routing alertów bezpieczeństwa
+- Operacyjne workflow decyzyjne
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+14. REWARD ADS I REFERRAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+REWARD ADS:
+- Użytkownik ogląda reklamę → dostaje dodatkowe tokeny AI
+- Kontrolowane z panelu admin (dostawca, typ, limit/dzień)
+- Zapobiega nadużyciom (signed token + cooldown)
+- Integracja: Google AdSense gotowa
+
+REFERRAL:
+- Każdy użytkownik ma unikalny kod polecenia
+- Bonus za skuteczne polecenie (konfigurowalny)
+- Dashboard referral widoczny w koncie użytkownika
+- Metryki widoczne w panelu admin
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+15. SUPPORT, OPINIE, RETENCJA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SUPPORT:
+- Support inbox w panelu admin
+- Formularz wsparcia dostępny z dashboardu
+- CRM events — historia interakcji z klientem
+
+OPINIE:
+- Review moderation panel w admin
+- Sekcja opinii na stronie głównej
+- Automatyczne prośby o opinię po analizie
+
+RETENCJA:
+- Churn engine — wykrywanie użytkowników zagrożonych rezygnacją
+- Notification engine — alerty i przypomnienia
+- Personalizacja na podstawie historii analiz
+- Plan upsell triggers (gdy user osiąga limit)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+16. NASTĘPNE KROKI — PRIORYTETYZOWANE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+TYDZIEŃ 1 (TERAZ):
+□ Google Search Console — dodaj domenę, zweryfikuj, wyślij sitemap
+□ GA4 — oznacz sign_up, begin_checkout, purchase jako konwersje
+□ Microsoft Clarity — dodaj skrypt, włącz session recordings
+□ Pierwsze 10 postów organicznych (TikTok/Reels) pokazujące analizę live
+
+TYDZIEŃ 2-3:
+□ SEO — optymalizacja meta tagów stron kluczowych
+□ Blog/content — 5 artykułów z przykładowymi analizami produktów
+□ Case study sekcja — "Analiza myjni parowej" jako przykład
+□ Newsletter setup — zbieranie emaili, welcome sequence
+
+MIESIĄC 1-2:
+□ Google Ads — kampania na "analiza produktu AI", "dropshipping kalkulator"
+□ Pierwsza kampania Meta Ads (retargeting odwiedzających /pricing)
+□ Partnerstwa z twórcami YouTube/TikTok z niszy ecommerce
+□ Program beta testerów — 50 osób, feedback, social proof
+
+MIESIĄC 2-3:
+□ API publiczne — dostęp dla deweloperów (Scale plan)
+□ Chrome Extension — analiza z dowolnej strony produktowej
+□ Integracja Allegro API — live dane o ofertach
+□ Integracja Amazon PA-API — live ceny, BSR, review count

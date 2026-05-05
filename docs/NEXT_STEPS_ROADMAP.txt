@@ -1,0 +1,227 @@
+UFREV.com — NASTĘPNE KROKI PO WDROŻENIU AI PROMPT + GA4
+Data: 5 maja 2026 | Roadmap właściciela
+================================================
+
+╔══════════════════════════════════════════════════════════════╗
+║  GOTOWE: Stripe ✅ | Auth ✅ | Email ✅ | GA4 ✅ | Prompt ✅ ║
+║  TERAZ: Widoczność, Użytkownicy, Pierwsze $$$                ║
+╚══════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TYDZIEŃ 1 — FUNDAMENT WIDOCZNOŚCI (ZRÓB TO TERAZ)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+□ 1. GOOGLE SEARCH CONSOLE
+   Cel: Google musi wiedzieć że ufrev.com istnieje
+   Jak:
+   a) Wejdź na search.google.com/search-console
+   b) Dodaj właściwość: https://ufrev.com
+   c) Weryfikacja: przez Cloudflare DNS (TXT record) lub przez GA4 (już połączony)
+   d) Wyślij sitemap: https://ufrev.com/sitemap.xml
+   e) Kliknij "Żądaj indeksowania" dla stron: /, /pricing, /auth
+   Czas: 30 minut
+
+□ 2. GA4 — OZNACZ KONWERSJE
+   Cel: GA4 musi wiedzieć które eventy to zarabianie
+   Jak:
+   a) analytics.google.com → G-1MYCXJLDF2 → Admin
+   b) Conversions → New conversion event → dodaj: "sign_up"
+   c) Powtórz dla: "begin_checkout", "purchase"
+   d) Sprawdź w Realtime czy eventy płyną
+   Czas: 15 minut
+
+□ 3. MICROSOFT CLARITY (HEATMAPY + SESSION RECORDINGS)
+   Cel: Widzieć jak użytkownicy zachowują się na stronie
+   Jak:
+   a) clarity.microsoft.com → New project → https://ufrev.com
+   b) Skopiuj kod skryptu (< head >)
+   c) Dodaj do app/layout.tsx przed znacznikiem </head>
+   d) Poczekaj 24h na pierwsze nagrania
+   Koszt: BEZPŁATNY
+   Czas: 20 minut
+
+□ 4. GOOGLE MY BUSINESS (jeśli masz adres lub działasz lokalnie)
+   Opcjonalne — skip jeśli pure online
+
+□ 5. SITEMAP.XML — SPRAWDŹ
+   Wejdź na: https://ufrev.com/sitemap.xml
+   Czy istnieje? Jeśli nie — Next.js generuje automatycznie przez app/sitemap.ts
+   Jeśli brakuje — zgłoś, dodam sitemap.ts
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TYDZIEŃ 1-2 — PIERWSI UŻYTKOWNICY (ORGANICZNIE)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+□ 5. PIERWSZE POSTY TIKTOK/REELS (NAJWAŻNIEJSZE)
+   Cel: Zdobyć pierwszych 100-500 użytkowników organicznie
+   Format: Screen recording analizy UFREV na żywo (60 sekund)
+
+   Pomysły na pierwsze 5 filmów:
+   a) "Sprawdzam produkt z Alibaba $12 — czy warto kupić?" 
+      → wklej do UFREV, nagraj ekran, pokaż werdykt
+   b) "Ile zarobię otwierając myjnię parową? AI liczy..."
+      → wpisz pytanie, nagraj odpowiedź, overlay z numerami
+   c) "Wrzucam fakturę za prąd do AI — ile mogę zaoszczędzić?"
+      → dramatyczny efekt: "zaoszczędzę 180 PLN/mies!"
+   d) "Dropshipping 2026 — ten produkt BUY czy AVOID?"
+      → szybki input, werdykt na ekranie, reveal
+   e) "Chcę otworzyć food truck — AI mi mówi ile to kosztuje"
+      → konkretne liczby, sprzęt, break-even reveal
+
+   Hook do użycia: "Zanim wydam pieniądze — sprawdzam UFREV"
+   CTA: "Link w bio → 3 analizy gratis"
+   Wrzucaj: minimum 1 film/dzień przez 14 dni
+
+□ 6. GRUPY FACEBOOK / REDDIT / FORUM
+   Grupy PL do postowania (wartościowy content, nie spam):
+   - "Allegro Sprzedawcy" (Facebook)
+   - "Dropshipping Polska" (Facebook)
+   - "Ecommerce Polska" (Facebook)
+   - "Swój biznes" (Facebook, różne)
+   - r/polska_przedsiebiorcy (Reddit)
+   - Forum Elektroda.pl (jeśli gadżety/elektronika)
+
+   Co postować: pytanie "czy sprawdzaliście już AI do analizy produktów?",
+   case study bez nachalnej reklamy
+
+□ 7. PRODUCT HUNT (opcjonalnie, angielski rynek)
+   Przygotuj wpis: tagline, opis, GIF demo, 5 screenshots
+   Launch: wtorek lub środa rano (US timezone)
+   Cel: 100+ upvotes → featured → ruch organiczny
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+MIESIĄC 1 — PIERWSZE PRZYCHODY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+□ 8. EMAIL LISTA — ZACZNIJ ZBIERAĆ TERAZ
+   Cel: Lista emaili = aktyw, który zawsze masz
+   Jak:
+   a) Dodaj pop-up lub inline form na stronie głównej
+   b) Magnet: "Pobierz listę 50 produktów do dropshipping z marżą 40%+" (PDF)
+   c) Platforma: Mailchimp (free do 500), Brevo, MailerLite
+   d) Welcome email automat: uruchom od razu po zapisie
+   Cel na miesiąc 1: 200+ adresów email
+
+□ 9. PIERWSZY ARTYKUŁ BLOGOWY
+   Tytuł (SEO): "Jak obliczyć prawdziwą marżę przy sprzedaży na Allegro (kalkulator 2026)"
+   Cel: Ruch z Google, edukacja, soft sell UFREV
+   Gdzie: /blog/jak-obliczyc-marze-allegro lub jako osobna strona
+   Długość: 1,500-2,500 słów
+   CTA: "Przelicz swój produkt za darmo w UFREV"
+
+□ 10. GOOGLE ADS — MAŁA KAMPANIA TESTOWA
+    Budżet: 500-800 PLN na 2 tygodnie
+    Słowa kluczowe (exact match):
+    - "analiza produktu dropshipping"
+    - "kalkulator marży allegro"
+    - "sprawdź produkt przed zakupem"
+    Cel: rejestracja (Free plan)
+    Śledzenie: przez GA4 event "sign_up"
+    KPI: koszt rejestracji < 20 PLN
+
+□ 11. CASE STUDY — NAPISZ PIERWSZY
+    Temat: "Analizowałem 10 produktów z Alibaba — wyniki"
+    Format: "produkt → werdykt UFREV → rzeczywisty wynik po teście"
+    Gdzie: blog + social media thread
+    Cel: social proof, SEO, content do dzielenia się
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+MIESIĄC 2 — SKALOWANIE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+□ 12. META ADS — PROSPECTING
+    Budżet: 50-100 PLN/dzień
+    Creative: Video ad ze screen recording analizy (najlepszy organic TikTok)
+    Audience: zainteresowania dropshipping, e-commerce, sprzedaż online, Allegro
+    Cel: link click → landing → rejestracja
+    KPI: CPL (cost per lead/rejestracja) < 15 PLN
+
+□ 13. PARTNERSTWO Z TWÓRCĄ
+    Typ: YouTuber/TikToker z niszy e-commerce PL
+    Zasięg: 10,000-100,000 subscribers
+    Model: darmowe Pro konto + 30% rev share affiliate
+    Brief: "Sprawdź produkt live używając UFREV w filmie"
+    Oczekiwany efekt: 200-1,000 rejestracji per film
+
+□ 14. RETARGETING META ADS
+    Audience: Odwiedzający /pricing którzy nie kupili (ostatnie 30 dni)
+    Creative: "Zostało Ci jeszcze kilka darmowych analiz — sprawdź teraz"
+    Budżet: 20-30 PLN/dzień
+    Cel: upgrade Free → Starter
+
+□ 15. PROGRAM REFERRAL — AKTYWUJ
+    Upewnij się że referral działa poprawnie
+    Dodaj widoczny CTA w dashboardzie: "Poleć i zyskaj 50 tokenów"
+    Email do aktywnych users: "Poleć znajomemu, oboje zykacie"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+MIESIĄC 3 — ROZBUDOWA PRODUKTU
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+□ 16. CHROME EXTENSION
+    Cel: Analiza produktu bez wychodzenia ze strony Allegro/Amazon/eBay
+    Funkcja: zaznacz produkt → prawy klik → "Analizuj w UFREV"
+    Wymagany developer: 1-2 tygodnie pracy
+    Efekt: viralność, stałe użycie, premium upsell
+
+□ 17. SITEMAP + SEO TECHNICZNE
+    - meta tags wszystkich stron
+    - Open Graph (Facebook/LinkedIn preview)
+    - structured data (JSON-LD) dla rich snippets
+    - Core Web Vitals optymalizacja
+
+□ 18. API PUBLICZNE (Scale plan)
+    Endpoint: POST /api/analyze (z API key)
+    Cel: deweloperzy, agencje, automation users
+    Pricing: Scale plan + opcjonalne API credits
+
+□ 19. NEWSLETTER — TYGODNIOWY DIGEST
+    Temat: "UFREV Weekly — 3 produkty do sprawdzenia + 1 trend rynkowy"
+    Częstotliwość: co tydzień (poniedziałek rano)
+    Cel: retencja, użycie, upsell
+
+□ 20. INTEGRACJE LIVE DATA
+    Priority 1: Allegro API — live ceny z marketplace
+    Priority 2: Amazon PA-API — BSR, review count, price history
+    Priority 3: eBay Finding API — sold listings data
+    Efekt: analizy oparte na real-time danych = wyraźna przewaga nad konkurencją
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+METRYKI DO MONITOROWANIA (TYGODNIOWO)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+RUCH (Google Analytics):
+□ Sesje/tydzień → cel: 500 w tygodniu 4
+□ Bounce rate strony głównej → cel: < 60%
+□ Czas sesji → cel: > 2:30 minuty
+
+KONWERSJE (GA4 + Stripe):
+□ Rejestracje/tydzień → cel: 30+ w tygodniu 4
+□ Aktywacja (pierwsza analiza / registered) → cel: > 60%
+□ Free → Paid conversion → cel: > 5%
+□ MRR → cel: 500 PLN M1, 2k M2, 5k M3
+
+ENGAGEMENT (Supabase + Admin panel):
+□ Analizy wykonane/tydzień
+□ Średnio analiz na aktywnego usera
+□ Churn rate (kto anulował)
+
+SOCIAL (TikTok/IG/YT):
+□ Followers wzrost/tydzień
+□ Wyświetlenia ostatnich 5 filmów
+□ Kliknięcia w bio link
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PRIORYTETY — ABSOLUTNY MINIMUM NA START
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Jeśli masz tylko 2 godziny dzisiaj — zrób to:
+
+1. (30 min) Google Search Console — dodaj, wyślij sitemap
+2. (15 min) GA4 — oznacz sign_up, begin_checkout, purchase jako konwersje
+3. (20 min) Microsoft Clarity — dodaj skrypt
+4. (55 min) Nagraj i wrzuć JEDEN film TikTok/Reel z live analizą produktu
+           Format: "Sprawdzam produkt z Alibaba — BUY czy AVOID?"
+           Screen recording + głos + subtitles + link do bio
+
+To wystarczy żeby zacząć zbierać pierwszych użytkowników.

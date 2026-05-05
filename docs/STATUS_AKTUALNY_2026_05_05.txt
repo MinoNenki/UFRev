@@ -1,0 +1,141 @@
+UFREV.COM — STATUS AKTUALNY PLATFORMY
+Data aktualizacji: 5 maja 2026
+================================================
+
+╔══════════════════════════════════════════════════════════╗
+║  STATUS: LIVE PRODUKCJA ✅ | PŁATNOŚCI STRIPE LIVE ✅   ║
+║  GA4 AKTYWNE ✅ | GLOBAL AI PROMPT WDROŻONY ✅          ║
+╚══════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. INFRASTRUKTURA PRODUKCYJNA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Platforma:    https://ufrev.com — LIVE
+Hosting:      Vercel Production — Status READY
+GitHub:       MinoNenki/UFRev — branch main — auto-deploy aktywny
+Baza danych:  Supabase (produkcja) — fxpbbxebyazurbgrjquy.supabase.co
+Płatności:    Stripe LIVE — konto zweryfikowane
+Webhook:      https://ufrev.com/api/stripe/webhook — AKTYWNY
+DNS:          Cloudflare — poprawna konfiguracja (A + CNAME → Vercel)
+Email:        Resend SMTP — noreply@ufrev.com — domena zweryfikowana
+Analytics:    GA4 — G-1MYCXJLDF2 — AKTYWNE (kod w kodzie ✅)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2. CO JEST ZROBIONE I DZIAŁA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CORE PLATFORMA:
+✅ Strona główna (hero, problem, how it works, pricing, reviews)
+✅ Rejestracja i logowanie (Supabase Auth + email confirm)
+✅ Dashboard użytkownika z analizami AI
+✅ Silnik analizy AI — werdykty BUY / TEST / AVOID
+✅ Analiza produktu (URL, opis, obraz, PDF, wideo)
+✅ Analiza kosztów i faktur (cost_optimization mode)
+✅ Analiza dokumentów (document_analysis mode)
+✅ Analiza wizualna (visual_analysis mode)
+✅ Analiza wideo (MP4, MOV, WEBM, AVI — ekstrakcja klatek)
+✅ Logika anti-loss (guardrails marży, kill switch, staged rollout)
+✅ What-If scenariusze w wynikach
+✅ Recheck — ponowna analiza
+✅ Share Result Button
+
+AI PROMPT (NAJNOWSZY — 5 maja 2026):
+✅ GLOBAL PRO PROMPT — obejmuje KAŻDĄ kategorię na świecie
+✅ Produkty fizyczne: wszystkie kategorie (elektronika, moda, dom, auto itd.)
+✅ Produkty cyfrowe: SaaS, kursy, szablony, domeny
+✅ Usługi: dom, auto, uroda, jedzenie, IT, marketing, finanse, logistyka...
+✅ Online biznesy: dropshipping, FBA, affiliate, freelancing, SaaS
+✅ Dla każdej kategorii: sprzęt, koszty, marża, break-even, platformy
+✅ Uwzględnia koszty wysyłki i prowizje platform
+✅ Nigdy nie zwraca pustej/ogólnej odpowiedzi
+
+MONETYZACJA:
+✅ Plan Free (3 analizy/mies)
+✅ Plan Starter 19 PLN — price_1TSJ3RR53XuH2tCzKLXqhAyA
+✅ Plan Pro 49 PLN — price_1TSJ3QR53XuH2tCzDBe78WEs
+✅ Plan Scale 99 PLN — price_1TSJ3TR53XuH2tCzFi9XrPXj
+✅ Pack 9 PLN — price_1TSJ3PR53XuH2tCzpLr01ErE
+✅ Pack 19 PLN — price_1TSJ3OR53XuH2tCzC86tLYAr
+✅ Pack 39 PLN — price_1TSJ3SR53XuH2tCzjRjTxQoH
+✅ Stripe Checkout + Webhook — DZIAŁA
+✅ Paywall i plan gating — DZIAŁA
+
+ANALYTICS (WDROŻONE 5 maja 2026):
+✅ GA4 kod wdrożony w app/layout.tsx
+✅ page_view — automatycznie na każdej stronie
+✅ view_pricing — wejście na /pricing
+✅ begin_checkout — kliknięcie "Kup plan"
+✅ checkout_redirect — przekierowanie do Stripe
+✅ checkout_error — błąd przy checkout
+✅ purchase — powrót po zakupie (?success=1)
+✅ sign_up — rejestracja nowego użytkownika
+✅ login — logowanie
+
+EMAIL:
+✅ Resend SMTP skonfigurowany dla noreply@ufrev.com
+✅ Branded email template w Supabase
+✅ Potwierdzenie rejestracji (email confirm)
+
+POZOSTAŁE:
+✅ Market Watch — sygnały popytu i rynku
+✅ Automatyzacje biznesowe
+✅ Integracje marketplace (Shopify, Amazon, eBay, Allegro i inne)
+✅ Panel administratora (pełny)
+✅ KPI dashboard: MRR, ARR, ARPPU, LTV/CAC
+✅ Reward Ads i referral
+✅ Wielojęzyczność: PL, EN, DE, ES, PT, RU, JA, ZH, ID
+✅ System opinii (Reviews)
+✅ Support system
+✅ Strony prawne: Privacy Policy, Terms of Service, Cookies
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+3. OSTATNIE COMMITY (HISTORIA ZMIAN)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+2026-05-05: feat: expand AI prompts to global PRO coverage (943508a)
+            - ANALYSIS_SYSTEM_PROMPT rozbudowany do globalnego zasięgu
+            - Każda kategoria produktów i usług na świecie
+            - Koszty wysyłki uwzględnione, marża po wszystkich kosztach
+
+2026-05-05: feat: improve AI analysis prompts for professional-grade output
+            - buildSystemPrompt przepisany z intencją per mode
+            - Reguły per fileType (image, link, video, pdf, text)
+
+2026-05-05: feat: add GA4 analytics with funnel events
+            - lib/analytics.ts — helper GA4
+            - components/analytics/GoogleAnalytics.tsx — script loader
+            - Śledzenie: sign_up, login, begin_checkout, purchase itd.
+
+2026-04-XX: fix: correct stripe live price ids for all products
+            - Wszystkie 6 price IDs poprawione na LIVE mode
+            - Pack 9: literówka Lr01ErE poprawiona
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+4. DO ZROBIENIA — PRIORYTET NATYCHMIASTOWY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+□ [CRITICAL] Google Search Console — dodaj ufrev.com, wyślij sitemap.xml
+□ [CRITICAL] GA4 Admin — oznacz sign_up, begin_checkout, purchase jako konwersje
+□ [HIGH] Microsoft Clarity — dodaj skrypt (session recordings, heatmaps)
+□ [HIGH] Pierwsze posty TikTok/Reels z live analizą produktu
+□ [MEDIUM] Meta tagi SEO — optymalizacja strony głównej i /pricing
+□ [MEDIUM] Sitemap.xml — sprawdź czy jest generowany poprawnie
+□ [MEDIUM] robots.txt — sprawdź konfigurację
+□ [LOW] Blog — pierwszy artykuł SEO (analiza produktu, dropshipping kalkulator)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+5. STACK TECHNOLOGICZNY — AKTUALNY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Frontend:      Next.js 14.2.30 (App Router)
+Styling:       Tailwind CSS
+Język:         TypeScript 100%
+Backend:       Next.js API Routes (serverless)
+Baza:          Supabase (PostgreSQL)
+Auth:          Supabase Auth
+AI:            OpenAI GPT-4o + vision + document
+Płatności:     Stripe (Checkout + Webhooks)
+Hosting:       Vercel
+DNS/CDN:       Cloudflare
+Analytics:     Google Analytics 4
+Email:         Resend (SMTP)
+Testy:         Vitest
