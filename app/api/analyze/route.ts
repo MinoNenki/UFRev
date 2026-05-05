@@ -68,7 +68,7 @@ function applyServiceBusinessOverlay(params: {
         selectedCountry ? `The answer should stay grounded in the selected local context: ${selectedCountry}.` : 'The local region context should drive the answer more than a rigid product model.',
       ];
 
-  decision.issues = currentLanguage === 'pl'
+decision.issues = currentLanguage === 'pl'
     ? [
         'Nie wolno pokazywać 0,00 jako ceny lub kosztu, jeśli cennik i CAPEX nie zostały potwierdzone.',
         'Myjnia mobilna, myjnia TIR i mycie elewacji to trzy różne modele operacyjne, więc nie warto startować od wszystkiego naraz.',
