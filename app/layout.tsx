@@ -1,6 +1,7 @@
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import BackgroundFX from '@/components/BackgroundFX';
+import GoogleAnalytics from '@/components/analytics/GoogleAnalytics';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Manrope, Space_Grotesk } from 'next/font/google';
@@ -59,6 +60,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang={language}>
       <body className={`${bodyFont.variable} ${headingFont.variable} relative min-h-screen antialiased`}>
+        <GoogleAnalytics />
         <BackgroundFX />
         <Navbar />
 

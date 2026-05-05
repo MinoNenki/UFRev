@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { trackEvent } from '@/lib/analytics';
 
 type PricingCheckoutButtonProps = {
   itemKey: string;
@@ -28,6 +29,7 @@ export default function PricingCheckoutButton({
     }
 
     setIsLoading(true);
+    trackEvent('begin_checkout', { item_key: itemKey });
 
     try {
       const res = await fetch('/api/stripe/checkout', {
@@ -38,12 +40,21 @@ export default function PricingCheckoutButton({
       const data = await res.json();
 
       if (data?.url) {
+        trackEvent('checkout_redirect', { item_key: itemKey });
         window.location.href = data.url;
         return;
       }
 
+      trackEvent('checkout_error', {
+        item_key: itemKey,
+        message: data?.error || 'Checkout error',
+      });
       alert(data?.error || 'Checkout error');
     } catch {
+      trackEvent('checkout_error', {
+        item_key: itemKey,
+        message: 'Checkout error',
+      });
       alert('Checkout error');
     } finally {
       setIsLoading(false);

@@ -5,6 +5,7 @@ import { createSupabaseBrowserClient } from '@/lib/supabase-browser';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { SITE } from '@/lib/site';
+import { trackEvent } from '@/lib/analytics';
 
 type Props = {
   mode: 'login' | 'register';
@@ -60,6 +61,10 @@ export default function AuthForm({ mode }: Props) {
       });
       if (error) setMessage(getAuthErrorMessage(error.message));
       else {
+        trackEvent('sign_up', {
+          method: 'email',
+          referral_present: Boolean(referralCode),
+        });
         setMessage(`Account created. Check your email and confirm your account. After clicking the link, you will return to a branded ${SITE.shortName} confirmation page.`);
         router.push('/auth/login');
         router.refresh();
@@ -68,6 +73,7 @@ export default function AuthForm({ mode }: Props) {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) setMessage(getAuthErrorMessage(error.message));
       else {
+        trackEvent('login', { method: 'email' });
         router.replace('/account');
         router.refresh();
       }
