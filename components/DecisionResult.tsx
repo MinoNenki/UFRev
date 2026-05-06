@@ -104,6 +104,20 @@ type DecisionResultShape = {
       note: string;
     }>;
   };
+  hybridBreakdown?: {
+    enabled?: boolean;
+    laneCount?: number;
+    summary?: string;
+    recommendedOrder?: Array<'service' | 'product' | 'education'>;
+    lanes?: Array<{
+      key: 'service' | 'product' | 'education';
+      label: string;
+      score: number;
+      readiness: 'ready' | 'test' | 'later';
+      risk: 'low' | 'medium' | 'high';
+      note: string;
+    }>;
+  };
 };
 
 function verdictColor(verdict?: string) {
@@ -512,6 +526,34 @@ function riskTone(value?: 'low' | 'medium' | 'high') {
   return 'border-amber-300/30 bg-amber-300/10 text-amber-100';
 }
 
+function readinessTone(value?: 'ready' | 'test' | 'later') {
+  if (value === 'ready') return 'border-emerald-400/30 bg-emerald-400/10 text-emerald-100';
+  if (value === 'later') return 'border-rose-400/30 bg-rose-400/10 text-rose-100';
+  return 'border-amber-300/30 bg-amber-300/10 text-amber-100';
+}
+
+function localizeReadiness(value: 'ready' | 'test' | 'later', language: Language) {
+  if (language === 'pl') {
+    if (value === 'ready') return 'Startuj';
+    if (value === 'test') return 'Testuj';
+    return 'Później';
+  }
+  if (value === 'ready') return 'Start';
+  if (value === 'test') return 'Test';
+  return 'Later';
+}
+
+function localizeLaneOrderKey(key: 'service' | 'product' | 'education', language: Language) {
+  if (language === 'pl') {
+    if (key === 'service') return 'Usługa';
+    if (key === 'product') return 'Produkt';
+    return 'Kurs';
+  }
+  if (key === 'service') return 'Service';
+  if (key === 'product') return 'Product';
+  return 'Course';
+}
+
 function MoneyRow({
   label,
   value,
@@ -618,6 +660,8 @@ function buildDecisionResultViewModel(result: DecisionResultShape, currentLangua
     })),
   ].filter((item, index, array) => item.url && array.findIndex((candidate) => candidate.url === item.url) === index).slice(0, 5);
 
+  const hybridBreakdown = result.hybridBreakdown?.enabled ? result.hybridBreakdown : null;
+
   const title = narrativeMismatch
     ? genericNarrative.title
     : result.analysisHeadline ||
@@ -668,6 +712,7 @@ function buildDecisionResultViewModel(result: DecisionResultShape, currentLangua
     serviceSetup,
     benchmarkLinks,
     userPlanLinks,
+    hybridBreakdown,
     title,
     infoCardClass,
     infoTitleClass,
@@ -701,6 +746,7 @@ export default function DecisionResult({
     sourcingOffers,
     serviceSetup,
     userPlanLinks,
+    hybridBreakdown,
     title,
     infoCardClass,
     infoTitleClass,
@@ -810,6 +856,45 @@ export default function DecisionResult({
           value={String(primaryNextStep)}
         />
       </div>
+
+      {hybridBreakdown ? (
+        <div className="rounded-[24px] border border-cyan-300/20 bg-cyan-300/10 p-4 sm:p-5">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="text-[11px] uppercase tracking-[0.22em] text-cyan-100">
+              {tt(currentLanguage, { en: '3-stream revenue map', pl: 'Mapa 3 strumieni przychodu' })}
+            </div>
+            <span className="rounded-full border border-cyan-200/30 bg-slate-950/35 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-100">
+              {tt(currentLanguage, { en: 'Visible effect layer', pl: 'Warstwa widocznego efektu' })}
+            </span>
+          </div>
+          <p className="mt-3 text-sm leading-7 text-cyan-50/90">
+            {hybridBreakdown.summary || tt(currentLanguage, { en: 'The model is split into separate streams so you can see what to launch first.', pl: 'Model jest rozdzielony na osobne strumienie, aby było jasne, co uruchomić najpierw.' })}
+          </p>
+
+          <div className="mt-4 grid gap-3 md:grid-cols-3">
+            {(hybridBreakdown.lanes || []).map((lane) => (
+              <div key={lane.key} className="rounded-2xl border border-white/10 bg-slate-950/45 p-4">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="text-sm font-semibold text-white">{lane.label}</div>
+                  <span className={`rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] ${readinessTone(lane.readiness)}`}>
+                    {localizeReadiness(lane.readiness, currentLanguage)}
+                  </span>
+                </div>
+                <div className="mt-3 text-2xl font-black text-white">{lane.score}<span className="text-sm text-slate-400">/100</span></div>
+                <div className="mt-1 text-xs text-slate-300">{tt(currentLanguage, { en: 'Risk', pl: 'Ryzyko' })}: {localizeRisk(lane.risk === 'low' ? 'Low' : lane.risk === 'high' ? 'High' : 'Medium', currentLanguage)}</div>
+                <p className="mt-3 text-xs leading-6 text-slate-300">{lane.note}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-4 rounded-2xl border border-white/10 bg-slate-950/35 px-4 py-3 text-sm text-slate-100">
+            <span className="font-semibold text-cyan-100">{tt(currentLanguage, { en: 'Recommended launch order', pl: 'Rekomendowana kolejność wdrożenia' })}: </span>
+            {(hybridBreakdown.recommendedOrder || [])
+              .map((key) => localizeLaneOrderKey(key, currentLanguage))
+              .join(' -> ')}
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -845,6 +930,7 @@ export function AdvancedDecisionReasoning({
     localizedCapitalProtection,
     guardrails,
     localizedRevenuePlaybook,
+    serviceSetup,
     infoCardClass,
     infoTitleClass,
     infoBodyClass,
@@ -968,6 +1054,55 @@ export function AdvancedDecisionReasoning({
           </div>
         )}
       </div>
+
+      {serviceSetup ? (
+        <div className="mt-5 rounded-[24px] border border-emerald-300/25 bg-emerald-300/10 p-4 sm:p-5">
+          <div className="text-[11px] uppercase tracking-[0.22em] text-emerald-100">
+            {tt(currentLanguage, { en: 'Startup cost blueprint', pl: 'Blueprint kosztów startu' })}
+          </div>
+          <div className="mt-3 grid gap-3 sm:grid-cols-3">
+            <div className="rounded-2xl border border-white/10 bg-slate-950/45 p-3">
+              <div className="text-[11px] uppercase tracking-[0.18em] text-slate-400">{tt(currentLanguage, { en: 'Starter lane', pl: 'Główny tor startu' })}</div>
+              <div className="mt-2 text-sm font-semibold text-white">{serviceSetup.primaryLane || '—'}</div>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-slate-950/45 p-3">
+              <div className="text-[11px] uppercase tracking-[0.18em] text-slate-400">{tt(currentLanguage, { en: 'Min startup budget', pl: 'Minimalny budżet startu' })}</div>
+              <div className="mt-2 text-sm font-semibold text-white">
+                {serviceSetup.capexBuckets?.length
+                  ? formatMoney(serviceSetup.capexBuckets.reduce((sum, bucket) => sum + (Number(bucket.low || 0) || 0), 0), currentLanguage, currency)
+                  : '—'}
+              </div>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-slate-950/45 p-3">
+              <div className="text-[11px] uppercase tracking-[0.18em] text-slate-400">{tt(currentLanguage, { en: 'Max startup budget', pl: 'Maksymalny budżet startu' })}</div>
+              <div className="mt-2 text-sm font-semibold text-white">
+                {serviceSetup.capexBuckets?.length
+                  ? formatMoney(serviceSetup.capexBuckets.reduce((sum, bucket) => sum + (Number(bucket.high || 0) || 0), 0), currentLanguage, currency)
+                  : '—'}
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-4 grid gap-3 xl:grid-cols-2">
+            <div className="rounded-2xl border border-white/10 bg-slate-950/40 p-4">
+              <div className="text-[11px] uppercase tracking-[0.18em] text-slate-400">{tt(currentLanguage, { en: 'Equipment list', pl: 'Lista sprzętu' })}</div>
+              <div className="mt-2 space-y-2 text-sm text-slate-200">
+                {(serviceSetup.equipment || []).slice(0, 4).map((item) => (
+                  <div key={`${item.item}-${item.priority}`}>• {item.item}{typeof item.estimatedCost === 'number' ? ` (${formatMoney(item.estimatedCost, currentLanguage, currency)})` : ''}</div>
+                ))}
+              </div>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-slate-950/40 p-4">
+              <div className="text-[11px] uppercase tracking-[0.18em] text-slate-400">{tt(currentLanguage, { en: 'First pricing packs', pl: 'Pierwsze pakiety cenowe' })}</div>
+              <div className="mt-2 space-y-2 text-sm text-slate-200">
+                {(serviceSetup.pricePackages || []).slice(0, 3).map((item) => (
+                  <div key={item.name}>• {item.name}: {typeof item.priceFrom === 'number' ? formatMoney(item.priceFrom, currentLanguage, currency) : '—'} - {typeof item.priceTo === 'number' ? formatMoney(item.priceTo, currentLanguage, currency) : '—'}</div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
 
       {showGrowthIntel && (
         <>

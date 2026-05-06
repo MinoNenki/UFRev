@@ -343,6 +343,43 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <section className="mt-8 rounded-[32px] border border-cyan-300/20 bg-[linear-gradient(135deg,rgba(34,211,238,0.12),rgba(16,185,129,0.08),rgba(2,6,23,0.92))] p-6 sm:p-8 shadow-[0_20px_70px_rgba(34,211,238,0.12)]">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <div className="text-[11px] uppercase tracking-[0.22em] text-cyan-100">{tr(language, { en: 'How to start in 3 minutes', pl: 'Jak zacząć w 3 minuty' })}</div>
+            <div className="mt-2 text-2xl font-black text-white">{tr(language, { en: 'Simple path for first-time users', pl: 'Prosta ścieżka dla nowych użytkowników' })}</div>
+          </div>
+          <Link href="/dashboard" className="rounded-2xl bg-cyan-300 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:brightness-105">
+            {tr(language, { en: 'Open dashboard', pl: 'Otwórz dashboard' })}
+          </Link>
+        </div>
+
+        <div className="mt-4 grid gap-3 md:grid-cols-3">
+          {[
+            {
+              title: tr(language, { en: '1. Add input', pl: '1. Dodaj dane wejściowe' }),
+              text: tr(language, { en: 'URL, plik, zdjęcie, oferta lub pomysł.', pl: 'URL, plik, zdjęcie, oferta albo pomysł.' }),
+              href: '/dashboard',
+            },
+            {
+              title: tr(language, { en: '2. Read verdict + startup cost', pl: '2. Sprawdź werdykt i koszt startu' }),
+              text: tr(language, { en: 'You get decision, risk and startup budget range.', pl: 'Dostajesz decyzję, ryzyko i widełki budżetu startu.' }),
+              href: '/example-verdicts',
+            },
+            {
+              title: tr(language, { en: '3. Launch first safe move', pl: '3. Wykonaj pierwszy bezpieczny ruch' }),
+              text: tr(language, { en: 'Use suggested order instead of random spending.', pl: 'Działaj według kolejności zamiast losowego wydawania pieniędzy.' }),
+              href: '/dashboard',
+            },
+          ].map((item) => (
+            <Link key={item.title} href={item.href} className="rounded-2xl border border-white/10 bg-slate-950/45 p-4 transition hover:-translate-y-[1px] hover:border-cyan-200/35">
+              <div className="text-sm font-semibold text-white">{item.title}</div>
+              <div className="mt-2 text-sm leading-6 text-slate-300">{item.text}</div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       <section className="mt-8 rounded-[32px] border border-red-500/20 bg-[linear-gradient(135deg,rgba(239,68,68,0.08),rgba(15,23,42,0.9),rgba(2,6,23,0.95))] p-8 shadow-[0_20px_60px_rgba(239,68,68,0.08)]">
         <div className="text-center">
           <div className="glass-chip mx-auto mb-4 inline-block border-red-400/30 bg-red-400/10 text-red-200">

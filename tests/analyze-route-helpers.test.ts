@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildDirectQuestionLead, detectIntent, isServiceBusinessPrompt, normalizeAnalysisProfile } from '@/lib/analyze-helpers';
+import { buildDirectQuestionLead, detectIntent, inferRequestAudience, isPrivateConsumerPrompt, isServiceBusinessPrompt, normalizeAnalysisProfile } from '@/lib/analyze-helpers';
 
 describe('analyze route helpers', () => {
   it('treats Polish units-price-demand questions as profit intent', () => {
@@ -67,5 +67,28 @@ describe('analyze route helpers', () => {
       role: 'user',
       plan_key: 'free',
     });
+  });
+
+  it('classifies private medical equipment requests as consumer audience', () => {
+    const prompt = 'Chce proteze modułową udową nogi, podaj producentów, ofertę cenową i finansowanie. Mój budżet to 12 tys zł.';
+    expect(isPrivateConsumerPrompt(prompt)).toBe(true);
+    expect(inferRequestAudience(prompt)).toBe('consumer');
+  });
+
+  it('returns a consumer-safe lead for personal prosthesis financing questions', () => {
+    const lead = buildDirectQuestionLead({
+      content: 'Potrzebuję protezy i chcę znać opcje cenowe oraz finansowanie NFZ/PFRON przy budżecie 12 tys.',
+      currentLanguage: 'pl',
+      displayCurrency: 'PLN',
+      websiteUrl: '',
+      salesChannel: '',
+      price: 0,
+      cost: 0,
+    });
+
+    expect(lead).toMatch(/budżetu|budzetu|widełki|widelki/i);
+    expect(lead).toMatch(/finansowania|refundac|NFZ|PFRON/i);
+    expect(lead).toMatch(/sprzętu medycznego|sprzetu medycznego|medycznego/i);
+    expect(lead).not.toMatch(/wystawiać|marży|marzy|allegro|skaluj/i);
   });
 });

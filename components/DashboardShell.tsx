@@ -116,6 +116,31 @@ export default function DashboardShell({
       steps={tutorialSteps}
       storageKey="ufrev-dashboard-tutorial"
     >
+      <section className="mb-5 rounded-[24px] border border-cyan-300/20 bg-cyan-300/10 p-4 sm:p-5">
+        <div className="text-[11px] uppercase tracking-[0.22em] text-cyan-100">{tt(language, { en: 'Quick start for new users', pl: 'Szybki start dla nowych użytkowników' })}</div>
+        <div className="mt-3 grid gap-3 md:grid-cols-3">
+          {[
+            {
+              title: tt(language, { en: '1. Enter your idea', pl: '1. Wpisz pomysł' }),
+              text: tt(language, { en: 'Paste link/text or add file. Keep it short and specific.', pl: 'Wklej link/tekst albo dodaj plik. Krótko i konkretnie.' }),
+            },
+            {
+              title: tt(language, { en: '2. Read 4 key fields', pl: '2. Przeczytaj 4 pola' }),
+              text: tt(language, { en: 'Verdict, margin/readiness, risk, and next step.', pl: 'Werdykt, marża/gotowość, ryzyko i następny krok.' }),
+            },
+            {
+              title: tt(language, { en: '3. Launch controlled test', pl: '3. Uruchom kontrolowany test' }),
+              text: tt(language, { en: 'Use the recommended order and avoid full-scale entry.', pl: 'Użyj rekomendowanej kolejności i unikaj pełnego wejścia od razu.' }),
+            },
+          ].map((item) => (
+            <div key={item.title} className="rounded-2xl border border-white/10 bg-slate-950/45 p-4">
+              <div className="text-sm font-semibold text-white">{item.title}</div>
+              <div className="mt-2 text-sm leading-6 text-slate-300">{item.text}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <TutorialStep
         step="01"
         title={tt(language, { en: 'Start with the top dashboard signals', pl: 'Zacznij od górnych sygnałów dashboardu' })}

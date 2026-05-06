@@ -23,7 +23,7 @@ export function detectIntent(input: string): AnalysisIntent {
   return 'general_analysis';
 }
 
-export type FileType = 'image' | 'link' | 'text' | 'unknown';
+export type FileType = 'image' | 'link' | 'text' | 'video' | 'pdf' | 'document' | 'unknown';
 
 export function detectFileType({
   websiteUrl,

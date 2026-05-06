@@ -25,7 +25,8 @@ export function isServiceBusinessPrompt(input: string) {
   const serviceSignals = [
     'myjni', 'mycie', 'czyszczenie', 'elewac', 'kostki brukowej', 'kostka brukowa',
     'tir', 'truck wash', 'detailing', 'mobiln', 'mobile wash', 'parow', 'steam cleaning',
-    'usług', 'uslug', 'service business', 'lokaln', 'regional', 'woj.', 'województ', 'wojewodzt',
+    'usług', 'uslug', 'service business', 'serwis', 'b2b serwis', 'hotel', 'restaurac', 'akwari',
+    'lokaln', 'regional', 'woj.', 'województ', 'wojewodzt',
   ];
   const requestSignals = [
     'jaki sprzęt', 'jaki sprzet', 'sprzęt', 'sprzet', 'equipment', 'maszyn',
@@ -42,6 +43,47 @@ export function isServiceBusinessPrompt(input: string) {
   return serviceScore >= 2 && (requestScore >= 1 || hasLinks || startupSignal);
 }
 
+export function isStartupIntentPrompt(input: string) {
+  const text = (input || '').toLowerCase();
+  return /jak zacząć|jak zaczac|jak uruchomi|jak otworzy|jak założy|jak zalozy|koszt start|budżet start|budzet start|startup cost|start cost|ile kosztuje start|co kupić na start|co kupic na start|sprzęt na start|sprzet na start|otworzyć (sklep|firm|biznes|usług)|otworzyc (sklep|firm|biznes|uslug)|chcę otworzyć|chce otworzyc|chcę założyć|chce zalozyc/i.test(text);
+}
+
+export function isDocumentAnalysisPrompt(input: string) {
+  const text = (input || '').toLowerCase();
+  return /faktura|rachunek|invoice|umowa|regulamin|wniosek o dotac|grant|biznesplan|biznes plan|kosztorys|polisa|oc firmy|abonament|przetarg|leasing|audyt|raport finansow|oferta leasingu/i.test(text);
+}
+
+export function isMarketingAnalysisPrompt(input: string) {
+  const text = (input || '').toLowerCase();
+  return /ctr|cpm|roas|kampania (meta|google|tiktok|facebook)|reklama (meta|google|facebook)|jak pisać tytuły|jak pisac tytuly|opis (produktu|oferty)|landing page|konwersj|seo|email marketing|influencer|retargeting|hook tiktok|content strategy|brief (dla|copywriter)|cold email|whatsapp business/i.test(text);
+}
+
+export function isAmazonFBAPrompt(input: string) {
+  const text = (input || '').toLowerCase();
+  return /\bfba\b|fulfillment by amazon|bsr|best seller rank|amazon (de|uk|us|fr|it|es|pl)|amazon fba|fba fee/i.test(text);
+}
+
+export type RequestAudience = 'consumer' | 'business' | 'startup';
+
+export function isPrivateConsumerPrompt(input: string) {
+  const text = (input || '').toLowerCase();
+  const directConsumerSignals = /dla mnie|dla siebie|osoba prywatna|prywatnie|potrzebuj(e|ę)|szukam|chcę kupić|chce kupic|mój budżet|moj budzet|moja mama|mój tata|moj tata|dla dziecka|dla seniora/i.test(text);
+  const medicalConsumerSignals = /proteza|orteza|wózek inwalidzki|wozek inwalidzki|aparat słuchowy|aparat sluchowy|rehabilitac|nfz|pfron|refundac|turnus|leczen|pacjent/i.test(text);
+  return directConsumerSignals || medicalConsumerSignals;
+}
+
+export function inferRequestAudience(input: string): RequestAudience {
+  const text = (input || '').toLowerCase();
+  if (isStartupIntentPrompt(text)) return 'startup';
+
+  const businessSignals = /firma|spółk|spolk|sp\. z o\.o\.|działalno|dzialalno|b2b|startup|agencj|klienci|lead|sprzedaż|sprzedaz|marża|marza|roas|roi|moq|allegro|amazon|ebay|shopify|e-commerce|ecommerce|wholesale|hurt|dystrybucj|biznes|przedsiębior|przedsiebior/i.test(text);
+  const consumerSignals = isPrivateConsumerPrompt(text);
+
+  if (consumerSignals && !businessSignals) return 'consumer';
+  if (businessSignals) return 'business';
+  return consumerSignals ? 'consumer' : 'business';
+}
+
 export function buildDirectQuestionLead(params: {
   content: string;
   currentLanguage: Language;
@@ -52,6 +94,7 @@ export function buildDirectQuestionLead(params: {
   cost: number;
 }) {
   const combined = `${params.content} ${params.salesChannel}`.toLowerCase();
+  const isConsumerCase = isPrivateConsumerPrompt(combined);
   const asksUnits = /ile sztuk|how many units|order quantity|test batch|moq|min(?:imum)? order/.test(combined);
   const asksPrice = /po ile|wystawia[cć]|selling price|listing price|sell price|jak[aą] cen[aę]/.test(combined);
   const asksDemand = /popyt|demand|czy się sprzeda|czy sie sprzeda|will it sell|czy będzie|czy bedzie/.test(combined);
@@ -61,14 +104,32 @@ export function buildDirectQuestionLead(params: {
   const asksDirection = /w jaki kierunek|co wybrać|co wybrac|pionier rynku|which direction|what niche|which lane/i.test(combined);
   const serviceBusinessCase = isServiceBusinessPrompt(`${params.content} ${params.salesChannel}`);
 
-  if (!asksUnits && !asksPrice && !asksDemand && !asksRental && !asksEquipment && !asksStartupCost && !asksDirection) return '';
-
   const supplierSource = looksLikeSupplierMarketplaceUrl(params.websiteUrl);
   const hasHardCost = params.cost > 0 || params.price > 0 || /unit price|price per unit|cena|cost|koszt|shipping|dostaw/i.test(combined);
   const targetSellFloor = params.cost > 0 ? params.cost / 0.65 : null;
   const quickPaybackRentLow = params.cost > 0 ? params.cost / 12 : null;
   const quickPaybackRentHigh = params.cost > 0 ? params.cost / 8 : null;
   const weekendPackage = params.cost > 0 ? params.cost / 5 : null;
+
+  if (isConsumerCase && params.currentLanguage === 'pl') {
+    const parts: string[] = [];
+
+    if (asksPrice || /budżet|budzet|budżec|budzec|koszt|cena|widełk|widelk/i.test(combined)) {
+      parts.push('Przy pytaniu prywatnym najpierw dopasuj widełki cenowe do budżetu, a dopiero potem porównuj marki i warianty.');
+    }
+
+    if (/finansowan|refundac|nfz|pfron|raty|leasing konsumencki/i.test(combined)) {
+      parts.push('Uwzględnij możliwe ścieżki finansowania (np. refundacja, dofinansowanie, raty) oraz dokumenty potrzebne do złożenia wniosku.');
+    }
+
+    if (/protez|ortez|sprzęt medyczny|sprzet medyczny|rehabilitac/i.test(combined)) {
+      parts.push('Dla sprzętu medycznego podaj bezpieczne kroki wyboru: konsultacja specjalistyczna, pomiar/dopasowanie, serwis i warunki gwarancji.');
+    }
+
+    return parts.join(' ');
+  }
+
+  if (!asksUnits && !asksPrice && !asksDemand && !asksRental && !asksEquipment && !asksStartupCost && !asksDirection) return '';
 
   if (serviceBusinessCase && params.currentLanguage === 'pl') {
     const parts: string[] = [];

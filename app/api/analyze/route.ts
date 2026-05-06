@@ -18,19 +18,20 @@ import { collectProMarketData } from '@/lib/market-connectors';
 import { convertCurrency, convertToUsd, formatMoney, getCurrencyForCountry, getCurrencyForLanguage, normalizeCurrencyCode } from '@/lib/currency';
 import { buildSystemPrompt } from '@/lib/analysis-prompt';
 import { buildMarketWatchReport, getRecentMarketWatchSnapshots, persistMarketWatchReport } from '@/lib/market-watch';
-import { isServiceBusinessPrompt } from '@/lib/analyze-helpers';
+import { isServiceBusinessPrompt, isStartupIntentPrompt, isDocumentAnalysisPrompt, isMarketingAnalysisPrompt, isAmazonFBAPrompt, inferRequestAudience, isPrivateConsumerPrompt } from '@/lib/analyze-helpers';
 import { buildProductSourcingLayer, buildServiceSetupLayer } from '@/lib/recommendation-layers';
 export const runtime = 'nodejs';
 
 
 function finalGuard(decision: any, websiteUrl: string) {
+  // Guard only against overconfident BUY, do not flatten every verdict to TEST.
   if (!websiteUrl && decision.verdict === 'BUY') decision.verdict = 'TEST';
 
-  if (decision.confidence < 65) decision.verdict = 'TEST';
+  if (decision.confidence < 52 && decision.verdict === 'BUY') decision.verdict = 'TEST';
 
   if (decision.burnRisk === 'High') decision.verdict = 'AVOID';
 
-  if ((decision.pricing?.marginPercent ?? 0) < 25) decision.verdict = 'TEST';
+  if ((decision.pricing?.marginPercent ?? 0) < 18 && decision.verdict === 'BUY') decision.verdict = 'TEST';
 
   if (!decision.rolloutPlan?.length && decision.verdict === 'BUY') {
     decision.verdict = 'TEST';
@@ -247,7 +248,233 @@ function inferFinancialContextFromText(text: string) {
     /(?:sprzeda(?:ż|z)(?:y| do| za)?|sprzeda[cć] za|po ile|wystawia(?:ć|c)|selling price|sell for|listing price|retail price|cena sprzeda(?:ż|z)y)[^0-9]{0,24}([0-9][0-9\s.,]{0,14})/i,
   ]);
 
-  return { inferredCost, inferredPrice };
+  // Extract shipping cost if mentioned separately (e.g. "+ $1.80 wysyłka")
+  const inferredShipping = extractLabeledMoneyValue(compact, [
+    /(?:\+|plus|oraz)[^0-9]{0,12}([0-9][0-9\s.,]{0,10})\s?(?:\$|€|£|zł|zl|pln|eur|usd|gbp)?[^a-z0-9]{0,16}(?:wysyłka|wysylka|shipping|ship|freight|dostawa)/i,
+    /(?:wysyłka|wysylka|shipping|ship|freight|dostawa)[^0-9]{0,16}([0-9][0-9\s.,]{0,10})\s?(?:\$|€|£|zł|zl|pln|eur|usd|gbp)?/i,
+  ]);
+
+  // Extract BSR rank (Best Seller Rank) - treat lower as stronger demand signal
+  const bsrMatch = compact.match(/(?:bsr|best seller rank|bestseller rank)[^0-9]{0,16}#?([0-9]{1,6})/i);
+  const bsrValue = bsrMatch ? Number(bsrMatch[1]) : null;
+  // BSR → demand proxy: #1-50 = very strong, #51-500 = strong, #501-2000 = medium
+  const bsrDemandBonus = bsrValue == null ? 0
+    : bsrValue <= 50 ? 28
+    : bsrValue <= 250 ? 20
+    : bsrValue <= 1000 ? 12
+    : bsrValue <= 3000 ? 6
+    : 0;
+
+  // Detect FBA context
+  const hasFBA = /\bfba\b|fulfillment by amazon/i.test(compact);
+  // FBA fees are typically 15% referral + $3-5 fulfillment
+  const fbaFeeEstimate = hasFBA && inferredPrice > 0 ? inferredPrice * 0.28 : 0;
+
+  // Seasonal detection
+  const seasonalSignals = {
+    q4: /q4|sezon(?: )?q4|kwiecień|holiday|christmas|boże narodzenie|mikołaj|gwiazdka/i.test(compact),
+    summer: /sezon(?:owość)?(?: letni| lato)?|maj.?sierpień|summer|outdoor|ogrod|garden|camping|kempingowy/i.test(compact),
+    winter: /zim[aę]|winter|sezon(?:owość)? zimow|październik.?marzec/i.test(compact),
+  };
+  const isSeasonalProduct = seasonalSignals.q4 || seasonalSignals.summer || seasonalSignals.winter;
+
+  return { inferredCost, inferredPrice, inferredShipping, bsrValue, bsrDemandBonus, hasFBA, fbaFeeEstimate, isSeasonalProduct, seasonalSignals };
+}
+
+function countKeywordHits(text: string, keywords: string[]) {
+  return keywords.reduce((total, keyword) => total + (text.includes(keyword) ? 1 : 0), 0);
+}
+
+function extractLabeledScore(text: string, labels: string[]) {
+  for (const label of labels) {
+    const direct = text.match(new RegExp(`${label}[^0-9]{0,14}([0-9]{1,3})(?:\\s*\\/\\s*100|\\s*%)?`, 'i'));
+    if (direct) {
+      const value = Number(direct[1]);
+      if (Number.isFinite(value)) return Math.max(0, Math.min(100, value));
+    }
+
+    const reversed = text.match(new RegExp(`([0-9]{1,3})(?:\\s*\\/\\s*100|\\s*%)?[^a-z0-9]{0,12}${label}`, 'i'));
+    if (reversed) {
+      const value = Number(reversed[1]);
+      if (Number.isFinite(value)) return Math.max(0, Math.min(100, value));
+    }
+  }
+
+  return null;
+}
+
+function inferMarketSignalsFromText(params: {
+  text: string;
+  isServiceBusinessCase: boolean;
+  hasWebsiteUrl: boolean;
+  competitorUrls: string;
+}) {
+  const normalized = String(params.text || '').toLowerCase();
+  const explicitDemand = extractLabeledScore(normalized, ['popyt', 'demand']);
+  const explicitCompetition = extractLabeledScore(normalized, ['konkurencj', 'competition', 'nasycenie']);
+
+  if (explicitDemand != null || explicitCompetition != null) {
+    return {
+      demand: explicitDemand,
+      competition: explicitCompetition,
+    };
+  }
+
+  const tokenCount = normalized.split(/\s+/).filter(Boolean).length;
+  const competitorLinkCount = extractUrlsFromText(params.competitorUrls || '').length;
+
+  const demandPositive = countKeywordHits(normalized, [
+    'duzy popyt', 'duży popyt', 'high demand', 'trend', 'rosn', 'rosną', 'zapotrzebowanie', '3 revenue streams', 'abonament', 'subscription', 'powtarzalne', 'powtarzalny',
+  ]);
+  const demandNegative = countKeywordHits(normalized, [
+    'niski popyt', 'slaby popyt', 'słaby popyt', 'sezonow', 'brak popytu', 'niepewny popyt', 'uncertain demand',
+  ]);
+
+  const competitionHigh = countKeywordHits(normalized, [
+    'duza konkurencja', 'duża konkurencja', 'wysoka konkurencja', 'nasycony', 'crowded', 'duzo konkurent', 'dużo konkurent', 'red ocean',
+  ]);
+  const competitionLow = countKeywordHits(normalized, [
+    'nisza', 'blue ocean', 'mala konkurencja', 'mała konkurencja', 'slaba konkurencja', 'słaba konkurencja', 'unikaln', 'wyróżnik',
+  ]);
+
+  let demand = 34 + Math.min(14, Math.floor(tokenCount / 45));
+  if (params.isServiceBusinessCase) demand += 6;
+  if (params.hasWebsiteUrl) demand += 3;
+  demand += demandPositive * 4;
+  demand -= demandNegative * 5;
+
+  let competition = params.isServiceBusinessCase ? 52 : 40;
+  competition += competitorLinkCount * 4;
+  competition += competitionHigh * 6;
+  competition -= competitionLow * 6;
+
+  return {
+    demand: Math.max(10, Math.min(92, Math.round(demand))),
+    competition: Math.max(8, Math.min(94, Math.round(competition))),
+  };
+}
+
+function detectHybridBusinessModel(text: string) {
+  const normalized = String(text || '').toLowerCase();
+  const hasProductLane = /sklep|e-?commerce|produkt|allegro|amazon|etsy|offer|oferta/i.test(normalized);
+  const hasServiceLane = /usług|uslug|detailing|myjni|mycie|mobiln|service/i.test(normalized);
+  const hasEducationLane = /kurs|szkoleni|ebook|webinar|online course|mentoring|konsultacj/i.test(normalized);
+  const laneCount = [hasProductLane, hasServiceLane, hasEducationLane].filter(Boolean).length;
+  return {
+    isHybrid: laneCount >= 2,
+    hasProductLane,
+    hasServiceLane,
+    hasEducationLane,
+    laneCount,
+  };
+}
+
+function clampScore(value: number) {
+  if (!Number.isFinite(value)) return 0;
+  return Math.max(0, Math.min(100, Math.round(value)));
+}
+
+function buildHybridRevenueBreakdown(params: {
+  currentLanguage: Language;
+  content: string;
+  demand: number;
+  competition: number;
+  marginPercent: number;
+  confidence: number;
+  hasWebsiteUrl: boolean;
+  hasCompetitorEvidence: boolean;
+  isServiceBusinessCase: boolean;
+}) {
+  const model = detectHybridBusinessModel(params.content);
+  if (!model.isHybrid && !params.isServiceBusinessCase) return null;
+
+  const competitionGap = Math.max(0, 100 - (params.competition || 0));
+  const margin = Math.max(0, params.marginPercent || 0);
+  const confidence = Math.max(0, params.confidence || 0);
+
+  const productScore = clampScore(
+    (model.hasProductLane ? 34 : 12)
+    + (params.demand * 0.24)
+    + (competitionGap * 0.2)
+    + (margin * 0.28)
+    + (params.hasWebsiteUrl ? 6 : 0)
+    + (params.hasCompetitorEvidence ? 5 : 0)
+    + (confidence * 0.13)
+  );
+
+  const serviceScore = clampScore(
+    (model.hasServiceLane ? 38 : 14)
+    + (params.demand * 0.3)
+    + (competitionGap * 0.17)
+    + (confidence * 0.21)
+    + (params.isServiceBusinessCase ? 8 : 0)
+    + (params.hasCompetitorEvidence ? 6 : 0)
+    + Math.min(10, margin * 0.12)
+  );
+
+  const educationScore = clampScore(
+    (model.hasEducationLane ? 36 : 14)
+    + (params.demand * 0.2)
+    + (competitionGap * 0.16)
+    + (confidence * 0.26)
+    + (params.hasWebsiteUrl ? 3 : 0)
+    + (params.hasCompetitorEvidence ? 4 : 0)
+    + (model.laneCount >= 3 ? 5 : 0)
+  );
+
+  const scoreToRisk = (score: number) => score >= 72 ? 'low' : score >= 48 ? 'medium' : 'high';
+  const scoreToReadiness = (score: number) => score >= 72 ? 'ready' : score >= 48 ? 'test' : 'later';
+
+  const lanes = [
+    {
+      key: 'service',
+      label: params.currentLanguage === 'pl' ? 'Usługa' : 'Service',
+      score: serviceScore,
+      readiness: scoreToReadiness(serviceScore),
+      risk: scoreToRisk(serviceScore),
+      note: params.currentLanguage === 'pl'
+        ? 'Najszybsza walidacja przez lokalne leady i rozmowy sprzedażowe.'
+        : 'Fastest validation path via local leads and direct sales calls.',
+    },
+    {
+      key: 'product',
+      label: params.currentLanguage === 'pl' ? 'Produkt' : 'Product',
+      score: productScore,
+      readiness: scoreToReadiness(productScore),
+      risk: scoreToRisk(productScore),
+      note: params.currentLanguage === 'pl'
+        ? 'Wymaga kontroli marży, zwrotów i kosztu pozyskania przy skali.'
+        : 'Requires tighter margin, returns, and CAC control before scale.',
+    },
+    {
+      key: 'education',
+      label: params.currentLanguage === 'pl' ? 'Kurs' : 'Course',
+      score: educationScore,
+      readiness: scoreToReadiness(educationScore),
+      risk: scoreToRisk(educationScore),
+      note: params.currentLanguage === 'pl'
+        ? 'Dokłada marżę po zebraniu dowodów i opinii z realizacji usługi.'
+        : 'Adds margin after service proof and testimonials are collected.',
+    },
+  ] as const;
+
+  const order = [...lanes].sort((a, b) => b.score - a.score).map((lane) => lane.key);
+
+  const summary = params.currentLanguage === 'pl'
+    ? model.isHybrid
+      ? 'Model mieszany rozbijamy na 3 strumienie, aby nie przepalać budżetu i wdrażać kanały we właściwej kolejności.'
+      : 'Model usługowy pokazuje 3 strumienie przychodu: główny kanał startowy oraz dwa kanały dokładane po walidacji.'
+    : model.isHybrid
+      ? 'Mixed model is split into 3 streams to reduce burn risk and sequence channels properly.'
+      : 'Service model shows 3 revenue streams: primary launch lane plus two follow-up lanes after validation.';
+
+  return {
+    enabled: true,
+    laneCount: model.laneCount,
+    lanes,
+    recommendedOrder: order,
+    summary,
+  };
 }
 
 function extractUrlsFromText(text: string) {
@@ -1339,6 +1566,7 @@ function enhanceDecisionForUi(params: {
   decision: ReturnType<typeof calculateDecision> & { analysisMode?: string; analysisHeadline?: string };
   currentLanguage: Language;
   productName: string;
+  contentSnippet: string;
   websiteUrl: string;
   competitorUrls: string;
   uploadedFilesCount: number;
@@ -1354,6 +1582,7 @@ function enhanceDecisionForUi(params: {
     decision,
     currentLanguage,
     productName,
+    contentSnippet,
     websiteUrl,
     competitorUrls,
     uploadedFilesCount,
@@ -1386,6 +1615,7 @@ function enhanceDecisionForUi(params: {
   const hasEvidence = Boolean(websiteUrl || competitorUrls || uploadedFilesCount > 0 || uploadedImagesCount > 0);
   const hasHardUnitEconomics = Boolean((decision.pricing?.currentPrice ?? 0) > 0 && (decision.pricing?.estimatedCost ?? 0) > 0);
   const region = (targetMarket || selectedCountry || '').trim();
+  const hybridModel = detectHybridBusinessModel(`${productName} ${contentSnippet}`);
 
   if (isServiceBusinessCase) {
     decision.analysisMode = 'service_estimation';
@@ -1393,21 +1623,35 @@ function enhanceDecisionForUi(params: {
     decision.executionMode = 'manual_review';
 
     if (currentLanguage === 'pl') {
-      decision.analysisHeadline = `To jest case usługowy lokalny${region ? ` (${region})` : ''} - zacznij od kontrolowanego wejścia, nie od pełnej skali.`;
+      decision.analysisHeadline = hybridModel.isHybrid
+        ? `To model mieszany${region ? ` (${region})` : ''} - najpierw potwierdź jeden główny strumień przychodu, potem dołóż kolejne.`
+        : `To lokalny model usługowy${region ? ` (${region})` : ''} - zacznij od kontrolowanego wejścia, nie od pełnej skali.`;
       decision.why = [
-        `Pytanie dotyczy uruchomienia usługi lokalnej, więc priorytetem jest popyt lokalny, cennik i operacja, a nie klasyczny e-commerce margin model.`,
+        hybridModel.isHybrid
+          ? 'Opis wskazuje model mieszany (produkt/usługa/kurs), więc trzeba rozdzielić rentowność i testy dla każdego strumienia osobno.'
+          : 'Pytanie dotyczy uruchomienia usługi lokalnej, więc priorytetem jest popyt lokalny, cennik i operacja, a nie klasyczny model marży e-commerce.',
         competitorUrls ? 'Konkurencja została uwzględniona jako benchmark usług i poziomów cen.' : 'Brak linków konkurencji obniża pewność i utrudnia precyzyjny cennik startowy.',
         `Sygnały wejściowe: popyt ${Math.round(resolvedDemand ?? 0)}/100, konkurencja ${Math.round(resolvedCompetition ?? 0)}/100.`,
       ].slice(0, 3);
       decision.issues = [
-        hasHardUnitEconomics ? 'Model usługi ma częściowo potwierdzone liczby, ale nadal wymaga walidacji lokalnej i testu ofert.' : 'Nie ma pełnych danych liczbowych do twardej marży, więc wynik musi pozostać ostrożny.',
+        hybridModel.isHybrid
+          ? 'Łączenie kilku strumieni na starcie rozmywa budżet i utrudnia ocenę, który kanał naprawdę dowozi wynik.'
+          : hasHardUnitEconomics
+            ? 'Model usługi ma częściowo potwierdzone liczby, ale nadal wymaga walidacji lokalnej i testu ofert.'
+            : 'Nie ma pełnych danych liczbowych do twardej marży, więc wynik musi pozostać ostrożny.',
         'Szybkie wejście dużym budżetem bez testu pakietów i jakości leadów zwiększa ryzyko przepalenia.',
         competitionLevel ? 'Konkurencja wygląda mocno, więc oferta musi mieć wyraźny wyróżnik i lepszą prezentację wartości.' : 'Brak wyraźnego benchmarku konkurencji może zaniżyć trafność decyzji.',
       ].slice(0, 3);
       decision.improvements = [
-        'Wybierz 1 główną usługę startową i 2 pakiety cenowe (entry + premium), zamiast ruszać od razu szeroko.',
+        hybridModel.isHybrid
+          ? 'Ustal jeden główny silnik przychodu na 14 dni (np. detailing mobilny), a sklep i kurs zostaw jako dodatki po walidacji.'
+          : 'Wybierz 1 główną usługę startową i 2 pakiety cenowe (entry + premium), zamiast ruszać od razu szeroko.',
         'Zrób mały test lokalny (3-7 dni) i mierz: koszt leada, konwersję kontakt->zlecenie, realny czas realizacji.',
-        competitorUrls ? 'Porównaj cennik i zakres konkurencji 1:1, a potem ustaw ofertę z jasnym wyróżnikiem.' : 'Dodaj min. 3 linki lokalnej konkurencji, żeby doprecyzować cennik i pozycjonowanie.',
+        hybridModel.isHybrid
+          ? 'Ustaw kolejność wdrożenia: 1) usługa lokalna, 2) sprzedaż produktu jako upsell, 3) kurs dopiero po zebraniu proof i opinii.'
+          : competitorUrls
+            ? 'Porównaj cennik i zakres konkurencji 1:1, a potem ustaw ofertę z jasnym wyróżnikiem.'
+            : 'Dodaj min. 3 linki lokalnej konkurencji, żeby doprecyzować cennik i pozycjonowanie.',
       ].slice(0, 3);
       decision.marketSignals = [
         region ? `Kontekst lokalny ustawiony na: ${region}.` : 'Brak jednoznacznie ustawionego regionu docelowego.',
@@ -1536,7 +1780,13 @@ function enhanceDecisionForUi(params: {
       ? `Są podstawy, żeby ostrożnie wejść z ${itemLabelPl}`
       : decision.verdict === 'AVOID'
         ? `Na teraz lepiej wstrzymać ruch wokół ${itemLabelPl}`
-        : `To wygląda na case do małego testu, a nie pełnego wejścia`;
+        : !hasHardUnitEconomics
+          ? 'Brakuje twardych liczb do pełnego wejścia, więc zacznij od kontrolowanego testu.'
+          : competitionLevel
+            ? `Konkurencja wokół ${itemLabelPl} jest wymagająca, więc najpierw zrób test zamiast pełnej skali.`
+            : hasEvidence
+              ? `Sygnały dla ${itemLabelPl} są obiecujące, ale potrzebują krótkiej walidacji testowej.`
+              : `To wygląda na etap małego testu, a nie pełnego wejścia`;
 
   decision.why = [
     hasHardUnitEconomics
@@ -1613,6 +1863,8 @@ function buildFallbackAnalysis(params: {
   displayCurrency: string;
   decision: ReturnType<typeof calculateDecision>;
   isServiceBusinessCase?: boolean;
+  startupIntent?: boolean;
+  requestAudience?: 'consumer' | 'business' | 'startup';
 }) {
   const {
     productName,
@@ -1634,6 +1886,8 @@ function buildFallbackAnalysis(params: {
     displayCurrency,
     decision,
     isServiceBusinessCase,
+    startupIntent,
+    requestAudience,
   } = params;
 
   const directAnswerLead = buildDirectQuestionLead({
@@ -1648,6 +1902,40 @@ function buildFallbackAnalysis(params: {
   const formatMoneyOrMissing = (value: number, missingLabel: string) => value > 0 ? formatMoney(value, currentLanguage, displayCurrency as any) : missingLabel;
   const serviceSetup = (decision as any).serviceSetup || null;
   const productSourcing = (decision as any).productSourcing || null;
+  const isConsumerAudience = requestAudience === 'consumer';
+
+  if (currentLanguage === 'pl' && isConsumerAudience) {
+    const hasMedicalNeed = /proteza|orteza|rehabilitac|sprzęt medyczny|sprzet medyczny|pacjent/i.test([productName, content].join(' '));
+    const hasBudget = /budżet|budzet|do\s*\d+[\s\d]*\s*(zł|pln)|\d+[\s\d]*\s*(zł|pln)/i.test(content);
+    const hasFinancingNeed = /finansowan|refundac|nfz|pfron|raty|dofinans/i.test(content);
+
+    return [
+      'Krótka odpowiedź: to pytanie osoby prywatnej, więc analiza powinna być oparta na dopasowaniu opcji do potrzeb zdrowotnych i budżetu, a nie na modelu biznesowym.',
+      '',
+      'Dla Ciebie:',
+      hasMedicalNeed
+        ? '- Zacznij od konsultacji i pomiaru u certyfikowanego protetyka, bo dopasowanie leja i modułów ma większe znaczenie niż sama marka.'
+        : '- Najpierw doprecyzuj 2-3 najważniejsze wymagania użytkowe, a dopiero potem porównuj oferty cenowe.',
+      hasBudget
+        ? '- Przy budżecie podanym w pytaniu zawęź listę do wariantów bazowych + jednego wariantu rozszerzonego i porównaj koszt całkowity (sprzęt + dopasowanie + serwis).'
+        : '- Ustal maksymalny budżet oraz koszt całkowity (zakup, dopasowanie, regulacje, serwis) przed wyborem modelu.',
+      '- Poproś o pełną specyfikację: komponenty, zakres regulacji, warunki gwarancji, czas realizacji i terminy wizyt kontrolnych.',
+      '',
+      'Finansowanie:',
+      hasFinancingNeed
+        ? '- Sprawdź równolegle: refundację NFZ/PFRON, raty 0% lub finansowanie ratalne i wymagane dokumenty medyczne.'
+        : '- Sprawdź możliwe ścieżki finansowania: refundacja, dofinansowanie lub raty, wraz z wymaganymi dokumentami.',
+      '- Nie podpisuj umowy bez informacji o dopłatach za komponenty dodatkowe i koszty późniejszego serwisu.',
+      '',
+      'Kolejne kroki:',
+      '- Poproś minimum 3 pracownie/producentów o wycenę w tym samym zakresie komponentów.',
+      '- Porównaj oferty tabelą: cena bazowa, dopłaty, gwarancja, serwis, termin realizacji.',
+      '- Wybierz opcję o najlepszym stosunku dopasowanie/serwis/cena, a nie tylko najniższą kwotę początkową.',
+      '',
+      'Notatka źródłowa:',
+      content || 'Brak dodatkowego opisu.',
+    ].join('\n');
+  }
 
   if (currentLanguage === 'pl' && isServiceBusinessCase) {
     return [
@@ -1689,6 +1977,17 @@ function buildFallbackAnalysis(params: {
   }
 
   if (currentLanguage === 'pl') {
+    const startupCostLines = startupIntent
+      ? [
+          '',
+          'Koszty startu (estymacja):',
+          `- Sprzęt i narzędzia: ${cost > 0 ? formatMoney(cost * 0.5, currentLanguage, displayCurrency as any) : 'n/d'} - ${cost > 0 ? formatMoney(cost * 1.2, currentLanguage, displayCurrency as any) : 'n/d'}`,
+          `- Operacje i dojazd: ${adBudget > 0 ? formatMoney(adBudget * 0.4, currentLanguage, displayCurrency as any) : 'n/d'} - ${adBudget > 0 ? formatMoney(adBudget * 1.1, currentLanguage, displayCurrency as any) : 'n/d'}`,
+          `- Marketing/test pozyskania: ${adBudget > 0 ? formatMoney(adBudget * 0.6, currentLanguage, displayCurrency as any) : 'n/d'} - ${adBudget > 0 ? formatMoney(adBudget * 1.4, currentLanguage, displayCurrency as any) : 'n/d'}`,
+          `- Rezerwa bezpieczeństwa: ${cost > 0 ? formatMoney(cost * 0.15, currentLanguage, displayCurrency as any) : 'n/d'} - ${cost > 0 ? formatMoney(cost * 0.35, currentLanguage, displayCurrency as any) : 'n/d'}`,
+        ]
+      : [];
+
     return [
       directAnswerLead
         ? `Krótka odpowiedź: ${directAnswerLead}`
@@ -1712,6 +2011,7 @@ function buildFallbackAnalysis(params: {
       ...(websiteUrl ? [`- Link oferty: ${websiteUrl}`] : []),
       ...(competitorUrls ? [`- Linki konkurencji: ${competitorUrls}`] : []),
       ...(productSourcing?.recommendedOffers?.length ? [...productSourcing.recommendedOffers.slice(0, 3).map((item: any) => `- Link referencyjny: ${item.url}`)] : []),
+      ...startupCostLines,
     ].join('\n');
   }
 
@@ -1898,6 +2198,12 @@ function buildDynamicSystemPrompt(params: {
   fileType: SmartFileType;
   currentLanguage: Language;
   isServiceBusinessCase?: boolean;
+  startupIntent?: boolean;
+  documentAnalysisIntent?: boolean;
+  marketingAnalysisIntent?: boolean;
+  amazonFBAIntent?: boolean;
+  requestAudience?: 'consumer' | 'business' | 'startup';
+  privateConsumerIntent?: boolean;
 }) {
   const languageRule =
     params.currentLanguage === 'pl'
@@ -1958,6 +2264,7 @@ OUTPUT RULES:
 - If the user asks how many units to buy, what price to list, or whether demand exists, answer those points explicitly instead of giving a generic summary
 - If the user asks about opening a local business in a specific city/country, answer viability directly for that location with a concrete starter plan
 - If the user is researching a local service business, answer with the recommended service lane, starter equipment stack, startup-cost buckets, pricing-pack logic, and what to test first in that region
+- If the user asks how to start/open a business, ALWAYS include a visible startup-cost breakdown with ranges for equipment, operations, acquisition, and reserve
 - If hard cost or market data is missing, recommend a conservative first batch and say which numbers still need confirmation before scaling
 - Then add "Reasons" with 3 concrete bullets when that structure fits the question
 - Then add "Actions" with 3 concrete next steps focused on what to change, add, remove, or test next
@@ -1974,6 +2281,23 @@ OUTPUT RULES:
 - Do not invent a new selling price, margin, or market number unless it is supported by provided data
 - Never invent marketplace or product URLs; only return links that were provided by the user or found in live/public research signals
 ${params.isServiceBusinessCase ? '- This request is about a local service business. Do not force retail-unit economics, product margin language, or fake 0-value metrics. Treat competitor links as service benchmarks and answer the equipment / startup-cost / direction question directly.' : ''}
+${params.startupIntent ? '- Startup/opening intent is active. Output MUST contain a dedicated section named "Koszty startu" (or "Startup costs"), with at least 4 line items and a min-max total estimate in the selected currency.' : ''}
+- When BSR (Best Seller Rank) is mentioned, treat a low BSR number as strong demand evidence and reference it explicitly in the demand assessment
+- When FBA is mentioned, always include an explicit FBA fee line item in the cost structure and net margin calculation
+- When shipping cost appears in the input (e.g. "+ $2.00 wysyłka"), ALWAYS add it to the landed cost before computing margin — never ignore it
+- When a seasonal window is mentioned (Q4, sezon letni, winter), include a timing recommendation: when to order, when to launch, and when stock risk peaks
+- For invoice/document/contract analysis: first explain what the document appears to be, then identify key financial risks, unusually high line items, and concrete optimization actions
+- For marketing/ads analysis (CTR, CPM, ROAS, campaigns): always answer with 3 specific improvement actions instead of generic copy advice
+- For Amazon/eBay listing analysis: always include estimated FBA fees, net margin after fees, and BSR demand context if provided
+- If the request is from a private person (consumer), do not force a startup/company framing or investor-style verdict language
+- For private-person healthcare/equipment requests (e.g., prosthesis, orthosis, rehabilitation equipment), prioritize practical buyer guidance: fitting process, provider comparison, budget-fit options, financing/refund pathways, and next steps
+${params.documentAnalysisIntent ? '- DOCUMENT ANALYSIS MODE: This input is a document/invoice/contract/grant. First identify document type. Then flag 2-3 financial risks or high-cost items. Then give 3 optimization actions. Do not force a product verdict.' : ''}
+${params.marketingAnalysisIntent ? '- MARKETING ANALYSIS MODE: This input is about ads/marketing/content. Answer with specific metrics improvements. Give 3 concrete actions (not generic). Include benchmark comparison where relevant.' : ''}
+${params.amazonFBAIntent ? '- FBA/AMAZON MODE: Always compute net margin AFTER referral fee (~15%) + FBA fulfillment fee (~$3-5/unit). State clearly what the landed cost, FBA-adjusted margin, and break-even ROAS look like.' : ''}
+${params.requestAudience === 'startup' ? '- AUDIENCE MODE: STARTUP. Include launch sequence, startup costs, and cautious validation gates.' : ''}
+${params.requestAudience === 'business' ? '- AUDIENCE MODE: BUSINESS. Focus on unit economics, competition, and controlled scaling decisions.' : ''}
+${params.requestAudience === 'consumer' ? '- AUDIENCE MODE: PRIVATE PERSON. Focus on personal decision support, budget fit, offer comparison, financing/refund options, and practical next steps. Do not suggest raising sell prices or scaling a business.' : ''}
+${params.privateConsumerIntent ? '- PRIVATE PERSON SAFETY MODE: If medical context appears, avoid clinical diagnosis claims. Recommend consultation with a qualified specialist/provider for final fit and treatment choices.' : ''}
 
 ${languageRule}
 `.trim();
@@ -2117,9 +2441,21 @@ ${extractedText || (currentLanguage === 'pl'
     const responseStyle = chooseResponseStyle(`${productName}|${resolvedWebsiteUrlInput}|${content.slice(0, 120)}`);
     const analysisMode = detectAnalysisMode({ analysisType, websiteUrl: resolvedWebsiteUrlInput, productName, content, uploadedFiles });
     const isServiceBusinessCase = isServiceBusinessPrompt([productName, rawContent, salesChannel, resolvedTargetMarket, resolvedCompetitorUrlsInput].filter(Boolean).join(' '));
+    const startupIntent = isStartupIntentPrompt([productName, rawContent, salesChannel, resolvedTargetMarket].filter(Boolean).join(' '));
+    const documentAnalysisIntent = isDocumentAnalysisPrompt([productName, rawContent].filter(Boolean).join(' '));
+    const marketingAnalysisIntent = isMarketingAnalysisPrompt([productName, rawContent, salesChannel].filter(Boolean).join(' '));
+    const amazonFBAIntent = isAmazonFBAPrompt([productName, rawContent, salesChannel].filter(Boolean).join(' '));
+    const requestAudience = inferRequestAudience([productName, rawContent, salesChannel, resolvedTargetMarket].filter(Boolean).join(' '));
+    const privateConsumerIntent = requestAudience === 'consumer' || isPrivateConsumerPrompt([productName, rawContent, salesChannel].filter(Boolean).join(' '));
+    const inferredMarketSignals = inferMarketSignalsFromText({
+      text: [productName, rawContent, resolvedTargetMarket, salesChannel, resolvedCompetitorUrlsInput].filter(Boolean).join(' '),
+      isServiceBusinessCase,
+      hasWebsiteUrl: Boolean(resolvedWebsiteUrlInput),
+      competitorUrls: resolvedCompetitorUrlsInput,
+    });
     const intent = detectIntent([productName, content].filter(Boolean).join(' '));
     const fileType = detectFileType({ websiteUrl: resolvedWebsiteUrlInput, content, uploadedImages, uploadedFiles });
-    const dynamicSystemPrompt = buildDynamicSystemPrompt({ intent, fileType, currentLanguage, isServiceBusinessCase });
+    const dynamicSystemPrompt = buildDynamicSystemPrompt({ intent, fileType, currentLanguage, isServiceBusinessCase, startupIntent, documentAnalysisIntent, marketingAnalysisIntent, amazonFBAIntent, requestAudience, privateConsumerIntent });
     const analysisTokenCost = estimateAnalysisTokenCost({
       contentLength: content.length,
       uploadedImageCount: uploadedImages.length,
@@ -2356,21 +2692,35 @@ ${extractedText || (currentLanguage === 'pl'
     const supplierSourceDetected = looksLikeSupplierMarketplaceUrl(resolvedWebsiteUrlInput);
     const shouldUseInferredSellPrice = price <= 0 && inferredFinancials.inferredPrice > 0 && (!resolvedWebsiteUrlInput || !(marketData.product?.priceUsd && marketData.product.priceUsd > 0));
     const resolvedManualPriceInput = price > 0 ? price : shouldUseInferredSellPrice ? inferredFinancials.inferredPrice : 0;
-    const resolvedManualCostInput = cost > 0 ? cost : inferredFinancials.inferredCost;
+    // Add inferred shipping cost to base cost if not already included by user
+    const shippingAddOn = cost <= 0 && inferredFinancials.inferredShipping > 0 ? inferredFinancials.inferredShipping : 0;
+    const resolvedManualCostInput = cost > 0 ? cost : (inferredFinancials.inferredCost > 0 ? inferredFinancials.inferredCost + shippingAddOn : 0);
     const manualPriceUsd = resolvedManualPriceInput > 0 ? convertToUsd(resolvedManualPriceInput, inputCurrency) : 0;
     const manualCompetitorAvgPriceUsd = competitorAvgPrice > 0 ? convertToUsd(competitorAvgPrice, inputCurrency) : 0;
     const baseCostUsd = resolvedManualCostInput > 0 ? convertToUsd(resolvedManualCostInput, inputCurrency) : 0;
     const supplierLandedCostUsd = supplierSourceDetected && baseCostUsd <= 0 && (marketData.product?.priceUsd ?? 0) > 0
       ? Number(((marketData.product?.priceUsd ?? 0) * 1.15).toFixed(2))
       : 0;
-    const resolvedCostUsd = baseCostUsd > 0 ? baseCostUsd : supplierLandedCostUsd;
+    // FBA: add estimated FBA fees to cost if detected
+    const fbaFeeUsd = inferredFinancials.hasFBA && baseCostUsd > 0 ? convertToUsd(inferredFinancials.fbaFeeEstimate, inputCurrency) : 0;
+    const resolvedCostUsd = (baseCostUsd > 0 ? baseCostUsd : supplierLandedCostUsd) + fbaFeeUsd;
     const manualAdBudgetUsd = adBudget > 0 ? convertToUsd(adBudget, inputCurrency) : 0;
 
     const resolvedPriceUsd = manualPriceUsd > 0 ? manualPriceUsd : supplierSourceDetected ? 0 : (marketData.product?.priceUsd ?? 0);
     const resolvedCompetitorAvgPriceUsd = manualCompetitorAvgPriceUsd > 0 ? manualCompetitorAvgPriceUsd : (marketData.competitorAvgPriceUsd ?? 0);
     const resolvedMarketMonthlyUnits = marketMonthlyUnits > 0 ? marketMonthlyUnits : (marketData.marketMonthlyUnitsEstimate ?? 0);
-    const resolvedDemand = demandWasProvided ? demand : Math.max(18, marketData.demandScore ?? 34);
-    const resolvedCompetition = competitionWasProvided ? competition : Math.max(12, marketData.competitionScore ?? (supplierSourceDetected ? 52 : 34));
+    // BSR boosts demand if provided
+    const bsrDemandBoost = inferredFinancials.bsrDemandBonus;
+    const fallbackDemand = Math.min(94, (inferredMarketSignals.demand ?? (isServiceBusinessCase ? 48 : 40)) + bsrDemandBoost);
+    const fallbackCompetition = inferredMarketSignals.competition ?? (supplierSourceDetected ? 54 : isServiceBusinessCase ? 58 : 44);
+    const blendedDemand = marketData.demandScore != null
+      ? Math.round((marketData.demandScore * 0.72) + (fallbackDemand * 0.28))
+      : fallbackDemand;
+    const blendedCompetition = marketData.competitionScore != null
+      ? Math.round((marketData.competitionScore * 0.72) + (fallbackCompetition * 0.28))
+      : fallbackCompetition;
+    const resolvedDemand = demandWasProvided ? demand : Math.max(0, Math.min(100, blendedDemand));
+    const resolvedCompetition = competitionWasProvided ? competition : Math.max(0, Math.min(100, blendedCompetition));
     const resolvedProductName = productName || marketData.product?.title || (resolvedWebsiteUrlInput ? resolvedWebsiteUrlInput.replace(/^https?:\/\//, '').split('/')[0] : '') || 'Produkt';
     const supplierContextNote = looksLikeSupplierMarketplaceUrl(resolvedWebsiteUrlInput)
       ? /allegro|amazon|ebay|etsy|walmart|shopify/i.test(`${salesChannel} ${content}`)
@@ -2448,6 +2798,17 @@ ${extractedText || (currentLanguage === 'pl'
     }
     safeDecision.productSourcing = productSourcing;
     safeDecision.serviceSetup = serviceSetup;
+    safeDecision.hybridBreakdown = buildHybridRevenueBreakdown({
+      currentLanguage,
+      content: [resolvedProductName, rawContent, salesChannel, resolvedTargetMarket, resolvedCompetitorUrlsInput].filter(Boolean).join(' '),
+      demand: resolvedDemand,
+      competition: resolvedCompetition,
+      marginPercent: Number(safeDecision.pricing?.marginPercent || 0),
+      confidence: Number(safeDecision.confidence || 0),
+      hasWebsiteUrl: Boolean(resolvedWebsiteUrlInput),
+      hasCompetitorEvidence: Boolean(resolvedCompetitorUrlsInput || safeDecision.market?.competitorAvgPrice),
+      isServiceBusinessCase,
+    });
     safeDecision.connectorBlueprint = {
       status: 'blueprint_ready',
       docPath: 'docs/analysis/marketplace-connectors-architecture.md',
@@ -2470,6 +2831,10 @@ ${extractedText || (currentLanguage === 'pl'
       ...(!demandWasProvided && marketData.demandScore != null ? [`Demand score was derived from live public market evidence: ${marketData.demandScore}/100.`] : []),
       ...(!competitionWasProvided && marketData.competitionScore != null ? [`Competition score was derived from live public market evidence: ${marketData.competitionScore}/100.`] : []),
       ...(cost <= 0 && inferredFinancials.inferredCost > 0 ? [`Product cost was inferred from the user message: ${inferredFinancials.inferredCost} ${inputCurrency}.`] : []),
+      ...(inferredFinancials.inferredShipping > 0 ? [`Shipping cost detected from input: ${inferredFinancials.inferredShipping} ${inputCurrency} — added to landed cost.`] : []),
+      ...(inferredFinancials.hasFBA ? [`FBA flow detected — estimated FBA fees: ${formatMoney(convertCurrency(inferredFinancials.fbaFeeEstimate, inputCurrency, displayCurrency), currentLanguage, displayCurrency)} included in cost calculation.`] : []),
+      ...(inferredFinancials.bsrValue != null ? [`Amazon BSR rank in input: #${inferredFinancials.bsrValue} → demand boost ${inferredFinancials.bsrDemandBonus}/100 applied.`] : []),
+      ...(inferredFinancials.isSeasonalProduct ? ['Seasonal product signals detected — include timing and stock-planning advice in the response.'] : []),
       ...(price <= 0 && resolvedManualPriceInput > 0 ? [`Sell price was inferred from the user message: ${resolvedManualPriceInput} ${inputCurrency}.`] : []),
       ...(enabledIntegrationLanes.length ? [`Enabled marketplace lanes in admin: ${enabledIntegrationLanes.join(', ')}.`] : []),
       ...(productSourcing.recommendedOffers.length ? [`Product sourcing shortlist contains ${productSourcing.recommendedOffers.length} concrete offer link(s).`] : []),
@@ -2481,6 +2846,7 @@ ${extractedText || (currentLanguage === 'pl'
       decision: safeDecision,
       currentLanguage,
       productName: resolvedProductName,
+      contentSnippet: [rawContent, salesChannel, resolvedTargetMarket].filter(Boolean).join(' '),
       websiteUrl: resolvedWebsiteUrlInput,
       competitorUrls: resolvedCompetitorUrlsInput,
       uploadedFilesCount: uploadedFiles.length,
@@ -2511,6 +2877,21 @@ ${extractedText || (currentLanguage === 'pl'
           currentLanguage === 'pl' ? '- Gdy podano konkurencję lub linki konkurencji, odnieś się do nich jawnie.' : '- When competitor input/links are provided, reference them explicitly.',
         ];
 
+    if (privateConsumerIntent) {
+      responseContractLines.push(
+        currentLanguage === 'pl' ? '- To pytanie osoby prywatnej: nie traktuj odpowiedzi jak planu sprzedaży ani startupu.' : '- This is a private-person question: do not frame the answer as a startup or selling plan.',
+        currentLanguage === 'pl' ? '- Podaj 2-4 praktyczne opcje wyboru pod budżet oraz kroki porównania ofert.' : '- Provide 2-4 practical options within budget plus offer-comparison steps.',
+        currentLanguage === 'pl' ? '- Jeśli pojawia się kontekst medyczny, dodaj neutralną notę o konsultacji z wykwalifikowanym specjalistą.' : '- If medical context appears, add a neutral note to consult a qualified specialist.'
+      );
+    }
+
+    if (startupIntent) {
+      responseContractLines.push(
+        currentLanguage === 'pl' ? '- Obowiązkowo dodaj sekcję: Koszty startu.' : '- Always add a dedicated section: Startup costs.',
+        currentLanguage === 'pl' ? '- W Kosztach startu podaj min. 4 pozycje: sprzęt, operacje, marketing i rezerwa (widełki min-max).' : '- In Startup costs include at least 4 line items: equipment, operations, marketing, reserve (min-max ranges).'
+      );
+    }
+
     const userPrompt = [
       `Product: ${resolvedProductName}`,
       marketData.product?.title ? `Resolved page title: ${marketData.product.title}` : 'Resolved page title: not available',
@@ -2540,7 +2921,14 @@ ${extractedText || (currentLanguage === 'pl'
       `Suggested test price: ${safeDecision.pricing.suggestedTestPrice ?? 'n/a'}`,
       `Recommended plan trigger: ${safeDecision.monetization.recommendedPlan}`,
       `Response style: ${responseStyle}`,
+      `Request audience: ${requestAudience}`,
+      `Startup intent: ${startupIntent ? 'yes' : 'no'}`,
+      inferredFinancials.bsrValue != null ? `Amazon BSR rank detected: #${inferredFinancials.bsrValue} (demand boost applied: +${inferredFinancials.bsrDemandBonus})` : '',
+      inferredFinancials.hasFBA ? `FBA context detected: estimated FBA fee ~${formatMoney(convertCurrency(inferredFinancials.fbaFeeEstimate, inputCurrency, displayCurrency), currentLanguage, displayCurrency)} added to cost.` : '',
+      inferredFinancials.inferredShipping > 0 ? `Shipping cost extracted from input: ${inferredFinancials.inferredShipping} ${inputCurrency} (included in landed cost).` : '',
+      inferredFinancials.isSeasonalProduct ? `Seasonal product detected. Adjust timing, inventory, and marketing advice to season windows.` : '',
       isServiceBusinessCase ? 'Service-business case: yes. The user wants equipment, startup-cost logic, local viability, competitor pricing, and which service lane to choose first.' : 'Service-business case: no.',
+      privateConsumerIntent ? 'Private-person case: yes. Prioritize personal budget-fit decision support and practical options, not seller/startup framing.' : 'Private-person case: no.',
       enabledIntegrationLanes.length ? `Enabled integration lanes in admin: ${enabledIntegrationLanes.join(', ')}.` : 'No marketplace integration lanes are enabled in admin settings.',
       supplierContextNote,
       '',
@@ -2610,7 +2998,7 @@ ${marketData.connectorSignals.map((item) => `- ${item.provider}: ${item.note}`).
         temperature: 0.35,
         max_tokens: 220,
         messages: [
-          { role: 'system', content: `${ANALYSIS_SYSTEM_PROMPT}\n\n${dynamicSystemPrompt}\n\nAlways reference the decision engine result. If images or video preview frames are attached, include visual observations when relevant.\nCRITICAL:\n- Always prioritize preventing financial loss\n- Never recommend scaling without a controlled test\n- Avoid optimistic assumptions\n- Give a direct actionable next step\n- Be concise and concrete\n- Answer the user's exact question, not a generic template\n- Never invent facts that are not present in the uploaded material or extracted signals.` },
+          { role: 'system', content: `${ANALYSIS_SYSTEM_PROMPT}\n\n${dynamicSystemPrompt}\n\n${privateConsumerIntent ? 'Treat decision-engine output as secondary context only; the primary goal is a clear personal recommendation for the user.' : 'Always reference the decision engine result.'} If images or video preview frames are attached, include visual observations when relevant.\nCRITICAL:\n- Always prioritize preventing financial loss\n- Never recommend scaling without a controlled test\n- Avoid optimistic assumptions\n- Give a direct actionable next step\n- Be concise and concrete\n- Answer the user's exact question, not a generic template\n- Never invent facts that are not present in the uploaded material or extracted signals.` },
           {
             role: 'user',
             content: [
@@ -2645,6 +3033,8 @@ ${marketData.connectorSignals.map((item) => `- ${item.provider}: ${item.note}`).
         displayCurrency,
         decision: safeDecision,
         isServiceBusinessCase,
+        startupIntent,
+        requestAudience,
       });
     }
 
@@ -2670,6 +3060,8 @@ ${marketData.connectorSignals.map((item) => `- ${item.provider}: ${item.note}`).
         displayCurrency,
         decision: safeDecision,
         isServiceBusinessCase,
+        startupIntent,
+        requestAudience,
       });
     }
 
@@ -2697,6 +3089,8 @@ ${marketData.connectorSignals.map((item) => `- ${item.provider}: ${item.note}`).
         displayCurrency,
         decision: safeDecision,
         isServiceBusinessCase,
+        startupIntent,
+        requestAudience,
       }),
     });
 
