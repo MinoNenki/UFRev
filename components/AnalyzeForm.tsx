@@ -7,6 +7,7 @@ import ShareResultButton from '@/components/ShareResultButton';
 import { TutorialHint } from '@/components/pro-ui/TutorialMode';
 import { tr, type Language } from '@/lib/i18n';
 import { formatMoney, getCurrencyForCountry, type SupportedCurrency } from '@/lib/currency';
+import { trackEvent } from '@/lib/analytics';
 
 const ACCEPTED_EXTENSIONS = ['.txt', '.md', '.csv', '.json', '.html', '.htm', '.xml', '.pdf', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.mp4', '.mov', '.webm', '.m4v', '.avi'];
 const INLINE_TEXT_EXTENSIONS = ['.txt', '.md', '.csv', '.json', '.html', '.htm', '.xml'];
@@ -336,6 +337,13 @@ export default function AnalyzeForm({
       ? (await Promise.all(videoFiles.map((file) => captureVideoPreviewFiles(file, 3)))).flat().slice(0, 3)
       : [];
 
+    trackEvent('upload_file', {
+      file_count: files.length,
+      total_upload_bytes: totalUploadBytes,
+      has_video: videoFiles.length > 0,
+      generated_preview_count: generatedPreviews.length,
+    });
+
     setGeneratedPreviewFiles(generatedPreviews);
     setFileNames(files.map((file) => file.name || 'file'));
     setSelectedFiles(files);
@@ -378,10 +386,30 @@ export default function AnalyzeForm({
       selectedFiles.forEach((file) => formData.append('analysisFiles', file));
       generatedPreviewFiles.forEach((file) => formData.append('analysisPreviewImages', file));
 
+      const analysisType = String(formData.get('analysisType') || 'product-decision');
+      const startedAt = Date.now();
+
+      trackEvent('analyze_started', {
+        analysis_type: analysisType,
+        selected_country: selectedCountry,
+        display_currency: displayCurrency,
+        input_currency: inputCurrency,
+        content_length: content.trim().length,
+        advanced_mode: advanced,
+        upload_file_count: selectedFiles.length,
+        preview_image_count: generatedPreviewFiles.length,
+      });
+
       const res = await fetch('/api/analyze', { method: 'POST', body: formData });
       const contentType = res.headers.get('content-type') || '';
 
       if (!contentType.includes('application/json')) {
+        trackEvent('analyze_error', {
+          analysis_type: analysisType,
+          error_stage: 'invalid_content_type',
+          status_code: res.status,
+          duration_ms: Date.now() - startedAt,
+        });
         setErrorMsg(
           tt(currentLanguage, {
             en: 'Invalid server response',
@@ -396,6 +424,13 @@ export default function AnalyzeForm({
       const data = await res.json();
 
       if (!res.ok) {
+        trackEvent('analyze_error', {
+          analysis_type: analysisType,
+          error_stage: 'api_error',
+          status_code: res.status,
+          error_code: String(data.error || 'analysis_failed').slice(0, 120),
+          duration_ms: Date.now() - startedAt,
+        });
         setErrorMsg(
           normalizeServerErrorMessage(
             data.error ||
@@ -426,9 +461,24 @@ export default function AnalyzeForm({
       setResult(nextResult);
       onResultChange?.(nextResult);
       setUpgradeOffer(data.upgradeOffer || null);
+
+      trackEvent('analyze_completed', {
+        analysis_type: analysisType,
+        duration_ms: Date.now() - startedAt,
+        verdict: String(data?.decision?.verdict || 'n/a'),
+        score: Number(data?.decision?.score ?? 0),
+        confidence: Number(data?.decision?.confidence ?? 0),
+        used_fallback: Boolean(data?.decision?.dataMode === 'manual_plus_evidence' && !data?.decision?.market?.sources?.competitorAvgPrice),
+      });
+
       if (fileInputRef.current) fileInputRef.current.value = '';
       router.refresh();
-    } catch {
+    } catch (error) {
+      trackEvent('analyze_error', {
+        analysis_type: 'product-decision',
+        error_stage: 'network_or_runtime',
+        error_code: String((error as Error)?.message || 'server_connection_error').slice(0, 120),
+      });
       setErrorMsg(
         tt(currentLanguage, {
           en: 'Server connection error',

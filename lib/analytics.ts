@@ -15,7 +15,11 @@ export type UFREVAnalyticsEvent =
   | 'checkout_cancel'
   | 'purchase'
   | 'sign_up'
-  | 'login';
+  | 'login'
+  | 'analyze_started'
+  | 'analyze_completed'
+  | 'analyze_error'
+  | 'upload_file';
 
 export function trackEvent(eventName: UFREVAnalyticsEvent, params: Record<string, unknown> = {}) {
   if (!GA_MEASUREMENT_ID || typeof window === 'undefined' || typeof window.gtag !== 'function') return;
