@@ -45,7 +45,14 @@ export function isServiceBusinessPrompt(input: string) {
 
 export function isStartupIntentPrompt(input: string) {
   const text = (input || '').toLowerCase();
-  return /jak zacząć|jak zaczac|jak uruchomi|jak otworzy|jak założy|jak zalozy|koszt start|budżet start|budzet start|startup cost|start cost|ile kosztuje start|co kupić na start|co kupic na start|sprzęt na start|sprzet na start|otworzyć (sklep|firm|biznes|usług)|otworzyc (sklep|firm|biznes|uslug)|chcę otworzyć|chce otworzyc|chcę założyć|chce zalozyc/i.test(text);
+  return /jak zacząć|jak zaczac|jak uruchomi|jak otworzy|jak założy|jak zalozy|koszt start|budżet start|budzet start|startup cost|start cost|ile kosztuje start|co kupić na start|co kupic na start|sprzęt na start|sprzet na start|otworzyć (sklep|firm|biznes|usług|działaln)|otworzyc (sklep|firm|biznes|uslug|dziahaln)|chcę otworzyć|chce otworzyc|chcę założyć|chce zalozyc|jak najlepiej otworzy|jak najlepiej zaczą|firmę która tworzy|firme ktora tworzy|firmę która produk|firme ktora produk|otworzyć działaln|otworzyc dziahaln|chce otworzyć|chcę zalozyc/i.test(text);
+}
+
+export function isMarketResearchSourcingPrompt(input: string) {
+  const text = (input || '').toLowerCase();
+  const sourcingSignals = /daj mi.*producent|podaj mi.*producent|lista.*producent|producent.*ze \u015bwiata|producent.*ze swiata|producent.*na \u015bwiecie|producent.*na swiecie|producent.*ca\u0142ego \u015bwiat|producent.*calego swiat|szukam.*producent.*firm|import.*z chin|komponenty z chin|komponenty.*sprowadz|sprowadz.*komponenty|sciagac.*komponenty|\u015bci\u0105ga\u0107.*komponenty|gotowe.*komponenty|komponenty.*\u015bwiata|komponenty.*swiata|producent.*komponent|dystrybutor.*\u015bwiat|dystrybutor.*swiata/i.test(text);
+  const industrySetupSignals = /otwier.*firm.*ktora|otwier.*firma.*ktora|tworzy.*protezy|produkuje.*protezy|montuje.*protezy|kompletuje.*protezy|tworzy.*protezy|asembl|protez.*firma|firma.*protez|ortez.*firma|firma.*ortez|medic.*firm|firma.*medic/i.test(text);
+  return sourcingSignals || industrySetupSignals;
 }
 
 export function isDocumentAnalysisPrompt(input: string) {
@@ -76,8 +83,11 @@ export function inferRequestAudience(input: string): RequestAudience {
   const text = (input || '').toLowerCase();
   if (isStartupIntentPrompt(text)) return 'startup';
 
-  const businessSignals = /firma|spółk|spolk|sp\. z o\.o\.|działalno|dzialalno|b2b|startup|agencj|klienci|lead|sprzedaż|sprzedaz|marża|marza|roas|roi|moq|allegro|amazon|ebay|shopify|e-commerce|ecommerce|wholesale|hurt|dystrybucj|biznes|przedsiębior|przedsiebior/i.test(text);
   const consumerSignals = isPrivateConsumerPrompt(text);
+  const businessSignals = /firma|sp\u00f3\u0142k|spolk|sp\. z o\.o\.|dzia\u0142alno|dzialalno|b2b|startup|agencj|klienci|lead|sprzeda\u017c|sprzedaz|mar\u017ca|marza|roas|roi|moq|allegro|amazon|ebay|shopify|e-commerce|ecommerce|wholesale|hurt|dystrybucj|biznes|przedsi\u0119bior|przedsiebior/i.test(text);
+
+  // Market research + sourcing only applies when no personal consumer signals dominate
+  if (!consumerSignals && isMarketResearchSourcingPrompt(text)) return 'startup';
 
   if (consumerSignals && !businessSignals) return 'consumer';
   if (businessSignals) return 'business';

@@ -18,7 +18,7 @@ import { collectProMarketData } from '@/lib/market-connectors';
 import { convertCurrency, convertToUsd, formatMoney, getCurrencyForCountry, getCurrencyForLanguage, normalizeCurrencyCode } from '@/lib/currency';
 import { buildSystemPrompt } from '@/lib/analysis-prompt';
 import { buildMarketWatchReport, getRecentMarketWatchSnapshots, persistMarketWatchReport } from '@/lib/market-watch';
-import { isServiceBusinessPrompt, isStartupIntentPrompt, isDocumentAnalysisPrompt, isMarketingAnalysisPrompt, isAmazonFBAPrompt, inferRequestAudience, isPrivateConsumerPrompt } from '@/lib/analyze-helpers';
+import { isServiceBusinessPrompt, isStartupIntentPrompt, isDocumentAnalysisPrompt, isMarketingAnalysisPrompt, isAmazonFBAPrompt, inferRequestAudience, isPrivateConsumerPrompt, isMarketResearchSourcingPrompt } from '@/lib/analyze-helpers';
 import { buildProductSourcingLayer, buildServiceSetupLayer } from '@/lib/recommendation-layers';
 export const runtime = 'nodejs';
 
@@ -2204,6 +2204,7 @@ function buildDynamicSystemPrompt(params: {
   amazonFBAIntent?: boolean;
   requestAudience?: 'consumer' | 'business' | 'startup';
   privateConsumerIntent?: boolean;
+  marketResearchIntent?: boolean;
 }) {
   const languageRule =
     params.currentLanguage === 'pl'
@@ -2295,6 +2296,7 @@ ${params.documentAnalysisIntent ? '- DOCUMENT ANALYSIS MODE: This input is a doc
 ${params.marketingAnalysisIntent ? '- MARKETING ANALYSIS MODE: This input is about ads/marketing/content. Answer with specific metrics improvements. Give 3 concrete actions (not generic). Include benchmark comparison where relevant.' : ''}
 ${params.amazonFBAIntent ? '- FBA/AMAZON MODE: Always compute net margin AFTER referral fee (~15%) + FBA fulfillment fee (~$3-5/unit). State clearly what the landed cost, FBA-adjusted margin, and break-even ROAS look like.' : ''}
 ${params.requestAudience === 'startup' ? '- AUDIENCE MODE: STARTUP. Include launch sequence, startup costs, and cautious validation gates.' : ''}
+${params.requestAudience === 'startup' && params.marketResearchIntent ? `- SOURCING & MARKET RESEARCH MODE (STARTUP): The user is asking for a list of manufacturers, suppliers, or components, AND wants to open a business in a specific country. Your response MUST include: (1) A named list of REAL global manufacturers/suppliers for the requested product category with country of origin, (2) Key component categories with representative brands/makers, (3) Concrete steps to register and launch the assembly/distribution business in the stated country (licenses, import procedures, VAT, trade directories), (4) Sourcing channels (trade shows, B2B directories, typical MOQs and price ranges). Do NOT give a generic e-commerce verdict. Do NOT say "ODPUŚĆ". This is business intelligence research — answer as an industry expert. Use your training knowledge about global medical device, prosthetics, orthotics, and component manufacturers.` : ''}
 ${params.requestAudience === 'business' ? '- AUDIENCE MODE: BUSINESS. Focus on unit economics, competition, and controlled scaling decisions.' : ''}
 ${params.requestAudience === 'consumer' ? '- AUDIENCE MODE: PRIVATE PERSON. Focus on personal decision support, budget fit, offer comparison, financing/refund options, and practical next steps. Do not suggest raising sell prices or scaling a business.' : ''}
 ${params.privateConsumerIntent ? '- PRIVATE PERSON SAFETY MODE: If medical context appears, avoid clinical diagnosis claims. Recommend consultation with a qualified specialist/provider for final fit and treatment choices.' : ''}
@@ -2446,7 +2448,8 @@ ${extractedText || (currentLanguage === 'pl'
     const marketingAnalysisIntent = isMarketingAnalysisPrompt([productName, rawContent, salesChannel].filter(Boolean).join(' '));
     const amazonFBAIntent = isAmazonFBAPrompt([productName, rawContent, salesChannel].filter(Boolean).join(' '));
     const requestAudience = inferRequestAudience([productName, rawContent, salesChannel, resolvedTargetMarket].filter(Boolean).join(' '));
-    const privateConsumerIntent = requestAudience === 'consumer' || isPrivateConsumerPrompt([productName, rawContent, salesChannel].filter(Boolean).join(' '));
+    const privateConsumerIntent = requestAudience === 'consumer';
+    const marketResearchIntent = isMarketResearchSourcingPrompt([productName, rawContent, salesChannel].filter(Boolean).join(' '));
     const inferredMarketSignals = inferMarketSignalsFromText({
       text: [productName, rawContent, resolvedTargetMarket, salesChannel, resolvedCompetitorUrlsInput].filter(Boolean).join(' '),
       isServiceBusinessCase,
@@ -2455,7 +2458,7 @@ ${extractedText || (currentLanguage === 'pl'
     });
     const intent = detectIntent([productName, content].filter(Boolean).join(' '));
     const fileType = detectFileType({ websiteUrl: resolvedWebsiteUrlInput, content, uploadedImages, uploadedFiles });
-    const dynamicSystemPrompt = buildDynamicSystemPrompt({ intent, fileType, currentLanguage, isServiceBusinessCase, startupIntent, documentAnalysisIntent, marketingAnalysisIntent, amazonFBAIntent, requestAudience, privateConsumerIntent });
+    const dynamicSystemPrompt = buildDynamicSystemPrompt({ intent, fileType, currentLanguage, isServiceBusinessCase, startupIntent, documentAnalysisIntent, marketingAnalysisIntent, amazonFBAIntent, requestAudience, privateConsumerIntent, marketResearchIntent });
     const analysisTokenCost = estimateAnalysisTokenCost({
       contentLength: content.length,
       uploadedImageCount: uploadedImages.length,
@@ -2892,6 +2895,17 @@ ${extractedText || (currentLanguage === 'pl'
       );
     }
 
+    if (marketResearchIntent) {
+      responseContractLines.push(
+        currentLanguage === 'pl' ? '- TRYB BADANIA RYNKU + SOURCING: Użytkownik pyta o listę producentów, dostawców lub komponentów.' : '- MARKET RESEARCH + SOURCING MODE: User is asking for a list of manufacturers, suppliers, or components.',
+        currentLanguage === 'pl' ? '- Podaj KONKRETNE NAZWY globalnych producentów (min. 8-12 firm z nazwami, krajami, stronami www jeśli znane).' : '- Provide SPECIFIC NAMES of global manufacturers (min. 8-12 companies with names, countries, websites if known).',
+        currentLanguage === 'pl' ? '- Podziel producentów według kategorii komponentów (stopa, kolano, ręka, bark itp.) jeśli o to pyta.' : '- Group manufacturers by component category (foot, knee, hand, shoulder etc.) if requested.',
+        currentLanguage === 'pl' ? '- Podaj konkretne kroki otwarcia firmy w podanym kraju: rejestracja, licencje medyczne, import, VAT, dystrybucja.' : '- Give concrete steps for opening a company in the stated country: registration, medical licenses, import, VAT, distribution.',
+        currentLanguage === 'pl' ? '- NIE zwracaj werdyktu ODPUŚĆ ani BUY/AVOID — to zapytanie researchowe, a nie ocena produktu do sprzedaży.' : '- Do NOT return AVOID or BUY/AVOID verdict — this is a research query, not a product sale evaluation.',
+        currentLanguage === 'pl' ? '- Pominij kalkulację marży e-commerce. Skup się: producenci → komponenty → import → rejestracja firmy → sprzedaż B2B/B2C w Polsce.' : '- Skip e-commerce margin calculation. Focus: manufacturers → components → import → company registration → B2B/B2C sales in Poland.'
+      );
+    }
+
     const userPrompt = [
       `Product: ${resolvedProductName}`,
       marketData.product?.title ? `Resolved page title: ${marketData.product.title}` : 'Resolved page title: not available',
@@ -2923,6 +2937,7 @@ ${extractedText || (currentLanguage === 'pl'
       `Response style: ${responseStyle}`,
       `Request audience: ${requestAudience}`,
       `Startup intent: ${startupIntent ? 'yes' : 'no'}`,
+      `Market research / sourcing intent: ${marketResearchIntent ? 'yes — provide named manufacturer/supplier lists and business-setup steps' : 'no'}`,
       inferredFinancials.bsrValue != null ? `Amazon BSR rank detected: #${inferredFinancials.bsrValue} (demand boost applied: +${inferredFinancials.bsrDemandBonus})` : '',
       inferredFinancials.hasFBA ? `FBA context detected: estimated FBA fee ~${formatMoney(convertCurrency(inferredFinancials.fbaFeeEstimate, inputCurrency, displayCurrency), currentLanguage, displayCurrency)} added to cost.` : '',
       inferredFinancials.inferredShipping > 0 ? `Shipping cost extracted from input: ${inferredFinancials.inferredShipping} ${inputCurrency} (included in landed cost).` : '',
@@ -2996,7 +3011,7 @@ ${marketData.connectorSignals.map((item) => `- ${item.provider}: ${item.note}`).
       const completion = await openai.chat.completions.create({
         model: 'gpt-4o-mini',
         temperature: 0.35,
-        max_tokens: 220,
+        max_tokens: marketResearchIntent ? 700 : startupIntent ? 380 : 220,
         messages: [
           { role: 'system', content: `${ANALYSIS_SYSTEM_PROMPT}\n\n${dynamicSystemPrompt}\n\n${privateConsumerIntent ? 'Treat decision-engine output as secondary context only; the primary goal is a clear personal recommendation for the user.' : 'Always reference the decision engine result.'} If images or video preview frames are attached, include visual observations when relevant.\nCRITICAL:\n- Always prioritize preventing financial loss\n- Never recommend scaling without a controlled test\n- Avoid optimistic assumptions\n- Give a direct actionable next step\n- Be concise and concrete\n- Answer the user's exact question, not a generic template\n- Never invent facts that are not present in the uploaded material or extracted signals.` },
           {
