@@ -2,6 +2,7 @@ import './globals.css';
 import Navbar from '@/components/Navbar';
 import BackgroundFX from '@/components/BackgroundFX';
 import GoogleAnalytics from '@/components/analytics/GoogleAnalytics';
+import Script from 'next/script';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Manrope, Space_Grotesk } from 'next/font/google';
@@ -56,10 +57,20 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const language = await getLanguage();
+  const adsenseClientId = (process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || '').trim();
 
   return (
     <html lang={language}>
       <body className={`${bodyFont.variable} ${headingFont.variable} relative min-h-screen antialiased`}>
+        {adsenseClientId ? (
+          <Script
+            id="adsense-global-script"
+            async
+            strategy="afterInteractive"
+            crossOrigin="anonymous"
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(adsenseClientId)}`}
+          />
+        ) : null}
         <GoogleAnalytics />
         <BackgroundFX />
         <Navbar />
