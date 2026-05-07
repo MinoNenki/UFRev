@@ -66,7 +66,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <Script
             id="adsense-global-script"
             async
-            strategy="afterInteractive"
+            strategy="beforeInteractive"
             crossOrigin="anonymous"
             src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(adsenseClientId)}`}
           />
