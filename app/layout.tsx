@@ -62,15 +62,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang={language}>
       <body className={`${bodyFont.variable} ${headingFont.variable} relative min-h-screen antialiased`}>
-        {adsenseClientId ? (
-          <Script
-            id="adsense-global-script"
-            async
-            strategy="beforeInteractive"
-            crossOrigin="anonymous"
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(adsenseClientId)}`}
-          />
-        ) : null}
+        {/* Google AdSense – Auto Ads + manual slots. Google automatycznie wstawia reklamy po weryfikacji. */}
+        <Script
+          id="adsense-global-script"
+          async
+          strategy="afterInteractive"
+          crossOrigin="anonymous"
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(adsenseClientId)}`}
+        />
         <GoogleAnalytics />
         <BackgroundFX />
         <Navbar />

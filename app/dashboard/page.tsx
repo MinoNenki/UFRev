@@ -11,6 +11,7 @@ import { createRewardToken } from '@/lib/security';
 import { tr } from '@/lib/i18n';
 import { getLanguage } from '@/lib/i18n-server';
 import { getPlanDisplayName } from '@/lib/plans';
+import AdBanner from '@/components/ads/AdBanner';
 
 export default async function DashboardPage() {
   const language = await getLanguage();
@@ -208,6 +209,9 @@ export default async function DashboardPage() {
           <p className="mt-2 text-sm leading-7 text-slate-300">{tr(language,{en:'Use the recommendation to test, skip, fix margin or improve the offer before spending more.',pl:'Użyj rekomendacji, aby testować, odpuścić, poprawić marżę albo ulepszyć ofertę zanim wydasz więcej.',de:'Gehe von der Idee zum kontrollierten Test mit klareren Zahlen und Schutzregeln.',es:'Pasa de la idea al test controlado con números más claros y reglas de protección.',pt:'Passe da ideia ao teste controlado com números mais claros e regras de proteção.',ru:'Переходи от идеи к контролируемому тесту с более ясными цифрами и правилами защиты.'})}</p>
         </div>
       </section>
+
+      {/* Baner reklamowy między sekcjami – Auto Ads Google lub manualny slot */}
+      <AdBanner format="autorelaxed" className="mt-6" />
 
       <section className="mt-8 grid gap-6 xl:grid-cols-[1.08fr_0.92fr]">
         <div className="mesh-panel dashboard-operator-shell animate-aurora relative p-6 sm:p-7">

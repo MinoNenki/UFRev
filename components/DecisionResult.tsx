@@ -1,6 +1,7 @@
 'use client';
 
 import Simulator from '@/components/whatif/Simulator';
+import AdBanner from '@/components/ads/AdBanner';
 import { tr, type Language } from '@/lib/i18n';
 import { deriveMarketWatch, deriveOpportunityProfile } from '@/lib/decision-engine';
 import { convertCurrency, formatMoney, getCurrencyForLanguage, normalizeCurrencyCode, type SupportedCurrency } from '@/lib/currency';
@@ -1114,6 +1115,9 @@ export function AdvancedDecisionReasoning({
           </div>
         </div>
       ) : null}
+
+      {/* Reklama po wynikach analizy – Auto Ads lub manualny slot z env */}
+      <AdBanner format="auto" className="mt-5" />
 
       {showGrowthIntel && (
         <>
