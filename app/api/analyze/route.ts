@@ -2103,6 +2103,47 @@ function ensureFixedResponseSections(params: {
 
   return [lead ? `Krótka odpowiedź: ${lead.replace(/^[-*]\s*/, '')}` : '', params.fallbackText].filter(Boolean).join('\n\n');
 }
+
+function hasSuspiciousGibberish(text: string) {
+  const normalized = String(text || '').replace(/\s+/g, ' ').trim();
+  if (!normalized) return true;
+
+  const weirdChars = normalized.match(/[^\p{L}\p{N}\s.,:;!?%\-–—()\/"'@&+#]/gu) || [];
+  const weirdRatio = weirdChars.length / Math.max(normalized.length, 1);
+
+  const suspiciousTokens = normalized
+    .split(/\s+/)
+    .filter((token) => {
+      const cleaned = token.replace(/[^\p{L}]/gu, '');
+      return cleaned.length >= 18 && !/[aeiouyąęóAEIOUYĄĘÓ]/u.test(cleaned);
+    });
+
+  return weirdRatio > 0.08 || suspiciousTokens.length >= 4;
+}
+
+function isLowQualityAnalysisText(params: {
+  text: string;
+  analysisMode: AnalysisMode;
+  isServiceBusinessCase?: boolean;
+  marketplaceListingIntent?: boolean;
+}) {
+  const normalized = String(params.text || '').trim();
+  if (!normalized) return true;
+  if (hasSuspiciousGibberish(normalized)) return true;
+
+  const wordCount = (normalized.match(/\p{L}{2,}/gu) || []).length;
+  if (params.analysisMode === 'product_analysis' && !params.isServiceBusinessCase && wordCount < 45) {
+    return true;
+  }
+
+  if (params.marketplaceListingIntent) {
+    const hasMarketplaceSignals = /amazon|ebay|fba|bsr|listing|opłat|oplata|fee|marż|marza|margin|konkurenc|competition|popyt|demand|zwrot|returns/i.test(normalized);
+    const hasStructuredGuidance = /kroki|next actions|kolejne kroki|actions|ryzyka|risks|dlaczego|why/i.test(normalized);
+    if (!hasMarketplaceSignals || !hasStructuredGuidance) return true;
+  }
+
+  return false;
+}
 type SmartIntent =
   | 'validate_product'
   | 'calculate_profit'
@@ -2289,7 +2330,7 @@ ${params.startupIntent ? '- Startup/opening intent is active. Output MUST contai
 - When a seasonal window is mentioned (Q4, sezon letni, winter), include a timing recommendation: when to order, when to launch, and when stock risk peaks
 - For invoice/document/contract analysis: first explain what the document appears to be, then identify key financial risks, unusually high line items, and concrete optimization actions
 - For marketing/ads analysis (CTR, CPM, ROAS, campaigns): always answer with 3 specific improvement actions instead of generic copy advice
-- For Amazon/eBay listing analysis: always include estimated FBA fees, net margin after fees, and BSR demand context if provided
+- For Amazon/eBay listing analysis: give a concrete operator answer with 4 blocks: (1) unit economics (landed cost, marketplace fees, ad cost, net margin), (2) demand evidence (BSR/sold-volume/review density), (3) risk flags (returns, saturation, price war risk), (4) 7-day validation plan with test batch, target price range, and kill-switch threshold
 - If the request is from a private person (consumer), do not force a startup/company framing or investor-style verdict language
 - For private-person healthcare/equipment requests (e.g., prosthesis, orthosis, rehabilitation equipment), prioritize practical buyer guidance: fitting process, provider comparison, budget-fit options, financing/refund pathways, and next steps
 ${params.documentAnalysisIntent ? '- DOCUMENT ANALYSIS MODE: This input is a document/invoice/contract/grant. First identify document type. Then flag 2-3 financial risks or high-cost items. Then give 3 optimization actions. Do not force a product verdict.' : ''}
@@ -2447,6 +2488,7 @@ ${extractedText || (currentLanguage === 'pl'
     const documentAnalysisIntent = isDocumentAnalysisPrompt([productName, rawContent].filter(Boolean).join(' '));
     const marketingAnalysisIntent = isMarketingAnalysisPrompt([productName, rawContent, salesChannel].filter(Boolean).join(' '));
     const amazonFBAIntent = isAmazonFBAPrompt([productName, rawContent, salesChannel].filter(Boolean).join(' '));
+    const marketplaceListingIntent = /amazon|ebay|fba|best seller rank|bsr|listing|seller/i.test([productName, rawContent, salesChannel, resolvedWebsiteUrlInput].filter(Boolean).join(' '));
     const requestAudience = inferRequestAudience([productName, rawContent, salesChannel, resolvedTargetMarket].filter(Boolean).join(' '));
     const privateConsumerIntent = requestAudience === 'consumer';
     const marketResearchIntent = isMarketResearchSourcingPrompt([productName, rawContent, salesChannel].filter(Boolean).join(' '));
@@ -2938,6 +2980,7 @@ ${extractedText || (currentLanguage === 'pl'
       `Request audience: ${requestAudience}`,
       `Startup intent: ${startupIntent ? 'yes' : 'no'}`,
       `Market research / sourcing intent: ${marketResearchIntent ? 'yes — provide named manufacturer/supplier lists and business-setup steps' : 'no'}`,
+      `Marketplace listing intent (Amazon/eBay/FBA): ${marketplaceListingIntent ? 'yes — enforce concrete unit economics and test plan' : 'no'}`,
       inferredFinancials.bsrValue != null ? `Amazon BSR rank detected: #${inferredFinancials.bsrValue} (demand boost applied: +${inferredFinancials.bsrDemandBonus})` : '',
       inferredFinancials.hasFBA ? `FBA context detected: estimated FBA fee ~${formatMoney(convertCurrency(inferredFinancials.fbaFeeEstimate, inputCurrency, displayCurrency), currentLanguage, displayCurrency)} added to cost.` : '',
       inferredFinancials.inferredShipping > 0 ? `Shipping cost extracted from input: ${inferredFinancials.inferredShipping} ${inputCurrency} (included in landed cost).` : '',
@@ -3011,7 +3054,7 @@ ${marketData.connectorSignals.map((item) => `- ${item.provider}: ${item.note}`).
       const completion = await openai.chat.completions.create({
         model: 'gpt-4o-mini',
         temperature: 0.35,
-        max_tokens: marketResearchIntent ? 700 : startupIntent ? 380 : 220,
+        max_tokens: marketResearchIntent ? 700 : marketplaceListingIntent ? 420 : startupIntent ? 380 : 260,
         messages: [
           { role: 'system', content: `${ANALYSIS_SYSTEM_PROMPT}\n\n${dynamicSystemPrompt}\n\n${privateConsumerIntent ? 'Treat decision-engine output as secondary context only; the primary goal is a clear personal recommendation for the user.' : 'Always reference the decision engine result.'} If images or video preview frames are attached, include visual observations when relevant.\nCRITICAL:\n- Always prioritize preventing financial loss\n- Never recommend scaling without a controlled test\n- Avoid optimistic assumptions\n- Give a direct actionable next step\n- Be concise and concrete\n- Answer the user's exact question, not a generic template\n- Never invent facts that are not present in the uploaded material or extracted signals.` },
           {
@@ -3108,6 +3151,38 @@ ${marketData.connectorSignals.map((item) => `- ${item.provider}: ${item.note}`).
         requestAudience,
       }),
     });
+
+    if (isLowQualityAnalysisText({
+      text: resultText,
+      analysisMode,
+      isServiceBusinessCase,
+      marketplaceListingIntent,
+    })) {
+      usedFallback = true;
+      resultText = buildFallbackAnalysis({
+        productName: resolvedProductName,
+        analysisType,
+        price: convertCurrency(resolvedPriceUsd, 'USD', displayCurrency),
+        cost: convertCurrency(resolvedCostUsd, 'USD', displayCurrency),
+        demand,
+        competition,
+        adBudget: convertCurrency(manualAdBudgetUsd, 'USD', displayCurrency),
+        targetMarket: resolvedTargetMarket,
+        salesChannel,
+        websiteUrl: resolvedWebsiteUrlInput,
+        competitorUrls: resolvedCompetitorUrlsInput,
+        competitorAvgPrice: resolvedCompetitorAvgPriceUsd > 0 ? convertCurrency(resolvedCompetitorAvgPriceUsd, 'USD', displayCurrency) : 0,
+        marketMonthlyUnits: resolvedMarketMonthlyUnits,
+        content,
+        uploadedImages,
+        currentLanguage,
+        displayCurrency,
+        decision: safeDecision,
+        isServiceBusinessCase,
+        startupIntent,
+        requestAudience,
+      });
+    }
 
     const persistedInput = [
       userPrompt,

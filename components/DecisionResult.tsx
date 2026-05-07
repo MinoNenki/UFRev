@@ -1234,8 +1234,13 @@ export function AdvancedDecisionReasoning({
       )}
 
       {result.text && !narrativeMismatch ? (
-        <div className="mt-5 whitespace-pre-wrap rounded-[24px] border border-white/5 bg-slate-950/35 p-4 text-[15px] leading-8 text-slate-100 sm:p-5 sm:text-base lg:p-6">
-          {result.text}
+        <div className="mt-5 rounded-[24px] border border-cyan-300/20 bg-[linear-gradient(160deg,rgba(34,211,238,0.14),rgba(15,23,42,0.78))] p-4 shadow-[0_18px_60px_rgba(34,211,238,0.14)] sm:p-5 lg:p-6">
+          <div className="mb-3 inline-flex rounded-full border border-cyan-200/35 bg-slate-950/40 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-100">
+            {tt(currentLanguage, { en: 'Detailed analysis description', pl: 'Wyróżniony opis analizy' })}
+          </div>
+          <div className="whitespace-pre-wrap text-[15px] leading-8 text-slate-50 sm:text-base">
+            {result.text}
+          </div>
         </div>
       ) : null}
     </details>
