@@ -57,7 +57,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const language = await getLanguage();
-  const adsenseClientId = (process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || '').trim();
+  const adsenseClientId = (process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || 'ca-pub-9729577979382455').trim();
 
   return (
     <html lang={language}>
