@@ -3,7 +3,7 @@ import Navbar from '@/components/Navbar';
 import BackgroundFX from '@/components/BackgroundFX';
 import GoogleAnalytics from '@/components/analytics/GoogleAnalytics';
 import Script from 'next/script';
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import Link from 'next/link';
 import { Manrope, Space_Grotesk } from 'next/font/google';
 import { SITE } from '@/lib/site';
@@ -53,6 +53,14 @@ export const metadata: Metadata = {
     title: `${SITE.shortName} - Product Review, Ecommerce Validation and Dropshipping Analysis`,
     description: SITE.researchDescription,
   },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  viewportFit: 'cover',
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

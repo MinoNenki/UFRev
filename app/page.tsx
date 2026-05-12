@@ -207,7 +207,7 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <div className="grid content-start gap-5">
+            <div className="hidden content-start gap-5 md:grid">
             <div className="premium-panel hover-lift overflow-hidden p-5 sm:p-6">
               <div className="mb-4 rounded-[24px] border border-cyan-300/20 bg-[linear-gradient(135deg,rgba(34,211,238,0.16),rgba(8,47,73,0.2),rgba(2,6,23,0.55))] p-4 shadow-[0_14px_40px_rgba(34,211,238,0.10)]">
                 <div className="text-[11px] uppercase tracking-[0.22em] text-cyan-100">{tr(language, { en: 'What you unlock fast', pl: 'Co odblokowujesz od razu' })}</div>
@@ -292,7 +292,7 @@ export default async function HomePage() {
           </div>
         </div>
 
-        <div className="relative mt-8">
+        <div className="relative mt-8 hidden md:block">
           <div className="mb-6 grid gap-4 xl:grid-cols-3">
             <MetricCard
               label={tr(language, { en: 'Core value', pl: 'Główna wartość', de: 'Kernwert', es: 'Valor principal', pt: 'Valor central', ru: 'Ключевая ценность' })}
@@ -329,11 +329,37 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="mt-8">
+      <section className="mt-6 rounded-[24px] border border-white/10 bg-slate-950/55 p-4 md:hidden">
+        <div className="text-[11px] uppercase tracking-[0.22em] text-cyan-200">{tr(language, { en: 'Mobile quick mode', pl: 'Szybki tryb mobile' })}</div>
+        <h2 className="mt-2 text-xl font-black leading-tight text-white">
+          {tr(language, { en: 'The shortest path to decision', pl: 'Najkrótsza ścieżka do decyzji' })}
+        </h2>
+        <div className="mt-4 grid gap-2">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-3 text-sm text-slate-200">
+            {tr(language, { en: '1. Add URL, screenshot, PDF or offer.', pl: '1. Dodaj URL, screenshot, PDF albo ofertę.' })}
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-3 text-sm text-slate-200">
+            {tr(language, { en: '2. Get BUY, TEST or SKIP + risk.', pl: '2. Odbierz BUY, TEST albo SKIP + ryzyko.' })}
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-3 text-sm text-slate-200">
+            {tr(language, { en: '3. Execute one safe next step.', pl: '3. Wykonaj jeden bezpieczny następny krok.' })}
+          </div>
+        </div>
+        <div className="mt-4 flex flex-col gap-2">
+          <Link href="/dashboard" className="rounded-2xl bg-cyan-300 px-4 py-3 text-center text-sm font-semibold text-slate-950">
+            {tr(language, { en: 'Open dashboard now', pl: 'Otwórz dashboard teraz' })}
+          </Link>
+          <Link href="/pricing" className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-center text-sm font-semibold text-white">
+            {tr(language, { en: 'See pricing', pl: 'Zobacz cennik' })}
+          </Link>
+        </div>
+      </section>
+
+      <section className="mt-8 hidden md:block">
         <ExampleVerdictShowcase language={language} />
       </section>
 
-      <section className="mt-8 rounded-[32px] border border-cyan-300/20 bg-[linear-gradient(135deg,rgba(34,211,238,0.12),rgba(16,185,129,0.08),rgba(2,6,23,0.92))] p-6 sm:p-8 shadow-[0_20px_70px_rgba(34,211,238,0.12)]">
+      <section className="mt-8 hidden rounded-[32px] border border-cyan-300/20 bg-[linear-gradient(135deg,rgba(34,211,238,0.12),rgba(16,185,129,0.08),rgba(2,6,23,0.92))] p-6 shadow-[0_20px_70px_rgba(34,211,238,0.12)] sm:p-8 md:block">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <div className="text-[11px] uppercase tracking-[0.22em] text-cyan-100">{tr(language, { en: 'How to start in 3 minutes', pl: 'Jak zacząć w 3 minuty' })}</div>
@@ -370,7 +396,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="mt-8 rounded-[32px] border border-red-500/20 bg-[linear-gradient(135deg,rgba(239,68,68,0.08),rgba(15,23,42,0.9),rgba(2,6,23,0.95))] p-8 shadow-[0_20px_60px_rgba(239,68,68,0.08)]">
+      <section className="mt-8 hidden rounded-[32px] border border-red-500/20 bg-[linear-gradient(135deg,rgba(239,68,68,0.08),rgba(15,23,42,0.9),rgba(2,6,23,0.95))] p-8 shadow-[0_20px_60px_rgba(239,68,68,0.08)] md:block">
         <div className="text-center">
           <div className="glass-chip mx-auto mb-4 inline-block border-red-400/30 bg-red-400/10 text-red-200">
             {tr(language, { en: '⚠️ The real problem', pl: '⚠️ Prawdziwy problem', de: '⚠️ Das echte Problem', es: '⚠️ El problema real', pt: '⚠️ O problema real', ru: '⚠️ Настоящая проблема' })}
@@ -425,7 +451,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="mt-8 grid gap-4 md:grid-cols-4">
+      <section className="mt-8 hidden gap-4 md:grid md:grid-cols-4">
         {[
           {
             title: tr(language, { en: 'Visual AI', pl: 'Visual AI', de: 'Visual AI', es: 'Visual AI', pt: 'IA visual', ru: 'Визуальный AI' }),
@@ -456,7 +482,7 @@ export default async function HomePage() {
         ))}
       </section>
 
-      <section className="mt-8 grid gap-4 md:grid-cols-3">
+      <section className="mt-8 hidden gap-4 md:grid md:grid-cols-3">
         {[
           {
             step: tr(language, { en: 'Step 01', pl: 'Krok 01', de: 'Schritt 01', es: 'Paso 01', pt: 'Passo 01', ru: 'Шаг 01' }),
@@ -485,7 +511,7 @@ export default async function HomePage() {
         ))}
       </section>
 
-      <section className="mt-8 grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
+      <section className="mt-8 hidden gap-6 md:grid xl:grid-cols-[1.05fr_0.95fr]">
         <InsightPanel language={language}
           title={tr(language, { en: 'Why people stay with the product', pl: 'Dlaczego ludzie zostają z produktem', de: 'Warum Nutzer bleiben', es: 'Por qué la gente se queda', pt: 'Porque as pessoas ficam com o produto', ru: 'Почему люди остаются с продуктом' })}
           items={[
