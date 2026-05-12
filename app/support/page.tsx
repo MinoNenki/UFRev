@@ -62,6 +62,27 @@ export default async function SupportPage({ searchParams }: { searchParams?: { s
         </div>
       )}
 
+      {/* Mobile compact block — visible only on phones */}
+      <section className="md:hidden mt-6 rounded-[28px] border border-cyan-300/20 bg-cyan-300/10 p-5">
+        <div className="text-[11px] uppercase tracking-[0.22em] text-cyan-100">{tr(language, { en: 'Mobile support', pl: 'Wsparcie mobile' })}</div>
+        <h2 className="mt-2 text-2xl font-black text-white">{tr(language, { en: 'Send us a message', pl: 'Wyślij nam wiadomość' })}</h2>
+        <form action="/api/support/create" method="post" className="mt-4 space-y-3">
+          <input name="email" type="email" defaultValue={user?.email ?? ''} className="input" placeholder="email@example.com" required />
+          <input name="subject" className="input" placeholder={tr(language, { en: 'Subject', pl: 'Temat' })} required />
+          <textarea name="message" rows={5} className="input" placeholder={tr(language, { en: 'Describe the issue', pl: 'Opisz problem' })} required />
+          <button className="w-full rounded-2xl bg-cyan-300 px-5 py-4 font-semibold text-slate-950">{tr(language, { en: 'Send to support', pl: 'Wyślij do supportu' })}</button>
+        </form>
+        {tickets.length > 0 && (
+          <div className="mt-5">
+            <div className="text-[11px] uppercase tracking-[0.22em] text-cyan-100 mb-3">{tr(language, { en: 'Recent tickets', pl: 'Ostatnie zgłoszenia' })}</div>
+            {tickets.slice(0, 3).map((t) => (
+              <div key={t.id} className="mb-2 rounded-2xl border border-white/10 bg-slate-950/40 px-4 py-3 text-sm text-slate-200">{t.subject}</div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      <div className="hidden md:block">
       <TutorialMode
         language={language}
         title={tr(language, { en: 'Want a guided support flow?', pl: 'Chcesz prowadzonego procesu wsparcia?' })}
@@ -129,6 +150,7 @@ export default async function SupportPage({ searchParams }: { searchParams?: { s
           </section>
         </TutorialStep>
       </TutorialMode>
+      </div>
     </main>
   );
 }

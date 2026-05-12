@@ -75,6 +75,22 @@ export default async function AutomationsPage() {
         </div>
       </section>
 
+      {/* Mobile compact block — visible only on phones */}
+      <section className="md:hidden mt-6 rounded-[28px] border border-cyan-300/20 bg-cyan-300/10 p-5">
+        <div className="text-[11px] uppercase tracking-[0.22em] text-cyan-100">{tr(language, { en: 'Mobile automations mode', pl: 'Tryb mobile automatyzacji' })}</div>
+        <h2 className="mt-2 text-2xl font-black text-white">{tr(language, { en: 'Your automations at a glance', pl: 'Automatyzacje w skrócie' })}</h2>
+        <div className="mt-3 grid grid-cols-2 gap-2 text-sm">
+          <div className="rounded-2xl border border-white/10 bg-slate-950/40 px-3 py-2 text-slate-200">{tr(language, { en: 'Competitor scans', pl: 'Skany konkurencji' })}: <span className={`font-bold ${settings.autoCompetitorScans ? 'text-emerald-300' : 'text-slate-400'}`}>{settings.autoCompetitorScans ? tr(language, { en: 'On', pl: 'Wł.' }) : tr(language, { en: 'Off', pl: 'Wył.' })}</span></div>
+          <div className="rounded-2xl border border-white/10 bg-slate-950/40 px-3 py-2 text-slate-200">{tr(language, { en: 'Margin alerts', pl: 'Alerty marży' })}: <span className={`font-bold ${settings.autoMarginAlerts ? 'text-emerald-300' : 'text-slate-400'}`}>{settings.autoMarginAlerts ? tr(language, { en: 'On', pl: 'Wł.' }) : tr(language, { en: 'Off', pl: 'Wył.' })}</span></div>
+          <div className="rounded-2xl border border-white/10 bg-slate-950/40 px-3 py-2 text-slate-200">{tr(language, { en: 'Review requests', pl: 'Prośby o opinie' })}: <span className={`font-bold ${settings.autoReviewRequests ? 'text-emerald-300' : 'text-slate-400'}`}>{settings.autoReviewRequests ? tr(language, { en: 'On', pl: 'Wł.' }) : tr(language, { en: 'Off', pl: 'Wył.' })}</span></div>
+          <div className="rounded-2xl border border-white/10 bg-slate-950/40 px-3 py-2 text-slate-200">{tr(language, { en: 'Ad safeguards', pl: 'Zabezp. reklam' })}: <span className={`font-bold ${settings.autoPauseLowMarginAds ? 'text-emerald-300' : 'text-slate-400'}`}>{settings.autoPauseLowMarginAds ? tr(language, { en: 'On', pl: 'Wł.' }) : tr(language, { en: 'Off', pl: 'Wył.' })}</span></div>
+        </div>
+        <div className="mt-4 flex flex-col gap-3">
+          <Link href="/dashboard" className="block rounded-2xl bg-cyan-300 px-5 py-4 text-center font-semibold text-slate-950">{tr(language, { en: 'Go to dashboard', pl: 'Przejdź do dashboardu' })}</Link>
+        </div>
+      </section>
+
+      <div className="hidden md:block">
       <TutorialMode
         language={language}
         title={tr(language, { en: 'Want a guided version of this page?', pl: 'Chcesz prowadzonej wersji tej strony?' })}
@@ -144,6 +160,7 @@ export default async function AutomationsPage() {
           </section>
         </TutorialStep>
       </TutorialMode>
+      </div>
     </main>
   );
 }

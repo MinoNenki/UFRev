@@ -95,6 +95,22 @@ export default async function IntegrationsPage() {
         </div>
       </section>
 
+      {/* Mobile compact block — visible only on phones */}
+      <section className="md:hidden mt-6 rounded-[28px] border border-cyan-300/20 bg-cyan-300/10 p-5">
+        <div className="text-[11px] uppercase tracking-[0.22em] text-cyan-100">{tr(language, { en: 'Mobile integrations mode', pl: 'Tryb mobile integracji' })}</div>
+        <h2 className="mt-2 text-2xl font-black text-white">{tr(language, { en: 'Connection status', pl: 'Status połączeń' })}</h2>
+        <div className="mt-3 rounded-2xl border border-white/10 bg-slate-950/40 px-4 py-3 text-sm text-slate-200 space-y-1">
+          <div>{tr(language, { en: 'Connected stores', pl: 'Połączone sklepy' })}: <span className="font-bold text-cyan-300">{connectedStores}/2</span></div>
+          <div>{tr(language, { en: 'Marketplaces', pl: 'Marketplace' })}: <span className="font-bold text-cyan-300">{enabledMarketplaces}/3</span></div>
+          <div>{tr(language, { en: 'Active syncs', pl: 'Aktywne syncy' })}: <span className="font-bold text-cyan-300">{enabledSyncs}/3</span></div>
+        </div>
+        <div className="mt-4 flex flex-col gap-3">
+          <Link href="/account/connections" className="block rounded-2xl bg-cyan-300 px-5 py-4 text-center font-semibold text-slate-950">{tr(language, { en: 'Connect your accounts', pl: 'Połącz swoje konta' })}</Link>
+          <Link href="/dashboard" className="block rounded-2xl border border-white/20 px-5 py-3 text-center text-sm font-semibold text-white">{tr(language, { en: 'Back to dashboard', pl: 'Wróć do dashboardu' })}</Link>
+        </div>
+      </section>
+
+      <div className="hidden md:block">
       <section className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
         <MetricCard language={language} label={tr(language, { en: 'Validated store accounts', pl: 'Zweryfikowane konta sklepu' })} value={`${connectedStores}/2`} delta="Shopify • WooCommerce" tone="cyan" />
         <MetricCard language={language} label={tr(language, { en: 'Enabled marketplace lanes', pl: 'Włączone ścieżki marketplace' })} value={`${enabledMarketplaces}/3`} delta="Amazon • eBay • Allegro" tone="emerald" />
@@ -185,6 +201,7 @@ export default async function IntegrationsPage() {
           </div>
         </div>
       </section>
+      </div>
     </main>
   );
 }

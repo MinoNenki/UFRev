@@ -65,6 +65,26 @@ export default async function AccountPage({ searchParams }: { searchParams?: { s
 
       {(params.saved || params.error) && <div className={`mt-6 rounded-2xl border p-4 ${params.saved ? 'border-emerald-300/30 bg-emerald-300/10 text-emerald-200' : 'border-rose-300/30 bg-rose-300/10 text-rose-200'}`}>{params.saved ? tr(language, { en: 'Profile updated successfully.', pl: 'Profil został zapisany.', de: 'Profil erfolgreich gespeichert.', es: 'Perfil guardado correctamente.', ja: 'プロフィールを保存しました。', zh: '资料已成功更新。', id: 'Profil berhasil diperbarui.' }) : tr(language, { en: 'Could not save profile changes.', pl: 'Nie udało się zapisać zmian profilu.', de: 'Profiländerungen konnten nicht gespeichert werden.', es: 'No se pudieron guardar los cambios del perfil.', ja: 'プロフィール変更を保存できませんでした。', zh: '无法保存资料更改。', id: 'Perubahan profil tidak dapat disimpan.' })}</div>}
 
+      {/* Mobile compact block — visible only on phones */}
+      <section className="md:hidden mt-6 rounded-[28px] border border-cyan-300/20 bg-cyan-300/10 p-5">
+        <div className="text-[11px] uppercase tracking-[0.22em] text-cyan-100">{tr(language, { en: 'Mobile account mode', pl: 'Tryb mobile konta' })}</div>
+        <h2 className="mt-2 text-2xl font-black text-white">{tr(language, { en: 'Your account at a glance', pl: 'Twoje konto w skrócie' })}</h2>
+        <div className="mt-3 rounded-2xl border border-white/10 bg-slate-950/40 px-4 py-3 text-sm text-slate-200 space-y-1">
+          <div>{tr(language, { en: 'Plan', pl: 'Plan' })}: <span className="font-bold text-white">{getPlanDisplayName(profile?.plan_key)}</span></div>
+          <div>{tr(language, { en: 'AI tokens', pl: 'Tokeny AI' })}: <span className="font-bold text-cyan-300">{profile?.credits_balance ?? 0}</span></div>
+        </div>
+        <form action="/api/profile/update" method="post" className="mt-4 space-y-3">
+          <input name="fullName" defaultValue={profile?.full_name ?? ''} className="input" placeholder={tr(language, { en: 'Full name', pl: 'Imię i nazwisko' })} />
+          <input name="companyName" defaultValue={profile?.company_name ?? ''} className="input" placeholder={tr(language, { en: 'Company or brand', pl: 'Firma lub marka' })} />
+          <button className="w-full rounded-2xl bg-cyan-300 px-5 py-4 font-semibold text-slate-950">{tr(language, { en: 'Save profile', pl: 'Zapisz profil' })}</button>
+        </form>
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          <Link href="/dashboard" className="block rounded-2xl border border-white/20 px-4 py-3 text-center text-sm font-semibold text-white">{tr(language, { en: 'Dashboard', pl: 'Dashboard' })}</Link>
+          <Link href="/pricing" className="block rounded-2xl border border-white/20 px-4 py-3 text-center text-sm font-semibold text-white">{tr(language, { en: 'Upgrade', pl: 'Upgrade' })}</Link>
+        </div>
+      </section>
+
+      <div className="hidden md:block">
       <TutorialMode
         language={language}
         title={tr(language, { en: 'Need a guided setup for your account?', pl: 'Potrzebujesz prowadzonej konfiguracji konta?' })}
@@ -181,6 +201,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { s
           </section>
         </TutorialStep>
       </TutorialMode>
+      </div>
     </main>
   );
 }
