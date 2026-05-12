@@ -116,7 +116,7 @@ export default function DashboardShell({
       steps={tutorialSteps}
       storageKey="ufrev-dashboard-tutorial"
     >
-      <section className="mb-5 rounded-[24px] border border-cyan-300/20 bg-cyan-300/10 p-4 sm:p-5">
+      <section className="mb-5 hidden rounded-[24px] border border-cyan-300/20 bg-cyan-300/10 p-4 sm:block sm:p-5">
         <div className="text-[11px] uppercase tracking-[0.22em] text-cyan-100">{tt(language, { en: 'Quick start for new users', pl: 'Szybki start dla nowych użytkowników' })}</div>
         <div className="mt-3 grid gap-3 md:grid-cols-3">
           {[
@@ -146,7 +146,7 @@ export default function DashboardShell({
         title={tt(language, { en: 'Start with the top dashboard signals', pl: 'Zacznij od górnych sygnałów dashboardu' })}
         description={tt(language, { en: 'This row tells you what is happening right now: market view, live signals, scenario tools, and safety confidence.', pl: 'Ten rząd pokazuje co dzieje się teraz: widok rynku, live signals, scenariusze i pewność bezpieczeństwa.' })}
       >
-        <div className="grid gap-4 xl:grid-cols-4">
+        <div className="hidden gap-4 md:grid xl:grid-cols-4">
           {quickVisibilityCards.map((item, index) => (
             <div key={`${item.label}-${index}`} className="dashboard-signal-card metric-card-3d group relative overflow-hidden rounded-[24px] border border-white/10 bg-slate-950/55 p-5 shadow-[0_18px_80px_rgba(2,6,23,0.45)] transition duration-300 hover:-translate-y-1 hover:border-amber-200/20 sm:p-6">
               <div className={`absolute inset-0 opacity-80 ${[
@@ -165,6 +165,14 @@ export default function DashboardShell({
             </div>
           ))}
         </div>
+        <div className="grid gap-2 md:hidden">
+          {quickVisibilityCards.slice(0, 2).map((item) => (
+            <div key={item.label} className="rounded-2xl border border-white/10 bg-slate-950/45 px-3 py-3">
+              <div className="text-[11px] uppercase tracking-[0.2em] text-slate-400">{item.label}</div>
+              <div className="mt-1 text-lg font-black text-white break-normal [overflow-wrap:anywhere]">{item.value}</div>
+            </div>
+          ))}
+        </div>
       </TutorialStep>
 
       <TutorialStep
@@ -172,10 +180,10 @@ export default function DashboardShell({
         title={tt(language, { en: 'Run an analysis or review the latest result', pl: 'Uruchom analizę albo przejrzyj ostatni wynik' })}
         description={tt(language, { en: 'Use the left form to send data in, then read the result panel on the right for the safest next move.', pl: 'Użyj formularza po lewej, aby wysłać dane, a potem przeczytaj panel wyniku po prawej, by zobaczyć najbezpieczniejszy kolejny ruch.' })}
       >
-        <section id="analyze-form-anchor" className="grid items-start gap-4 2xl:grid-cols-[minmax(0,0.98fr)_minmax(0,1.02fr)] 2xl:gap-7 sm:gap-5">
+        <section id="analyze-form-anchor" className="grid items-start gap-3 2xl:grid-cols-[minmax(0,0.98fr)_minmax(0,1.02fr)] 2xl:gap-7 sm:gap-5">
         <AnalyzeForm currentLanguage={language} onResultChange={setCurrentDecision} />
 
-      <div className="min-w-0 space-y-5">
+        <div className="min-w-0 space-y-3 sm:space-y-5">
         <div className="mesh-panel dashboard-premium-shell dashboard-result-shell glow-ring p-4 sm:p-5 xl:p-6 2xl:p-7">
           <div className="spotlight-sweep" />
           <div className="noise-overlay" />
@@ -225,7 +233,7 @@ export default function DashboardShell({
             </div>
           </div>
 
-          <div className="mt-5 rounded-[28px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(2,6,23,0.08))] p-1.5 sm:p-2">
+          <div className="mt-4 rounded-[24px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(2,6,23,0.08))] p-1 sm:mt-5 sm:rounded-[28px] sm:p-2">
             {currentDecision ? (
               <DecisionResult result={currentDecision} currentLanguage={language} />
             ) : (
@@ -250,7 +258,7 @@ export default function DashboardShell({
           title={tt(language, { en: 'Use rewards and referrals to extend usage', pl: 'Korzystaj z nagród i poleceń, aby zwiększyć użycie' })}
           description={tt(language, { en: 'These panels are here to help you get more AI tokens and grow your usage without friction.', pl: 'Te panele pomagają zdobyć więcej tokenów AI i rozwijać użycie bez zbędnego tarcia.' })}
         >
-          <div className="grid gap-6 xl:grid-cols-2">
+          <div className="grid gap-3 sm:gap-6 xl:grid-cols-2">
             <RewardAdsPanel currentLanguage={language} {...rewardAdsProps} />
             <ReferralPanel currentLanguage={language} {...referralProps} />
           </div>
@@ -259,9 +267,21 @@ export default function DashboardShell({
       </section>
 
       {currentDecision ? (
-        <div className="mt-7">
-          <AdvancedDecisionReasoning result={currentDecision} currentLanguage={language} />
-        </div>
+        <>
+          <div className="mt-5 md:hidden">
+            <details className="rounded-[24px] border border-white/10 bg-slate-950/45 p-4">
+              <summary className="cursor-pointer list-none rounded-2xl border border-cyan-300/20 bg-cyan-300/10 px-4 py-3 text-sm font-semibold text-cyan-100">
+                {tt(language, { en: 'Show full reasoning and rollout plan', pl: 'Pokaż pełne uzasadnienie i plan wdrożenia' })}
+              </summary>
+              <div className="mt-4">
+                <AdvancedDecisionReasoning result={currentDecision} currentLanguage={language} />
+              </div>
+            </details>
+          </div>
+          <div className="mt-7 hidden md:block">
+            <AdvancedDecisionReasoning result={currentDecision} currentLanguage={language} />
+          </div>
+        </>
       ) : null}
       </TutorialStep>
     </TutorialMode>

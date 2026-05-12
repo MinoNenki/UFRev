@@ -161,15 +161,15 @@ export default async function DashboardPage() {
         <div className="relative grid gap-8 xl:grid-cols-[1.15fr_0.85fr]">
           <div>
             <div className="glass-chip border-cyan-300/30 bg-cyan-300/10 text-cyan-100">{tr(language,{en:'One simple decision flow',pl:'Jeden prosty flow decyzyjny',de:'Globales Entscheidungs-Cockpit für Produkte, Kosten und Startup-Validierung',es:'Cockpit global de decisiones para productos, costes y validación startup',ja:'商品・コスト・スタートアップ検証のためのグローバル意思決定コックピット',zh:'面向产品、成本与创业验证的全球决策驾驶舱',id:'Kokpit keputusan global untuk produk, biaya, dan validasi startup',ru:'Глобальный центр решений для продуктов, затрат и проверки стартапов'})}</div>
-            <h1 className="mt-4 max-w-4xl text-balance text-[clamp(3rem,5vw,5.2rem)] font-black leading-[0.92] tracking-[-0.05em] text-white">{tr(language,{en:'Check if this product will burn your budget before you spend on ads.',pl:'Sprawdź czy ten produkt spali Ci budżet zanim wydasz na reklamy.',de:'Füge URL, PDF, Screenshot oder Idee ein und sieh sofort den sichersten nächsten Schritt.',es:'Sube una URL, PDF, captura o idea y ve al instante el siguiente paso más seguro.',ja:'URL、PDF、スクリーンショット、アイデアを入れるだけで、次の安全な一手がすぐ見えます。',zh:'放入 URL、PDF、截图或想法，即可立刻看到最安全的下一步。',id:'Masukkan URL, PDF, screenshot, atau ide dan langsung lihat langkah aman berikutnya.',ru:'Вставь URL, PDF, скриншот или идею и сразу увидишь самый безопасный следующий шаг.'})}</h1>
-            <p className="mt-5 max-w-3xl text-[1.05rem] leading-8 text-slate-300 sm:text-[1.12rem] sm:leading-9">{tr(language,{en:'Use one path: add a product link, description or file, then review the verdict, margin, risk and next step. Everything else stays secondary until you need it.',pl:'Używaj jednej ścieżki: dodaj link do produktu, opis albo plik, a potem sprawdź werdykt, marżę, ryzyko i kolejny krok. Reszta pozostaje drugorzędna, dopóki jej nie potrzebujesz.',de:'Nutze diesen Workspace, um Ideen zu validieren, Produkte zu vergleichen und schnellere Wachstumsentscheidungen zu treffen, ohne Budget zu verschwenden.',es:'Usa este workspace para validar ideas, comparar productos y tomar decisiones de crecimiento más rápidas sin desperdiciar presupuesto.',ja:'このワークスペースでは、アイデアの検証・商品の比較・より速い成長判断を、予算を無駄にせずに行えます。',zh:'这个工作区可帮助你验证创意、比较产品，并在不浪费预算的情况下更快做出增长决策。',id:'Gunakan workspace ini untuk memvalidasi ide, membandingkan produk, dan mengambil keputusan pertumbuhan lebih cepat tanpa membuang budget.',ru:'Используй это пространство, чтобы проверять идеи, сравнивать продукты и быстрее принимать решения о росте без лишних трат бюджета.'})}</p>
+            <h1 className="mt-3 max-w-4xl text-balance text-[clamp(2rem,7vw,5.2rem)] font-black leading-[0.95] tracking-[-0.04em] text-white sm:mt-4 sm:leading-[0.92] sm:tracking-[-0.05em]">{tr(language,{en:'Check if this product will burn your budget before you spend on ads.',pl:'Sprawdź czy ten produkt spali Ci budżet zanim wydasz na reklamy.',de:'Füge URL, PDF, Screenshot oder Idee ein und sieh sofort den sichersten nächsten Schritt.',es:'Sube una URL, PDF, captura o idea y ve al instante el siguiente paso más seguro.',ja:'URL、PDF、スクリーンショット、アイデアを入れるだけで、次の安全な一手がすぐ見えます。',zh:'放入 URL、PDF、截图或想法，即可立刻看到最安全的下一步。',id:'Masukkan URL, PDF, screenshot, atau ide dan langsung lihat langkah aman berikutnya.',ru:'Вставь URL, PDF, скриншот или идею и сразу увидишь самый безопасный следующий шаг.'})}</h1>
+            <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300 sm:mt-5 sm:text-[1.12rem] sm:leading-9">{tr(language,{en:'Use one path: add a product link, description or file, then review the verdict, margin, risk and next step. Everything else stays secondary until you need it.',pl:'Używaj jednej ścieżki: dodaj link do produktu, opis albo plik, a potem sprawdź werdykt, marżę, ryzyko i kolejny krok. Reszta pozostaje drugorzędna, dopóki jej nie potrzebujesz.',de:'Nutze diesen Workspace, um Ideen zu validieren, Produkte zu vergleichen und schnellere Wachstumsentscheidungen zu treffen, ohne Budget zu verschwenden.',es:'Usa este workspace para validar ideas, comparar productos y tomar decisiones de crecimiento más rápidas sin desperdiciar presupuesto.',ja:'このワークスペースでは、アイデアの検証・商品の比較・より速い成長判断を、予算を無駄にせずに行えます。',zh:'这个工作区可帮助你验证创意、比较产品，并在不浪费预算的情况下更快做出增长决策。',id:'Gunakan workspace ini untuk memvalidasi ide, membandingkan produk, dan mengambil keputusan pertumbuhan lebih cepat tanpa membuang budget.',ru:'Используй это пространство, чтобы проверять идеи, сравнивать продукты и быстрее принимать решения о росте без лишних трат бюджета.'})}</p>
             <div className="mt-7 flex flex-wrap gap-3">
               <Link href="/pricing" className="rounded-2xl border border-white/10 px-5 py-3 font-semibold hover:bg-white/5">{tr(language,{en:'Pricing',pl:'Cennik',de:'Preise',es:'Precios',ja:'料金',zh:'定价',id:'Harga',ru:'Тарифы'})}</Link>
               <Link href="/account" className="rounded-2xl border border-white/10 px-5 py-3 font-semibold hover:bg-white/5">{tr(language,{en:'Account',pl:'Konto',de:'Konto',es:'Cuenta',ja:'アカウント',zh:'账户',id:'Akun',ru:'Аккаунт'})}</Link>
               <Link href="/support" className="rounded-2xl bg-cyan-300 px-5 py-3 font-semibold text-slate-950">{tr(language,{en:'Support',pl:'Wsparcie',de:'Support',es:'Soporte',ja:'サポート',zh:'支持',id:'Dukungan',ru:'Поддержка'})}</Link>
               {profile?.role === 'admin' && <Link href="/admin" className="rounded-2xl bg-amber-300 px-5 py-3 font-semibold text-slate-950">{tr(language,{en:'Administrator',pl:'Administrator',de:'Administrator',es:'Administrador',ja:'管理者',zh:'管理员',id:'Administrator',ru:'Администратор'})}</Link>}
             </div>
-            <div className="mt-5 flex flex-wrap gap-2">
+            <div className="mt-4 flex flex-wrap gap-2 sm:mt-5">
               {[
                 tr(language,{en:'Visual AI',pl:'Visual AI',de:'Visual AI',es:'Visual AI',pt:'IA visual',ru:'Visual AI'}),
                 tr(language,{en:'PDF intelligence',pl:'Inteligencja PDF',de:'PDF-Intelligenz',es:'Inteligencia PDF',pt:'Inteligência PDF',ru:'PDF интеллект'}),
@@ -178,9 +178,17 @@ export default async function DashboardPage() {
                 <span key={item} className="glass-chip border-white/10 bg-white/[0.04] text-slate-100">{item}</span>
               ))}
             </div>
+            <div className="mt-4 grid grid-cols-2 gap-2 md:hidden">
+              <div className="rounded-2xl border border-white/10 bg-slate-950/45 px-3 py-3 text-sm text-slate-200">
+                {tr(language, { en: 'Plan', pl: 'Plan' })}: <span className="font-bold text-white">{getPlanDisplayName(profile?.plan_key)}</span>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-slate-950/45 px-3 py-3 text-sm text-slate-200">
+                {tr(language, { en: 'AI Tokens', pl: 'Tokeny AI' })}: <span className="font-bold text-cyan-200">{profile?.credits_balance ?? 0}</span>
+              </div>
+            </div>
           </div>
 
-          <div className="premium-panel dashboard-quick-overview p-6 sm:p-7">
+          <div className="premium-panel dashboard-quick-overview hidden p-6 md:block md:p-7">
             <div className="text-[11px] uppercase tracking-[0.24em] text-cyan-200">{tr(language,{en:'Quick overview',pl:'Szybki podgląd',de:'Schnellübersicht',es:'Vista rápida',pt:'Visão rápida',ru:'Быстрый обзор'})}</div>
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
               <MetricCard language={language} label={tr(language,{en:'Plan',pl:'Plan',de:'Plan',es:'Plan',ja:'プラン',zh:'套餐',id:'Paket',ru:'План'})} value={getPlanDisplayName(profile?.plan_key)} delta={tr(language,{en:'Active package',pl:'Aktywny pakiet',de:'Aktives Paket',es:'Paquete activo',ja:'有効なパッケージ',zh:'当前套餐',id:'Paket aktif',ru:'Активный пакет'})} tone="cyan" />
@@ -192,7 +200,7 @@ export default async function DashboardPage() {
         </div>
       </section>
 
-      <section className="mt-6 grid gap-3 xl:grid-cols-3 sm:mt-8 sm:gap-4">
+      <section className="mt-6 hidden gap-3 md:grid xl:grid-cols-3 sm:mt-8 sm:gap-4">
         <div className="dashboard-step-card hover-lift rounded-[24px] border border-white/10 bg-slate-950/60 p-5">
           <div className="text-[11px] uppercase tracking-[0.22em] text-cyan-200">{tr(language,{en:'Step 01',pl:'Krok 01',de:'Workflow 01',es:'Workflow 01',pt:'Fluxo 01',ru:'Сценарий 01'})}</div>
           <div className="mt-2 text-[1.35rem] font-black leading-[1.02] tracking-[-0.03em] text-white">{tr(language,{en:'Drop in the product',pl:'Wrzuć produkt',de:'Visuelle Prüfung',es:'Chequeo visual',pt:'Verificação visual',ru:'Визуальная проверка'})}</div>
@@ -385,7 +393,7 @@ export default async function DashboardPage() {
 
       <section className="mt-6 rounded-[24px] border border-cyan-300/20 bg-cyan-300/10 p-4 md:hidden">
         <div className="text-[11px] uppercase tracking-[0.22em] text-cyan-100">{tr(language, { en: 'Mobile focus mode', pl: 'Tryb mobile focus' })}</div>
-        <h2 className="mt-2 text-xl font-black text-white">{tr(language, { en: 'Core actions in one screen', pl: 'Najważniejsze akcje na jednym ekranie' })}</h2>
+        <h2 className="mt-2 text-lg font-black text-white">{tr(language, { en: 'Core actions in one screen', pl: 'Najważniejsze akcje na jednym ekranie' })}</h2>
         <div className="mt-3 grid gap-2 text-sm text-slate-100">
           <div className="rounded-2xl border border-white/10 bg-slate-950/45 px-3 py-3">{tr(language, { en: '1. Add product URL, screenshot, PDF or offer.', pl: '1. Dodaj URL produktu, screenshot, PDF albo ofertę.' })}</div>
           <div className="rounded-2xl border border-white/10 bg-slate-950/45 px-3 py-3">{tr(language, { en: '2. Read verdict + margin + risk.', pl: '2. Sprawdź werdykt + marżę + ryzyko.' })}</div>

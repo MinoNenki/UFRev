@@ -9,7 +9,7 @@ export default function LanguageSwitcher({ currentLanguage }: { currentLanguage:
   }
 
   return (
-    <div className="inline-flex flex-wrap rounded-2xl border border-white/10 bg-white/5 p-1 text-sm">
+    <div className="inline-flex flex-wrap rounded-2xl border border-white/10 bg-white/5 p-1 text-xs sm:text-sm">
       {VISIBLE_LANGUAGE_OPTIONS.map((language) => {
         const active = currentLanguage === language.value;
         return (
@@ -17,7 +17,7 @@ export default function LanguageSwitcher({ currentLanguage }: { currentLanguage:
             key={language.value}
             type="button"
             onClick={() => setLanguage(language.value)}
-            className={`rounded-xl px-3 py-2 font-medium transition ${active ? 'bg-cyan-300 text-slate-950' : 'text-slate-300 hover:bg-white/5'}`}
+            className={`rounded-xl px-2.5 py-1.5 font-medium transition sm:px-3 sm:py-2 ${active ? 'bg-cyan-300 text-slate-950' : 'text-slate-300 hover:bg-white/5'}`}
           >
             {language.label}
           </button>

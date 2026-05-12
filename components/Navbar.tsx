@@ -39,7 +39,7 @@ export default async function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/65 shadow-[0_16px_60px_rgba(2,6,23,0.30)] backdrop-blur-2xl">
-      <div className="mx-auto max-w-[1600px] px-4 py-3 text-white sm:px-6 sm:py-4">
+      <div className="mx-auto max-w-[1600px] px-3 py-2.5 text-white sm:px-6 sm:py-4">
         <div className="flex items-start justify-between gap-2 lg:hidden">
           <Link href="/" className="group flex min-w-0 flex-1 items-center gap-2.5">
             <span className="relative inline-flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-cyan-300/30 bg-[linear-gradient(135deg,rgba(34,211,238,0.95),rgba(96,165,250,0.95),rgba(168,85,247,0.95))] text-xs font-black text-slate-950 shadow-[0_0_40px_rgba(34,211,238,0.25)] transition duration-300 group-hover:scale-105">
@@ -61,7 +61,7 @@ export default async function Navbar() {
           </div>
         </div>
 
-        <div className="mt-3 grid grid-cols-2 gap-2 pb-1 sm:grid-cols-3 lg:hidden">
+        <div className="mt-2 grid grid-cols-3 gap-1.5 pb-1 sm:grid-cols-3 lg:hidden">
           <MobileNavLink href="/pricing">{tr(language, { en: 'Pricing', pl: 'Cennik', de: 'Preise', es: 'Precios', pt: 'Preços', ru: 'Тарифы' })}</MobileNavLink>
           <MobileNavLink href="/integrations">{tr(language, { en: 'Integrations', pl: 'Integracje', de: 'Integrationen', es: 'Integraciones', pt: 'Integrações', ru: 'Интеграции' })}</MobileNavLink>
           <MobileNavLink href="/reviews">{tr(language, { en: 'Reviews', pl: 'Opinie', de: 'Bewertungen', es: 'Reseñas', pt: 'Avaliações', ru: 'Отзывы' })}</MobileNavLink>
@@ -126,7 +126,7 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
 
 function MobileNavLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <Link href={href} className="min-w-0 rounded-2xl border border-white/10 bg-[linear-gradient(135deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] px-3 py-2.5 text-center text-[13px] font-medium leading-tight text-slate-200 transition duration-300 hover:border-cyan-300/20 hover:bg-white/[0.06] hover:text-white sm:px-4 sm:text-sm">
+    <Link href={href} className="min-w-0 rounded-xl border border-white/10 bg-[linear-gradient(135deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] px-2 py-2 text-center text-[12px] font-medium leading-tight text-slate-200 transition duration-300 hover:border-cyan-300/20 hover:bg-white/[0.06] hover:text-white sm:rounded-2xl sm:px-4 sm:py-2.5 sm:text-sm">
       {children}
     </Link>
   );
