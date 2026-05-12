@@ -24,11 +24,16 @@ export default async function ReviewsPage({ searchParams }: { searchParams?: { s
     .limit(24);
 
   return (
-    <main className="mx-auto max-w-[1500px] px-6 py-16 text-white">
-      <section className="rounded-[40px] border border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(34,211,238,0.18),transparent_24%),linear-gradient(180deg,rgba(15,23,42,0.92),rgba(2,6,23,0.92))] p-8 shadow-[0_30px_140px_rgba(2,6,23,0.65)]">
+    <main className="mx-auto max-w-[1500px] px-3 py-8 text-white sm:px-6 sm:py-16">
+      <section className="rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(34,211,238,0.18),transparent_24%),linear-gradient(180deg,rgba(15,23,42,0.92),rgba(2,6,23,0.92))] p-4 shadow-[0_30px_140px_rgba(2,6,23,0.65)] sm:rounded-[40px] sm:p-8">
         <div className="text-[11px] uppercase tracking-[0.24em] text-cyan-200">{tr(language, { en: 'Customer reviews', pl: 'Opinie klientów', es: 'Reseñas de clientes', ru: 'Отзывы клиентов' })}</div>
-        <h1 className="mt-4 text-5xl font-black tracking-tight">{tr(language, { en: 'Trust improves conversions and accelerates adoption', pl: 'Zaufanie poprawia konwersję i przyspiesza adopcję', es: 'La confianza mejora la conversión y acelera la adopción', ru: 'Доверие повышает конверсию и ускоряет внедрение' })}</h1>
-        <p className="mt-5 max-w-4xl text-lg leading-8 text-slate-300">{tr(language, { en: 'This premium review layer helps the product feel more established and enterprise-ready, while the moderation flow and protected logic remain unchanged.', pl: 'Ta premium warstwa opinii sprawia, że produkt wygląda bardziej dojrzale i gotowo dla firm, a moderacja i logika ochronna pozostają bez zmian.', es: 'Esta capa premium de reseñas hace que el producto se sienta más sólido y listo para empresas, mientras el flujo de moderación y la lógica protegida siguen igual.', ru: 'Этот премиальный слой отзывов делает продукт более зрелым и готовым для бизнеса, при этом модерация и защитная логика остаются без изменений.' })}</p>
+        <h1 className="mt-4 text-3xl font-black tracking-tight sm:text-5xl">{tr(language, { en: 'Trust improves conversions and accelerates adoption', pl: 'Zaufanie poprawia konwersję i przyspiesza adopcję', es: 'La confianza mejora la conversión y acelera la adopción', ru: 'Доверие повышает конверсию и ускоряет внедрение' })}</h1>
+        <p className="mt-4 max-w-4xl text-base leading-7 text-slate-300 sm:mt-5 sm:text-lg sm:leading-8">{tr(language, { en: 'This premium review layer helps the product feel more established and enterprise-ready, while the moderation flow and protected logic remain unchanged.', pl: 'Ta premium warstwa opinii sprawia, że produkt wygląda bardziej dojrzale i gotowo dla firm, a moderacja i logika ochronna pozostają bez zmian.', es: 'Esta capa premium de reseñas hace que el producto se sienta más sólido y listo para empresas, mientras el flujo de moderación y la lógica protegida siguen igual.', ru: 'Этот премиальный слой отзывов делает продукт более зрелым и готовым для бизнеса, при этом модерация и защитная логика остаются без изменений.' })}</p>
+      </section>
+
+      <section className="mt-5 rounded-[24px] border border-cyan-300/20 bg-cyan-300/10 p-4 md:hidden">
+        <div className="text-[11px] uppercase tracking-[0.22em] text-cyan-100">{tr(language, { en: 'Mobile review mode', pl: 'Tryb mobile opinii' })}</div>
+        <div className="mt-2 text-sm text-slate-100">{tr(language, { en: 'On phone we show a shorter review stream first. You can still add your own review below.', pl: 'Na telefonie pokazujemy najpierw krótszy strumień opinii. Nadal możesz dodać własną opinię niżej.' })}</div>
       </section>
 
       {(params.sent || params.error) && (
@@ -41,8 +46,8 @@ export default async function ReviewsPage({ searchParams }: { searchParams?: { s
 
       <section className="mt-8 grid gap-8 lg:grid-cols-[1fr_0.88fr]">
         <div className="grid gap-6 md:grid-cols-2">
-          {(reviews || []).map((item) => (
-            <div key={item.id} className="rounded-[32px] border border-white/10 bg-slate-950/60 p-8 shadow-[0_24px_100px_rgba(2,6,23,0.45)]">
+          {(reviews || []).map((item, index) => (
+            <div key={item.id} className={`rounded-[32px] border border-white/10 bg-slate-950/60 p-6 shadow-[0_24px_100px_rgba(2,6,23,0.45)] sm:p-8 ${index > 5 ? 'hidden md:block' : ''}`}>
               <div className="mb-4 text-cyan-200">{'★'.repeat(item.rating)}</div>
               <p className="text-lg leading-8 text-slate-200">{item.content}</p>
               <div className="mt-6 font-semibold text-white">{item.name}</div>

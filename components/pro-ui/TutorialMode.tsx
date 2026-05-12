@@ -337,6 +337,40 @@ export default function TutorialMode({ language = 'en', title, intro, steps, sto
             className="pointer-events-none fixed bottom-4 left-4 right-4 z-50 sm:left-auto sm:right-5 sm:w-[320px]"
             style={{ transform: `translate3d(${cursorOffset.x}px, ${cursorOffset.y}px, 0)` }}
           >
+            <div className="pointer-events-auto fixed left-3 right-3 top-[128px] z-[80] rounded-2xl border border-cyan-300/25 bg-slate-950/92 p-3 shadow-[0_18px_55px_rgba(2,6,23,0.55)] backdrop-blur md:hidden">
+              <div className="flex items-center justify-between gap-2">
+                <div>
+                  <div className="text-[10px] uppercase tracking-[0.2em] text-cyan-200">{copy(language, { en: 'Guide mode active', pl: 'Samouczek aktywny' })}</div>
+                  <div className="mt-1 text-sm font-bold text-white">{copy(language, { en: 'Step', pl: 'Krok' })} {currentStep.step} • {activeIndex + 1}/{steps.length}</div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setEnabled(false)}
+                  className="rounded-xl border border-rose-300/30 bg-rose-300/15 px-3 py-2 text-xs font-semibold text-rose-100"
+                >
+                  {copy(language, { en: 'Exit guide', pl: 'Wyjdź' })}
+                </button>
+              </div>
+              <div className="mt-2 flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => moveStep(-1)}
+                  disabled={activeIndex === 0}
+                  className="flex-1 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-xs font-semibold text-white disabled:opacity-40"
+                >
+                  {copy(language, { en: 'Back', pl: 'Wstecz' })}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => moveStep(1)}
+                  disabled={activeIndex >= steps.length - 1}
+                  className={cx('flex-1 rounded-xl px-3 py-2 text-xs font-semibold disabled:opacity-40', toneClasses.floatingButton)}
+                >
+                  {copy(language, { en: 'Next', pl: 'Dalej' })}
+                </button>
+              </div>
+            </div>
+
             <div className="tutorial-floating-shell pointer-events-auto sm:w-[320px]">
               <div className="tutorial-floating-aura" />
               <div className={cx('tutorial-floating-guide rounded-[28px] border bg-slate-950/92 p-4 shadow-[0_24px_80px_rgba(2,6,23,0.65)] backdrop-blur sm:w-[320px]', toneClasses.floatingWrap)}>
@@ -369,6 +403,13 @@ export default function TutorialMode({ language = 'en', title, intro, steps, sto
                   className={cx('rounded-2xl px-4 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-40', toneClasses.floatingButton)}
                 >
                   {copy(language, { en: 'Next step', pl: 'Dalej' })}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setEnabled(false)}
+                  className="rounded-2xl border border-rose-300/30 bg-rose-300/10 px-4 py-2 text-sm font-semibold text-rose-100 transition hover:bg-rose-300/18"
+                >
+                  {copy(language, { en: 'Exit guide', pl: 'Wyjdź z przewodnika' })}
                 </button>
               </div>
 

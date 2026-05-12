@@ -172,7 +172,7 @@ export default function DashboardShell({
         title={tt(language, { en: 'Run an analysis or review the latest result', pl: 'Uruchom analizę albo przejrzyj ostatni wynik' })}
         description={tt(language, { en: 'Use the left form to send data in, then read the result panel on the right for the safest next move.', pl: 'Użyj formularza po lewej, aby wysłać dane, a potem przeczytaj panel wyniku po prawej, by zobaczyć najbezpieczniejszy kolejny ruch.' })}
       >
-        <section className="grid items-start gap-5 2xl:grid-cols-[minmax(0,0.98fr)_minmax(0,1.02fr)] 2xl:gap-7">
+        <section id="analyze-form-anchor" className="grid items-start gap-4 2xl:grid-cols-[minmax(0,0.98fr)_minmax(0,1.02fr)] 2xl:gap-7 sm:gap-5">
         <AnalyzeForm currentLanguage={language} onResultChange={setCurrentDecision} />
 
       <div className="min-w-0 space-y-5">

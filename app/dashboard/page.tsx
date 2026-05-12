@@ -152,8 +152,8 @@ export default async function DashboardPage() {
   ];
 
   return (
-    <main className="mx-auto max-w-[1500px] px-2 py-10 text-white sm:px-0 sm:py-12">
-      <section className="mesh-panel dashboard-hero-shell animate-aurora relative rounded-[40px] p-8 shadow-[0_30px_140px_rgba(2,6,23,0.65)] sm:p-9">
+    <main className="mx-auto max-w-[1500px] px-3 py-6 text-white sm:px-0 sm:py-12">
+      <section className="mesh-panel dashboard-hero-shell animate-aurora relative rounded-[28px] p-4 shadow-[0_30px_140px_rgba(2,6,23,0.65)] sm:rounded-[40px] sm:p-9">
         <div className="spotlight-sweep" />
         <div className="noise-overlay" />
         <div className="dashboard-hero-flare dashboard-hero-flare-a" />
@@ -192,7 +192,7 @@ export default async function DashboardPage() {
         </div>
       </section>
 
-      <section className="mt-8 grid gap-4 xl:grid-cols-3">
+      <section className="mt-6 grid gap-3 xl:grid-cols-3 sm:mt-8 sm:gap-4">
         <div className="dashboard-step-card hover-lift rounded-[24px] border border-white/10 bg-slate-950/60 p-5">
           <div className="text-[11px] uppercase tracking-[0.22em] text-cyan-200">{tr(language,{en:'Step 01',pl:'Krok 01',de:'Workflow 01',es:'Workflow 01',pt:'Fluxo 01',ru:'Сценарий 01'})}</div>
           <div className="mt-2 text-[1.35rem] font-black leading-[1.02] tracking-[-0.03em] text-white">{tr(language,{en:'Drop in the product',pl:'Wrzuć produkt',de:'Visuelle Prüfung',es:'Chequeo visual',pt:'Verificação visual',ru:'Визуальная проверка'})}</div>
@@ -213,7 +213,7 @@ export default async function DashboardPage() {
       {/* Baner reklamowy między sekcjami – Auto Ads Google lub manualny slot */}
       <AdBanner format="autorelaxed" className="mt-6" />
 
-      <section className="mt-8 grid gap-6 xl:grid-cols-[1.08fr_0.92fr]">
+      <section className="mt-8 hidden gap-6 xl:grid-cols-[1.08fr_0.92fr] md:grid">
         <div className="mesh-panel dashboard-operator-shell animate-aurora relative p-6 sm:p-7">
           <div className="spotlight-sweep" />
           <div className="noise-overlay" />
@@ -380,6 +380,20 @@ export default async function DashboardPage() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="mt-6 rounded-[24px] border border-cyan-300/20 bg-cyan-300/10 p-4 md:hidden">
+        <div className="text-[11px] uppercase tracking-[0.22em] text-cyan-100">{tr(language, { en: 'Mobile focus mode', pl: 'Tryb mobile focus' })}</div>
+        <h2 className="mt-2 text-xl font-black text-white">{tr(language, { en: 'Core actions in one screen', pl: 'Najważniejsze akcje na jednym ekranie' })}</h2>
+        <div className="mt-3 grid gap-2 text-sm text-slate-100">
+          <div className="rounded-2xl border border-white/10 bg-slate-950/45 px-3 py-3">{tr(language, { en: '1. Add product URL, screenshot, PDF or offer.', pl: '1. Dodaj URL produktu, screenshot, PDF albo ofertę.' })}</div>
+          <div className="rounded-2xl border border-white/10 bg-slate-950/45 px-3 py-3">{tr(language, { en: '2. Read verdict + margin + risk.', pl: '2. Sprawdź werdykt + marżę + ryzyko.' })}</div>
+          <div className="rounded-2xl border border-white/10 bg-slate-950/45 px-3 py-3">{tr(language, { en: '3. Execute safe next move.', pl: '3. Wykonaj bezpieczny kolejny ruch.' })}</div>
+        </div>
+        <div className="mt-3 flex flex-col gap-2">
+          <Link href="#analyze-form-anchor" scroll className="rounded-2xl bg-cyan-300 px-4 py-3 text-center text-sm font-semibold text-slate-950">{tr(language, { en: 'Go to analysis form', pl: 'Przejdź do formularza analizy' })}</Link>
+          <Link href="/pricing" className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-center text-sm font-semibold text-white">{tr(language, { en: 'Open pricing', pl: 'Otwórz cennik' })}</Link>
         </div>
       </section>
 

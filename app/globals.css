@@ -1757,6 +1757,24 @@ body::after {
   }
 }
 
+@media (hover: none), (pointer: coarse) {
+  .tutorial-toggle-button-off,
+  .tutorial-toggle-button-on,
+  .tutorial-toggle-button::after,
+  .tutorial-floating-aura,
+  .tutorial-floating-guide,
+  .tutorial-guide-card,
+  .tutorial-spotlight {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .tutorial-guide-card:hover,
+  .hover-lift:hover {
+    transform: none;
+  }
+}
+
 .card {
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.08);
