@@ -65,7 +65,7 @@ export default async function HomePage() {
   }
 
   return (
-    <main className="mx-auto max-w-[1600px] px-2 py-10 text-white sm:px-0 sm:py-16">
+    <main className="mx-auto max-w-[1600px] px-3 py-5 text-white sm:px-0 sm:py-16">
       {!isSupabaseConfigured && (
         <section className="premium-panel mb-8 p-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
@@ -96,7 +96,7 @@ export default async function HomePage() {
         </section>
       )}
 
-      <section className="mesh-panel homepage-hero-shell animate-aurora relative rounded-[44px] p-8 shadow-[0_30px_140px_rgba(2,6,23,0.68)]">
+      <section className="mesh-panel homepage-hero-shell animate-aurora relative rounded-[28px] p-4 shadow-[0_30px_140px_rgba(2,6,23,0.68)] sm:rounded-[44px] sm:p-8">
         <div className="spotlight-sweep" />
         <div className="noise-overlay" />
         <div className="homepage-hero-flare homepage-hero-flare-a" />
@@ -112,9 +112,9 @@ export default async function HomePage() {
         <div className="hero-orb left-[22%] top-[8%] h-24 w-24 bg-rose-400/24 animate-pulse-soft" />
         <div className="hero-orb right-[14%] top-[14%] h-32 w-32 bg-lime-300/16 animate-float-delayed" />
 
-        <div className="relative grid gap-8 xl:grid-cols-[1.04fr_0.96fr]">
+        <div className="relative grid gap-6 xl:grid-cols-[1.04fr_0.96fr] sm:gap-8">
           <div>
-            <div className="glass-chip mb-4 border-cyan-200/40 bg-[linear-gradient(135deg,rgba(34,211,238,0.22),rgba(16,185,129,0.18),rgba(168,85,247,0.14))] text-cyan-50 shadow-[0_14px_40px_rgba(34,211,238,0.16)]">
+            <div className="glass-chip mb-4 border-cyan-200/40 bg-[linear-gradient(135deg,rgba(34,211,238,0.22),rgba(16,185,129,0.18),rgba(168,85,247,0.14))] text-[13px] text-cyan-50 shadow-[0_14px_40px_rgba(34,211,238,0.16)] sm:text-sm">
               {tr(language, {
                 en: 'AI decision support for products, offers and costs',
                 pl: 'AI do podejmowania decyzji o produktach, ofertach i kosztach',
@@ -124,7 +124,7 @@ export default async function HomePage() {
                 ru: 'Интеллект решений, созданный для снижения потерь и поиска роста',
               })}
             </div>
-            <h1 className="hero-headline text-balance max-w-4xl text-[clamp(2.75rem,10vw,5.8rem)] font-black leading-[0.92] tracking-[-0.055em] text-white [text-wrap:balance] sm:text-[clamp(3.2rem,5.4vw,5.8rem)]">
+            <h1 className="hero-headline text-balance max-w-4xl text-[clamp(2.35rem,12vw,5.8rem)] font-black leading-[0.94] tracking-[-0.055em] text-white [text-wrap:balance] sm:text-[clamp(3.2rem,5.4vw,5.8rem)]">
               <HeroWordReveal
                 durationMs={8500}
                 text={tr(language, {
@@ -137,7 +137,7 @@ export default async function HomePage() {
                 })}
               />
             </h1>
-            <p className="mt-6 max-w-3xl text-[1.04rem] leading-8 text-slate-300 sm:text-[1.12rem] sm:leading-9">
+            <p className="mt-5 max-w-3xl text-[0.98rem] leading-7 text-slate-300 sm:mt-6 sm:text-[1.12rem] sm:leading-9">
               {tr(language, {
                 en: 'Paste link, offer or screenshot and get one clear decision: BUY, TEST or SKIP. You instantly see risk and the next move, so you stop burning ad budget blindly.',
                 pl: 'Wklej link, ofertę albo screenshot i dostajesz jedną jasną decyzję: BUY, TEST albo SKIP. Od razu widzisz ryzyko i kolejny ruch, więc przestajesz ślepo przepalać budżet reklamowy.',
@@ -147,8 +147,8 @@ export default async function HomePage() {
                 ru: 'Анализируй любой продукт до того, как тратить деньги. Получай AI-решение: ПОКУПАТЬ, ТЕСТИРОВАТЬ или ПРОПУСТИТЬ — с реальной маржой и анализом рисков.',
               })}
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/dashboard" className="rounded-2xl bg-[linear-gradient(135deg,rgba(34,211,238,1),rgba(16,185,129,0.95),rgba(59,130,246,0.96))] px-6 py-4 font-semibold text-slate-950 shadow-[0_22px_70px_rgba(34,211,238,0.28)] transition duration-300 hover:scale-[1.02] hover:shadow-[0_28px_80px_rgba(34,211,238,0.34)]">
+            <div className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap">
+              <Link href="/dashboard" className="rounded-2xl bg-[linear-gradient(135deg,rgba(34,211,238,1),rgba(16,185,129,0.95),rgba(59,130,246,0.96))] px-5 py-4 text-sm font-semibold text-slate-950 shadow-[0_22px_70px_rgba(34,211,238,0.28)] transition duration-300 hover:scale-[1.02] hover:shadow-[0_28px_80px_rgba(34,211,238,0.34)] sm:px-6 sm:text-base">
                 {tr(language, {
                   en: '👉 Paste link and get verdict now',
                   pl: '👉 Wklej link i odbierz werdykt teraz',
@@ -158,7 +158,7 @@ export default async function HomePage() {
                   ru: '👉 Анализировать продукт сейчас — бесплатно',
                 })}
               </Link>
-              <Link href="/pricing" className="rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-4 font-semibold transition duration-300 hover:-translate-y-[1px] hover:bg-white/5 hover:shadow-[0_18px_45px_rgba(2,6,23,0.24)]">
+              <Link href="/pricing" className="rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4 text-sm font-semibold transition duration-300 hover:-translate-y-[1px] hover:bg-white/5 hover:shadow-[0_18px_45px_rgba(2,6,23,0.24)] sm:px-6 sm:text-base">
                 {tr(language, {
                   en: 'View pricing',
                   pl: 'Zobacz cennik',
@@ -168,7 +168,7 @@ export default async function HomePage() {
                   ru: 'Посмотреть тарифы',
                 })}
               </Link>
-              <Link href="/example-verdicts" className="rounded-2xl border border-cyan-300/20 bg-cyan-300/10 px-6 py-4 font-semibold text-cyan-50 transition duration-300 hover:-translate-y-[1px] hover:border-cyan-200/40 hover:bg-cyan-300/15">
+              <Link href="/example-verdicts" className="rounded-2xl border border-cyan-300/20 bg-cyan-300/10 px-5 py-4 text-sm font-semibold text-cyan-50 transition duration-300 hover:-translate-y-[1px] hover:border-cyan-200/40 hover:bg-cyan-300/15 sm:px-6 sm:text-base">
                 {tr(language, {
                   en: 'See example verdicts',
                   pl: 'Zobacz przykładowe werdykty',

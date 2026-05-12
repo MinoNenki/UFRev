@@ -1697,6 +1697,66 @@ body::after {
     transform: none !important;
   }
 }
+
+@media (max-width: 1024px) {
+  body::before {
+    animation: none;
+    opacity: 0.55;
+  }
+
+  body::after {
+    opacity: 0.18;
+    background-size: 56px 56px;
+  }
+
+  .homepage-hero-shell {
+    padding: 20px;
+    border-radius: 28px;
+  }
+
+  .homepage-hero-flare,
+  .homepage-hero-ribbon,
+  .homepage-hero-grid,
+  .spotlight-sweep,
+  .noise-overlay,
+  .hero-orb {
+    display: none !important;
+  }
+
+  .mesh-panel::before {
+    animation: none;
+    opacity: 0.45;
+  }
+
+  .hero-word {
+    filter: blur(0px);
+    transition-duration: 240ms;
+  }
+
+  .hero-headline::after {
+    opacity: 0.68;
+    filter: blur(22px);
+  }
+}
+
+@media (max-width: 640px) {
+  .homepage-hero-shell {
+    padding: 16px;
+  }
+
+  .hero-word-reveal {
+    gap: 0.12em 0.18em;
+  }
+
+  .hero-headline {
+    text-shadow: 0 8px 26px rgba(2, 6, 23, 0.22);
+  }
+
+  .hero-word-current {
+    text-shadow: 0 0 20px rgba(251,191,36,0.18), 0 0 30px rgba(34,211,238,0.12), 0 0 36px rgba(251,113,133,0.12);
+  }
+}
+
 .card {
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.08);

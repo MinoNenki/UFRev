@@ -40,29 +40,28 @@ export default async function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/65 shadow-[0_16px_60px_rgba(2,6,23,0.30)] backdrop-blur-2xl">
       <div className="mx-auto max-w-[1600px] px-4 py-3 text-white sm:px-6 sm:py-4">
-        <div className="flex items-start justify-between gap-3 lg:hidden">
-          <Link href="/" className="group flex min-w-0 flex-1 items-center gap-3">
-            <span className="relative inline-flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-cyan-300/30 bg-[linear-gradient(135deg,rgba(34,211,238,0.95),rgba(96,165,250,0.95),rgba(168,85,247,0.95))] text-sm font-black text-slate-950 shadow-[0_0_40px_rgba(34,211,238,0.25)] transition duration-300 group-hover:scale-105">
+        <div className="flex items-start justify-between gap-2 lg:hidden">
+          <Link href="/" className="group flex min-w-0 flex-1 items-center gap-2.5">
+            <span className="relative inline-flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-cyan-300/30 bg-[linear-gradient(135deg,rgba(34,211,238,0.95),rgba(96,165,250,0.95),rgba(168,85,247,0.95))] text-xs font-black text-slate-950 shadow-[0_0_40px_rgba(34,211,238,0.25)] transition duration-300 group-hover:scale-105">
               <span className="animate-pulse-soft absolute inset-[1px] rounded-[15px] bg-white/20" />
               <span className="relative">AI</span>
             </span>
             <span className="min-w-0">
-              <span className="block truncate text-base font-black leading-none tracking-wide">{SITE.shortName}</span>
-              <span className="mt-1 hidden text-[11px] text-slate-400 sm:block">{tr(language,{en:'Decision engine for e-commerce, startup validation and cost optimization',pl:'Silnik decyzji dla e-commerce, walidacji startupów i optymalizacji kosztów',de:'Decision Engine für E-Commerce, Startup-Validierung und Kostenoptimierung',es:'Motor de decisiones para e-commerce, validación startup y optimización de costes',pt:'Motor de decisão para e-commerce, validação de startup e otimização de custos',ru:'Движок решений для e-commerce, проверки стартапów i optymalizacji затрат'})}</span>
+              <span className="block truncate text-sm font-black leading-none tracking-wide xs:text-base">{SITE.shortName}</span>
             </span>
           </Link>
 
-          <div className="flex shrink-0 items-center gap-2">
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
             <LanguageSwitcher currentLanguage={language} />
             {user ? (
-              <Link href="/dashboard" className="rounded-2xl border border-cyan-300/20 bg-cyan-300/10 px-3 py-2 text-xs font-semibold text-cyan-50 transition hover:border-cyan-200/40 hover:bg-cyan-300/15">{tr(language, { en: 'Dashboard', pl: 'Panel użytkownika', de: 'Dashboard', es: 'Panel', pt: 'Painel', ru: 'Панель' })}</Link>
+              <Link href="/dashboard" className="rounded-2xl border border-cyan-300/20 bg-cyan-300/10 px-2.5 py-2 text-[11px] font-semibold text-cyan-50 transition hover:border-cyan-200/40 hover:bg-cyan-300/15 sm:px-3 sm:text-xs">{tr(language, { en: 'Dashboard', pl: 'Panel', de: 'Dashboard', es: 'Panel', pt: 'Painel', ru: 'Панель' })}</Link>
             ) : (
-              <Link href="/auth/register" className="rounded-2xl bg-[linear-gradient(135deg,rgba(34,211,238,1),rgba(168,85,247,0.9))] px-3 py-2 text-xs font-semibold text-slate-950 shadow-[0_12px_30px_rgba(34,211,238,0.18)]">{tr(language, { en: 'Join', pl: 'Start', de: 'Join', es: 'Crear', pt: 'Entrar', ru: 'Войти' })}</Link>
+              <Link href="/auth/register" className="rounded-2xl bg-[linear-gradient(135deg,rgba(34,211,238,1),rgba(168,85,247,0.9))] px-2.5 py-2 text-[11px] font-semibold text-slate-950 shadow-[0_12px_30px_rgba(34,211,238,0.18)] sm:px-3 sm:text-xs">{tr(language, { en: 'Join', pl: 'Start', de: 'Join', es: 'Crear', pt: 'Entrar', ru: 'Войти' })}</Link>
             )}
           </div>
         </div>
 
-        <div className="mt-3 flex items-center gap-2 overflow-x-auto pb-1 lg:hidden">
+        <div className="mt-3 grid grid-cols-2 gap-2 pb-1 sm:grid-cols-3 lg:hidden">
           <MobileNavLink href="/pricing">{tr(language, { en: 'Pricing', pl: 'Cennik', de: 'Preise', es: 'Precios', pt: 'Preços', ru: 'Тарифы' })}</MobileNavLink>
           <MobileNavLink href="/integrations">{tr(language, { en: 'Integrations', pl: 'Integracje', de: 'Integrationen', es: 'Integraciones', pt: 'Integrações', ru: 'Интеграции' })}</MobileNavLink>
           <MobileNavLink href="/reviews">{tr(language, { en: 'Reviews', pl: 'Opinie', de: 'Bewertungen', es: 'Reseñas', pt: 'Avaliações', ru: 'Отзывы' })}</MobileNavLink>
@@ -127,7 +126,7 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
 
 function MobileNavLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <Link href={href} className="whitespace-nowrap rounded-2xl border border-white/10 bg-[linear-gradient(135deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] px-4 py-2.5 text-sm font-medium text-slate-200 transition duration-300 hover:border-cyan-300/20 hover:bg-white/[0.06] hover:text-white">
+    <Link href={href} className="min-w-0 rounded-2xl border border-white/10 bg-[linear-gradient(135deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] px-3 py-2.5 text-center text-[13px] font-medium leading-tight text-slate-200 transition duration-300 hover:border-cyan-300/20 hover:bg-white/[0.06] hover:text-white sm:px-4 sm:text-sm">
       {children}
     </Link>
   );
