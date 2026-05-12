@@ -30,35 +30,7 @@ export default function PricingCheckoutButton({
 
     setIsLoading(true);
     trackEvent('begin_checkout', { item_key: itemKey });
-
-    try {
-      const res = await fetch('/api/stripe/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ itemKey }),
-      });
-      const data = await res.json();
-
-      if (data?.url) {
-        trackEvent('checkout_redirect', { item_key: itemKey });
-        window.location.href = data.url;
-        return;
-      }
-
-      trackEvent('checkout_error', {
-        item_key: itemKey,
-        message: data?.error || 'Checkout error',
-      });
-      alert(data?.error || 'Checkout error');
-    } catch {
-      trackEvent('checkout_error', {
-        item_key: itemKey,
-        message: 'Checkout error',
-      });
-      alert('Checkout error');
-    } finally {
-      setIsLoading(false);
-    }
+    window.location.href = `/checkout?itemKey=${encodeURIComponent(itemKey)}`;
   }
 
   return (

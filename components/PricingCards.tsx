@@ -8,17 +8,7 @@ export default function PricingCards({ isAuthenticated = false }: { isAuthentica
 
   async function handleCheckout(itemKey: string) {
     setLoadingKey(itemKey);
-    const res = await fetch('/api/stripe/checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ itemKey }),
-    });
-    const data = await res.json();
-    if (data?.url) window.location.href = data.url;
-    else {
-      alert(data?.error || 'Checkout error');
-      setLoadingKey(null);
-    }
+    window.location.href = `/checkout?itemKey=${encodeURIComponent(itemKey)}`;
   }
 
   return (

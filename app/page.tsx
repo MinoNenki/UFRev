@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { SITE } from '@/lib/site';
 import HeroWordReveal from '@/components/HeroWordReveal';
 import InteractiveDemoPreview from '@/components/InteractiveDemoPreview';
+import ExampleVerdictShowcase from '@/components/ExampleVerdictShowcase';
 import DonutChart from '@/components/pro-ui/DonutChart';
 import InsightPanel from '@/components/pro-ui/InsightPanel';
 import MetricCard from '@/components/pro-ui/MetricCard';
@@ -12,12 +13,12 @@ import { tr } from '@/lib/i18n';
 import { getLanguage } from '@/lib/i18n-server';
 
 export const metadata: Metadata = {
-  title: 'Product Review, Ecommerce Validation and Dropshipping Checks',
-  description: 'Review products, supplier offers, landing pages, invoices and ecommerce costs with AI. UFREV.com helps validate dropshipping ideas, product pages and pricing before you scale.',
+  title: 'UFREV.com - BUY TEST SKIP before you spend budget',
+  description: 'Check product, store or offer before you lose money. Get one clear AI verdict: BUY, TEST or SKIP with the next safest move.',
   alternates: { canonical: '/' },
   openGraph: {
-    title: 'UFREV.com - Product Review, Ecommerce Validation and Dropshipping Checks',
-    description: 'Review products, supplier offers, landing pages, invoices and ecommerce costs with AI before you spend more budget.',
+    title: 'UFREV.com - BUY TEST SKIP before you spend budget',
+    description: 'Check product, store or offer before you lose money. One clear AI verdict plus a safer next move.',
     url: SITE.url,
   },
 };
@@ -113,22 +114,22 @@ export default async function HomePage() {
 
         <div className="relative grid gap-8 xl:grid-cols-[1.04fr_0.96fr]">
           <div>
-            <div className="glass-chip mb-4 border-cyan-300/30 bg-cyan-300/10 text-cyan-100 shadow-[0_14px_40px_rgba(34,211,238,0.12)]">
+            <div className="glass-chip mb-4 border-cyan-200/40 bg-[linear-gradient(135deg,rgba(34,211,238,0.22),rgba(16,185,129,0.18),rgba(168,85,247,0.14))] text-cyan-50 shadow-[0_14px_40px_rgba(34,211,238,0.16)]">
               {tr(language, {
-                en: 'AI decision engine for dropshipping, e-commerce & startups',
-                pl: 'Silnik decyzji AI dla dropshippingu, e-commerce i startupów',
+                en: 'AI decision support for products, offers and costs',
+                pl: 'AI do podejmowania decyzji o produktach, ofertach i kosztach',
                 de: 'Decision Intelligence zur Verlustreduktion und Chancenfindung',
                 es: 'Inteligencia de decisión para reducir pérdidas y encontrar upside',
                 pt: 'Inteligência de decisão criada para reduzir perdas e encontrar upside',
                 ru: 'Интеллект решений, созданный для снижения потерь и поиска роста',
               })}
             </div>
-            <h1 className="hero-headline text-balance max-w-4xl text-[clamp(3.2rem,5.4vw,5.8rem)] font-black leading-[0.9] tracking-[-0.055em] text-white [text-wrap:balance]">
+            <h1 className="hero-headline text-balance max-w-4xl text-[clamp(2.75rem,10vw,5.8rem)] font-black leading-[0.92] tracking-[-0.055em] text-white [text-wrap:balance] sm:text-[clamp(3.2rem,5.4vw,5.8rem)]">
               <HeroWordReveal
-                durationMs={15000}
+                durationMs={8500}
                 text={tr(language, {
-                  en: 'Stop losing money on bad products.',
-                  pl: 'Przestań tracić pieniądze na złe produkty.',
+                  en: 'Check product, store or offer before you lose money.',
+                  pl: 'Sprawdź produkt, sklep lub ofertę zanim stracisz pieniądze.',
                   de: 'Hör auf, Geld mit schlechten Produkten zu verlieren.',
                   es: 'Deja de perder dinero con productos equivocados.',
                   pt: 'Para de perder dinheiro com produtos errados.',
@@ -138,8 +139,8 @@ export default async function HomePage() {
             </h1>
             <p className="mt-6 max-w-3xl text-[1.04rem] leading-8 text-slate-300 sm:text-[1.12rem] sm:leading-9">
               {tr(language, {
-                en: 'Analyze any product before you spend money. Get an AI decision: BUY, TEST, or SKIP — with real margin, risk insights, and a safer next step.',
-                pl: 'Przeanalizuj każdy produkt zanim wydasz pieniądze. Dostań decyzję AI: BUY, TEST lub SKIP — z realną marżą, analizą ryzyka i bezpieczniejszym kolejnym krokiem.',
+                en: 'Paste link, offer or screenshot and get one clear decision: BUY, TEST or SKIP. You instantly see risk and the next move, so you stop burning ad budget blindly.',
+                pl: 'Wklej link, ofertę albo screenshot i dostajesz jedną jasną decyzję: BUY, TEST albo SKIP. Od razu widzisz ryzyko i kolejny ruch, więc przestajesz ślepo przepalać budżet reklamowy.',
                 de: 'Analysiere jedes Produkt bevor du Geld ausgibst. Erhalte eine KI-Entscheidung: BUY, TEST oder SKIP — mit echten Margen- und Risikoeinblicken.',
                 es: 'Analiza cualquier producto antes de gastar dinero. Obtén una decisión AI: BUY, TEST o SKIP — con margen real e insights de riesgo.',
                 pt: 'Analisa qualquer produto antes de gastar dinheiro. Obtém uma decisão AI: BUY, TEST ou SKIP — com margem real e análise de risco.',
@@ -149,8 +150,8 @@ export default async function HomePage() {
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/dashboard" className="rounded-2xl bg-[linear-gradient(135deg,rgba(34,211,238,1),rgba(16,185,129,0.95),rgba(59,130,246,0.96))] px-6 py-4 font-semibold text-slate-950 shadow-[0_22px_70px_rgba(34,211,238,0.28)] transition duration-300 hover:scale-[1.02] hover:shadow-[0_28px_80px_rgba(34,211,238,0.34)]">
                 {tr(language, {
-                  en: '👉 Analyze product now — free',
-                  pl: '👉 Analizuj produkt teraz — za darmo',
+                  en: '👉 Paste link and get verdict now',
+                  pl: '👉 Wklej link i odbierz werdykt teraz',
                   de: '👉 Produkt jetzt analysieren — kostenlos',
                   es: '👉 Analizar producto ahora — gratis',
                   pt: '👉 Analisar produto agora — grátis',
@@ -176,52 +177,33 @@ export default async function HomePage() {
             </div>
             <div className="mt-4 grid gap-3 sm:grid-cols-3">
               {[
-                tr(language, { en: '1 input: URL, oferta, dokument lub plik', pl: '1 input: URL, oferta, dokument albo plik' }),
-                tr(language, { en: '1 output: BUY, TEST, SKIP or cut the cost', pl: '1 wynik: BUY, TEST, SKIP albo tnij koszt' }),
-                tr(language, { en: 'Built to stop budget burn in e-commerce and beyond', pl: 'Zbudowane, by zatrzymać przepalanie budżetu w e-commerce i nie tylko' }),
+                tr(language, { en: 'Step 1: paste URL, offer or screenshot', pl: 'Krok 1: wklej URL, ofertę lub screenshot' }),
+                tr(language, { en: 'Step 2: get BUY, TEST or SKIP in one screen', pl: 'Krok 2: dostajesz BUY, TEST albo SKIP na jednym ekranie' }),
+                tr(language, { en: 'Step 3: know if you scale ads or stop', pl: 'Krok 3: wiesz czy skalować reklamy czy odpuścić' }),
               ].map((item) => (
                 <div key={item} className="rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-3 text-sm text-slate-200 shadow-[0_12px_30px_rgba(2,6,23,0.14)]">
                   {item}
                 </div>
               ))}
             </div>
-            <div className="mt-5 flex flex-wrap gap-2">
-              {[
-                tr(language, {
-                  en: 'AI vision for screenshots',
-                  pl: 'AI vision dla screenshotów',
-                  de: 'AI-Vision für Screenshots',
-                  es: 'AI vision para capturas',
-                  pt: 'IA visual para capturas',
-                  ru: 'AI-зрение для скриншотов',
-                }),
-                tr(language, {
-                  en: 'Weighted video analysis',
-                  pl: 'Ważona analiza wideo',
-                  de: 'Gewichtete Videoanalyse',
-                  es: 'Análisis de vídeo ponderado',
-                  pt: 'Análise de vídeo ponderada',
-                  ru: 'Взвешенный анализ видео',
-                }),
-                tr(language, {
-                  en: 'PDF & document reading',
-                  pl: 'Odczyt PDF i dokumentów',
-                  de: 'PDF- & Dokumentlese',
-                  es: 'Lectura de PDF y documentos',
-                  pt: 'Leitura de PDF e documentos',
-                  ru: 'Чтение PDF и документов',
-                }),
-                tr(language, {
-                  en: 'Protected pricing logic',
-                  pl: 'Chroniona logika cenowa',
-                  de: 'Geschützte Preislogik',
-                  es: 'Lógica de precios protegida',
-                  pt: 'Lógica de preços protegida',
-                  ru: 'Защищённая ценовая логика',
-                }),
-              ].map((item) => (
-                <span key={item} className="glass-chip animate-pulse-soft border-white/10 bg-white/[0.04] text-slate-100">{item}</span>
-              ))}
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              <div className="rounded-2xl border border-cyan-300/20 bg-cyan-300/10 p-4">
+                <div className="text-[11px] uppercase tracking-[0.2em] text-cyan-100">{tr(language, { en: 'What you can check', pl: 'Co możesz sprawdzić' })}</div>
+                <div className="mt-2 text-base font-semibold text-white">
+                  {tr(language, {
+                    en: 'Product, store, offer, invoice, screenshot or PDF',
+                    pl: 'Produkt, sklep, oferta, faktura, screenshot albo PDF',
+                  })}
+                </div>
+              </div>
+              <div className="rounded-2xl border border-emerald-300/20 bg-emerald-300/10 p-4">
+                <div className="text-[11px] uppercase tracking-[0.2em] text-emerald-100">{tr(language, { en: 'What you get back', pl: 'Co dostajesz z powrotem' })}</div>
+                <ul className="mt-2 space-y-1 text-sm text-emerald-50">
+                  <li>{tr(language, { en: 'One clear verdict: BUY, TEST or SKIP', pl: 'Jeden jasny werdykt: BUY, TEST albo SKIP' })}</li>
+                  <li>{tr(language, { en: 'Risk and margin visibility', pl: 'Widoczność ryzyka i marży' })}</li>
+                  <li>{tr(language, { en: 'A practical next step instead of chaos', pl: 'Praktyczny kolejny krok zamiast chaosu' })}</li>
+                </ul>
+              </div>
             </div>
           </div>
 
@@ -269,9 +251,13 @@ export default async function HomePage() {
                 </div>
               </div>
               <div className="mt-4 rounded-[28px] border border-fuchsia-300/20 bg-[linear-gradient(135deg,rgba(168,85,247,0.18),rgba(15,23,42,0.86),rgba(34,211,238,0.08))] p-5 shadow-[0_20px_60px_rgba(88,28,135,0.18)]">
-                <div className="text-xs uppercase tracking-[0.22em] text-fuchsia-200">{tr(language, { en: 'Video analysis and token protection', pl: 'Analiza wideo i ochrona tokenów' })}</div>
-                <div className="mt-3 text-[1.35rem] font-black leading-7 tracking-[-0.02em] text-white">{tr(language, { en: 'Reads video frames, hook, product demo, and message clarity.', pl: 'Czyta klatki wideo, hook, demo produktu i klarowność przekazu.' })}</div>
-                <p className="mt-3 text-sm leading-7 text-slate-200">{tr(language, { en: 'UFREV already supports MP4, MOV, WEBM, and AVI analysis through extracted preview frames and metadata. Video work uses more weighted AI tokens than light text or image tasks, so heavier media stays profitable instead of quietly eating your margin.', pl: 'UFREV już obsługuje analizę MP4, MOV, WEBM i AVI przez wyodrębnione klatki podglądowe oraz metadane. Praca na wideo zużywa więcej ważonych tokenów AI niż lekki tekst lub obraz, dzięki czemu cięższe media pozostają opłacalne zamiast po cichu zjadać marżę.' })}</p>
+                <div className="text-xs uppercase tracking-[0.22em] text-fuchsia-200">{tr(language, { en: 'What user sees at the end', pl: 'Co user dostaje na końcu' })}</div>
+                <div className="mt-3 text-[1.35rem] font-black leading-7 tracking-[-0.02em] text-white">{tr(language, { en: 'One decision screen: BUY, TEST or SKIP plus risk and next step.', pl: 'Jeden ekran decyzji: BUY, TEST albo SKIP plus ryzyko i następny krok.' })}</div>
+                <div className="mt-3 grid gap-2 text-sm text-slate-200">
+                  <div>• {tr(language, { en: 'No long technical analysis to decode', pl: 'Bez długiej technicznej analizy do rozszyfrowania' })}</div>
+                  <div>• {tr(language, { en: 'Clear action before spending more budget', pl: 'Jasna akcja przed wydaniem kolejnego budżetu' })}</div>
+                  <div>• {tr(language, { en: 'Useful for products, offers, stores and costs', pl: 'Przydatne dla produktów, ofert, sklepów i kosztów' })}</div>
+                </div>
               </div>
             </div>
 
@@ -315,15 +301,15 @@ export default async function HomePage() {
               tone="cyan"
             />
             <MetricCard
-              label={tr(language, { en: 'Monetization', pl: 'Monetyzacja', de: 'Monetarisierung', es: 'Monetización', pt: 'Monetização', ru: 'Монетизация' })}
-              value={tr(language, { en: 'Free + Starter + Pro + Scale', pl: 'Free + Starter + Pro + Scale', de: 'Abos + AI-Tokens + Upsells', es: 'Suscripciones + tokens AI + upsells', pt: 'Subscrições + tokens AI + upsells', ru: 'Подписки + AI-токены + апселлы' })}
-              delta={tr(language, { en: 'Affordable path from first check to full ops', pl: 'Przystępna ścieżka od pierwszego checku do pełnej operacji', de: 'Für MRR gebaut', es: 'Diseñado para MRR', pt: 'Feito para MRR', ru: 'Построено для MRR' })}
+              label={tr(language, { en: 'What you get', pl: 'Co dostajesz', de: 'Monetarisierung', es: 'Monetización', pt: 'Monetização', ru: 'Монетизация' })}
+              value={tr(language, { en: 'Decision + risk + next move', pl: 'Decyzja + ryzyko + kolejny ruch', de: 'Abos + AI-Tokens + Upsells', es: 'Suscripciones + tokens AI + upsells', pt: 'Subscrições + tokens AI + upsells', ru: 'Подписки + AI-токены + апселлы' })}
+              delta={tr(language, { en: 'Built for quick and clearer decisions', pl: 'Zaprojektowane pod szybsze i jaśniejsze decyzje', de: 'Für MRR gebaut', es: 'Diseñado para MRR', pt: 'Feito para MRR', ru: 'Построено для MRR' })}
               tone="emerald"
             />
             <MetricCard
-              label={tr(language, { en: 'Coverage', pl: 'Zakres', de: 'Abdeckung', es: 'Cobertura', pt: 'Cobertura', ru: 'Охват' })}
-              value={tr(language, { en: 'Products, sourcing, costs, and startup ideas', pl: 'Produkty, sourcing, koszty i pomysły startupowe', de: 'Produkte + Kosten + Startup-Ideen', es: 'Productos + costes + ideas startup', pt: 'Produtos + custos + ideias de startup', ru: 'Товары + затраты + идеи стартапов' })}
-              delta={tr(language, { en: 'Works for users, stores, and firms', pl: 'Działa dla userów, sklepów i firm', de: 'Mehr Rückkehrgründe', es: 'Más razones para volver', pt: 'Mais motivos para voltar', ru: 'Больше причин вернуться' })}
+              label={tr(language, { en: 'Main effect', pl: 'Główny efekt', de: 'Abdeckung', es: 'Cobertura', pt: 'Cobertura', ru: 'Охват' })}
+              value={tr(language, { en: 'Less budget burn, faster learning', pl: 'Mniej przepalonego budżetu, szybsza nauka', de: 'Produkte + Kosten + Startup-Ideen', es: 'Productos + costes + ideas startup', pt: 'Produtos + custos + ideias de startup', ru: 'Товары + затраты + идеи стартапов' })}
+              delta={tr(language, { en: 'Know what to test next and what to skip now', pl: 'Wiesz co testować dalej, a co odpuścić od razu', de: 'Mehr Rückkehrgründe', es: 'Más razones para volver', pt: 'Mais motivos para voltar', ru: 'Больше причин вернуться' })}
               tone="violet"
             />
           </div>
@@ -341,6 +327,10 @@ export default async function HomePage() {
             liveCase={latestPreviewCase}
           />
         </div>
+      </section>
+
+      <section className="mt-8">
+        <ExampleVerdictShowcase language={language} />
       </section>
 
       <section className="mt-8 rounded-[32px] border border-cyan-300/20 bg-[linear-gradient(135deg,rgba(34,211,238,0.12),rgba(16,185,129,0.08),rgba(2,6,23,0.92))] p-6 sm:p-8 shadow-[0_20px_70px_rgba(34,211,238,0.12)]">
