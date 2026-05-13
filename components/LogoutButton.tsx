@@ -4,7 +4,13 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createSupabaseBrowserClient } from '@/lib/supabase-browser';
 
-export default function LogoutButton({ label }: { label: string }) {
+type LogoutButtonProps = {
+  label: string;
+  loadingLabel?: string;
+  className?: string;
+};
+
+export default function LogoutButton({ label, loadingLabel = '...', className = '' }: LogoutButtonProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -41,9 +47,9 @@ export default function LogoutButton({ label }: { label: string }) {
       type="button"
       onClick={handleLogout}
       disabled={loading}
-      className="rounded-2xl bg-[linear-gradient(135deg,rgba(34,211,238,1),rgba(59,130,246,0.95))] px-4 py-2.5 text-sm font-semibold text-slate-950 shadow-[0_12px_30px_rgba(34,211,238,0.18)] transition hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-70"
+      className={`rounded-2xl bg-[linear-gradient(135deg,rgba(34,211,238,1),rgba(59,130,246,0.95))] px-4 py-2.5 text-sm font-semibold text-slate-950 shadow-[0_12px_30px_rgba(34,211,238,0.18)] transition hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-70 ${className}`}
     >
-      {loading ? '...' : label}
+      {loading ? loadingLabel : label}
     </button>
   );
 }

@@ -119,9 +119,10 @@ export function sanitizeProviderConfig(providerType: string, rawConfig: unknown)
 
 function mergeGoogleAdSenseConfig(rawConfig: unknown): GoogleAdSenseConfig {
   const config = sanitizeProviderConfig('google_adsense', rawConfig) as GoogleAdSenseConfig;
+  const resolvedPublisherId = config.publisherId || env.adsensePublisherId;
   return {
-    publisherId: config.publisherId || env.adsensePublisherId,
-    clientId: config.clientId || env.adsenseClientId,
+    publisherId: resolvedPublisherId,
+    clientId: config.clientId || env.adsenseClientId || resolvedPublisherId,
     displaySlotId: config.displaySlotId || env.adsenseDisplaySlotId,
     autoAdsEnabled: Boolean(config.autoAdsEnabled),
     managementAccessToken: config.managementAccessToken || env.adsenseManagementAccessToken,
@@ -145,11 +146,12 @@ function mergeGoogleAdsConfig(rawConfig: unknown): GoogleAdsConfig {
 async function syncGoogleAdSense(rawConfig: unknown): Promise<ProviderSyncResult> {
   const checkedAt = new Date().toISOString();
   const config = mergeGoogleAdSenseConfig(rawConfig);
-  const displayReady = Boolean(config.clientId && config.displaySlotId);
+  const effectiveClientId = config.clientId || config.publisherId;
+  const displayReady = Boolean(effectiveClientId && config.displaySlotId);
   const warnings: string[] = [];
 
   if (!config.publisherId) warnings.push('Missing publisher ID.');
-  if (!config.clientId) warnings.push('Missing AdSense client ID.');
+  if (!effectiveClientId) warnings.push('Missing AdSense client ID.');
   if (!config.displaySlotId) warnings.push('Missing display slot ID.');
 
   if (!config.managementAccessToken) {
@@ -167,7 +169,7 @@ async function syncGoogleAdSense(rawConfig: unknown): Promise<ProviderSyncResult
       },
       metadata: {
         publisherId: config.publisherId || '',
-        clientId: config.clientId || '',
+        clientId: effectiveClientId || '',
         displaySlotId: config.displaySlotId || '',
         autoAdsEnabled: Boolean(config.autoAdsEnabled),
         tokenPreview: withMaskedSecret(config.managementAccessToken || ''),
@@ -199,7 +201,7 @@ async function syncGoogleAdSense(rawConfig: unknown): Promise<ProviderSyncResult
       metadata: {
         providerError: body.slice(0, 500),
         publisherId: config.publisherId || '',
-        clientId: config.clientId || '',
+        clientId: effectiveClientId || '',
         displaySlotId: config.displaySlotId || '',
       },
       warnings,
@@ -227,7 +229,7 @@ async function syncGoogleAdSense(rawConfig: unknown): Promise<ProviderSyncResult
       accountState: accounts[0]?.state || '',
       timeZone: accounts[0]?.timeZone || '',
       publisherId: config.publisherId || '',
-      clientId: config.clientId || '',
+      clientId: effectiveClientId || '',
       displaySlotId: config.displaySlotId || '',
       autoAdsEnabled: Boolean(config.autoAdsEnabled),
       tokenPreview: withMaskedSecret(config.managementAccessToken || ''),

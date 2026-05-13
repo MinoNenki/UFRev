@@ -129,6 +129,7 @@ export default async function PricingPage() {
       <section className="mt-5 rounded-[24px] border border-cyan-300/20 bg-cyan-300/10 p-4 md:hidden">
         <div className="text-[11px] uppercase tracking-[0.22em] text-cyan-100">{tr(language, { en: 'Mobile quick pricing', pl: 'Szybki cennik mobile' })}</div>
         <h2 className="mt-2 text-lg font-black text-white">{tr(language, { en: 'Pick plan in under 60 seconds', pl: 'Wybierz plan w mniej niż 60 sekund' })}</h2>
+        <p className="mt-2 text-sm leading-6 text-cyan-50">{tr(language, { en: 'Every tier also supports video analysis, not only text and screenshots.', pl: 'Każdy poziom obsługuje też analizę wideo, nie tylko tekst i screenshoty.' })}</p>
         <div className="mt-3 grid gap-2 text-sm text-slate-100">
           <div className="rounded-2xl border border-white/10 bg-slate-950/45 px-3 py-3">{tr(language, { en: 'Free = first tests', pl: 'Free = pierwsze testy' })}</div>
           <div className="rounded-2xl border border-white/10 bg-slate-950/45 px-3 py-3">{tr(language, { en: 'Starter/Pro = regular work', pl: 'Starter/Pro = regularna praca' })}</div>
@@ -145,6 +146,7 @@ export default async function PricingPage() {
             </div>
             <div className="mt-2 text-xs text-slate-400">{plan.monthlyCredits} {tr(language, { en: 'AI tokens', pl: 'tokenów AI' })} / {plan.monthlyAnalyses} {tr(language, { en: 'analyses', pl: 'analiz' })}</div>
             <div className="mt-3 text-sm leading-6 text-slate-300 line-clamp-3">{planNote(plan.key)}</div>
+            <div className="mt-3 rounded-xl border border-cyan-300/20 bg-cyan-300/10 px-3 py-2 text-xs font-semibold text-cyan-50">{tr(language, { en: 'Also includes video analysis', pl: 'Obejmuje także analizę wideo' })}</div>
             {plan.key === 'free'
               ? <Link href={isAuthenticated ? '/dashboard' : '/auth/register'} className="mt-4 block w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-center text-sm font-semibold text-white">{tr(language, { en: 'Start free', pl: 'Zacznij za darmo' })}</Link>
               : <PricingCheckoutButton
@@ -155,6 +157,34 @@ export default async function PricingPage() {
                   loadingLabel={tr(language, { en: 'Redirecting...', pl: 'Przekierowanie...' })}
                   className={`mt-4 block w-full rounded-2xl px-4 py-3 text-center text-sm font-semibold ${plan.key === 'pro' ? 'bg-cyan-300 text-slate-950' : 'border border-white/10 bg-white/[0.04] text-white'}`}
                 />}
+          </div>
+        ))}
+      </section>
+
+      <section className="mt-4 grid gap-3 md:hidden">
+        <div className="rounded-[24px] border border-amber-300/20 bg-amber-300/10 p-4">
+          <div className="text-[11px] uppercase tracking-[0.22em] text-amber-100">{tr(language, { en: 'Other micro-payments', pl: 'Inne mikropłatności' })}</div>
+          <h2 className="mt-2 text-lg font-black text-white">{tr(language, { en: 'One-time AI token packs', pl: 'Jednorazowe pakiety tokenów AI' })}</h2>
+          <p className="mt-2 text-sm leading-6 text-amber-50">{tr(language, { en: 'Good when you need extra analyses without changing your subscription. Works for text, files and video analysis.', pl: 'Dobre, gdy potrzebujesz dodatkowych analiz bez zmiany subskrypcji. Działa dla tekstu, plików i analizy wideo.' })}</p>
+        </div>
+
+        {CREDIT_PACK_ORDER.map((pack) => (
+          <div key={`mobile-pack-${pack.key}`} className="rounded-[24px] border border-white/10 bg-slate-950/60 p-4 shadow-[0_18px_60px_rgba(2,6,23,0.35)]">
+            <div className="flex items-center justify-between gap-2">
+              <div className="text-[11px] uppercase tracking-[0.22em] text-amber-200">{pack.name}</div>
+              <div className="text-3xl font-black text-white">{pack.priceLabel}</div>
+            </div>
+            <div className="mt-2 text-xs text-slate-400">{pack.credits} {tr(language, { en: 'one-time AI tokens', pl: 'jednorazowych tokenów AI' })}</div>
+            <div className="mt-3 text-sm leading-6 text-slate-300 line-clamp-3">{pack.description}</div>
+            <div className="mt-3 rounded-xl border border-cyan-300/20 bg-cyan-300/10 px-3 py-2 text-xs font-semibold text-cyan-50">{tr(language, { en: 'Can be used for video analysis too', pl: 'Można wykorzystać również do analizy wideo' })}</div>
+            <PricingCheckoutButton
+              itemKey={pack.key}
+              isAuthenticated={isAuthenticated}
+              checkoutLabel={tr(language, { en: 'Buy AI tokens', pl: 'Kup tokeny AI' })}
+              loginLabel={tr(language, { en: 'Log in to buy', pl: 'Zaloguj się, aby kupić' })}
+              loadingLabel={tr(language, { en: 'Redirecting...', pl: 'Przekierowanie...' })}
+              className="mt-4 block w-full rounded-2xl bg-amber-300 px-4 py-3 text-center text-sm font-semibold text-slate-950"
+            />
           </div>
         ))}
       </section>

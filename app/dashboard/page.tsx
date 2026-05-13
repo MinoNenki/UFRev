@@ -12,6 +12,7 @@ import { tr } from '@/lib/i18n';
 import { getLanguage } from '@/lib/i18n-server';
 import { getPlanDisplayName } from '@/lib/plans';
 import AdBanner from '@/components/ads/AdBanner';
+import LogoutButton from '@/components/LogoutButton';
 
 export default async function DashboardPage() {
   const language = await getLanguage();
@@ -185,6 +186,13 @@ export default async function DashboardPage() {
               <div className="rounded-2xl border border-white/10 bg-slate-950/45 px-3 py-3 text-sm text-slate-200">
                 {tr(language, { en: 'AI Tokens', pl: 'Tokeny AI' })}: <span className="font-bold text-cyan-200">{profile?.credits_balance ?? 0}</span>
               </div>
+            </div>
+            <div className="mt-3 md:hidden">
+              <LogoutButton
+                label={tr(language, { en: 'Log out', pl: 'Wyloguj się', de: 'Abmelden', es: 'Cerrar sesión', pt: 'Sair', ru: 'Выйść' })}
+                loadingLabel={tr(language, { en: 'Signing out...', pl: 'Wylogowywanie...' })}
+                className="w-full px-4 py-3 text-sm font-black"
+              />
             </div>
           </div>
 

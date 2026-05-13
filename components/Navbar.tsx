@@ -36,6 +36,14 @@ export default async function Navbar() {
     pt: 'Painel',
     ru: 'Панель',
   });
+  const dashboardCtaLabel = tr(language, {
+    en: 'Go to dashboard',
+    pl: 'Wejdź do panelu',
+    de: 'Zum Dashboard',
+    es: 'Ir al panel',
+    pt: 'Ir ao painel',
+    ru: 'Перейти в панель',
+  });
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/65 shadow-[0_16px_60px_rgba(2,6,23,0.30)] backdrop-blur-2xl">
@@ -54,7 +62,7 @@ export default async function Navbar() {
           <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
             <LanguageSwitcher currentLanguage={language} />
             {user ? (
-              <Link href="/dashboard" className="rounded-2xl border border-cyan-300/20 bg-cyan-300/10 px-2.5 py-2 text-[11px] font-semibold text-cyan-50 transition hover:border-cyan-200/40 hover:bg-cyan-300/15 sm:px-3 sm:text-xs">{tr(language, { en: 'Dashboard', pl: 'Panel', de: 'Dashboard', es: 'Panel', pt: 'Painel', ru: 'Панель' })}</Link>
+              <Link href="/dashboard" className="rounded-2xl border border-cyan-300/40 bg-[linear-gradient(135deg,rgba(34,211,238,0.95),rgba(59,130,246,0.95))] px-3 py-2 text-[11px] font-bold text-slate-950 shadow-[0_10px_30px_rgba(34,211,238,0.20)] transition hover:scale-[1.02] hover:border-cyan-200/50 sm:px-3.5 sm:text-xs">{dashboardLabel}</Link>
             ) : (
               <Link href="/auth/register" className="rounded-2xl bg-[linear-gradient(135deg,rgba(34,211,238,1),rgba(168,85,247,0.9))] px-2.5 py-2 text-[11px] font-semibold text-slate-950 shadow-[0_12px_30px_rgba(34,211,238,0.18)] sm:px-3 sm:text-xs">{tr(language, { en: 'Join', pl: 'Start', de: 'Join', es: 'Crear', pt: 'Entrar', ru: 'Войти' })}</Link>
             )}
@@ -68,6 +76,31 @@ export default async function Navbar() {
           <MobileNavLink href="/support">{tr(language, { en: 'Support', pl: 'Wsparcie', de: 'Support', es: 'Soporte', pt: 'Suporte', ru: 'Поддержка' })}</MobileNavLink>
           <MobileNavLink href="/privacy">{tr(language, { en: 'Privacy', pl: 'Prywatność', de: 'Datenschutz', es: 'Privacidad', pt: 'Privacidade', ru: 'Конфиденциальность' })}</MobileNavLink>
           {!isSupabaseConfigured && <MobileNavLink href="/setup">{tr(language, { en: 'Setup', pl: 'Konfiguracja', es: 'Configuración', ru: 'Настройka' })}</MobileNavLink>}
+        </div>
+        {user && (
+          <div className="mt-1.5 flex flex-wrap gap-1.5 pb-1 lg:hidden">
+            <Link href="/dashboard" className="rounded-xl border border-cyan-300/40 bg-[linear-gradient(135deg,rgba(34,211,238,0.95),rgba(59,130,246,0.95))] px-3 py-2 text-[12px] font-bold text-slate-950 shadow-[0_10px_30px_rgba(34,211,238,0.18)]">
+              {dashboardCtaLabel}
+            </Link>
+            {profileRole === 'admin' && (
+              <Link href="/admin" className="rounded-xl border border-fuchsia-300/30 bg-fuchsia-300/10 px-3 py-2 text-[12px] font-semibold text-fuchsia-50">
+                {tr(language, { en: 'Admin', pl: 'Admin', de: 'Admin', es: 'Admin', pt: 'Admin', ru: 'Админ' })}
+              </Link>
+            )}
+            <Link href="/account" className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 text-[12px] font-semibold text-white">
+              {tr(language, { en: 'My account', pl: 'Moje konto', de: 'Mein Konto', es: 'Mi cuenta', pt: 'Minha conta', ru: 'Мой аккаунт' })}
+            </Link>
+            <LogoutButton
+              label={tr(language, { en: 'Log out', pl: 'Wyloguj się', de: 'Abmelden', es: 'Cerrar sesión', pt: 'Sair', ru: 'Выйти' })}
+              loadingLabel={tr(language, { en: 'Signing out...', pl: 'Wylogowywanie...' })}
+              className="px-3 py-2 text-[12px] font-semibold"
+            />
+          </div>
+        )}
+        <div className="mt-1.5 pb-1 lg:hidden">
+          <div className="rounded-2xl border border-cyan-300/30 bg-cyan-300/10 px-3 py-2 text-center text-[11px] font-semibold tracking-[0.08em] text-cyan-100">
+            {tr(language, { en: 'Also analyzes video files', pl: 'Analizuje także pliki wideo', de: 'Analysiert auch Videodateien', es: 'Tambien analiza archivos de video', pt: 'Tambem analisa arquivos de video', ru: 'Анализирует также видеофайлы' })}
+          </div>
         </div>
 
         <div className="hidden lg:flex lg:items-center lg:justify-between lg:gap-4">
@@ -92,11 +125,12 @@ export default async function Navbar() {
             <NavLink href="/privacy">{tr(language, { en: 'Privacy', pl: 'Prywatność', de: 'Datenschutz', es: 'Privacidad', pt: 'Privacidade', ru: 'Конфиденциальность' })}</NavLink>
             {!isSupabaseConfigured && <NavLink href="/setup">{tr(language, { en: 'Setup', pl: 'Konfiguracja', es: 'Configuración', ru: 'Настройka' })}</NavLink>}
             <LanguageSwitcher currentLanguage={language} />
+            <span className="rounded-2xl border border-cyan-300/25 bg-cyan-300/10 px-3 py-2 text-xs font-semibold text-cyan-100">{tr(language, { en: 'Also analyzes video', pl: 'Też analizuje wideo', de: 'Analysiert auch Video', es: 'Tambien analiza video', pt: 'Tambem analisa video', ru: 'Анализирует также видео' })}</span>
             {!isSupabaseConfigured ? (
               <Link href="/setup" className="rounded-2xl bg-[linear-gradient(135deg,rgba(34,211,238,1),rgba(16,185,129,0.95))] px-5 py-3 text-sm font-semibold text-slate-950 shadow-[0_16px_48px_rgba(34,211,238,0.20)] transition hover:scale-[1.02]">{tr(language,{en:'Configure',pl:'Skonfiguruj',de:'Konfigurieren',es:'Configurar',pt:'Configurar',ru:'Настроить'})}</Link>
             ) : user ? (
               <>
-                <Link href="/dashboard" className="rounded-2xl border border-cyan-300/20 bg-cyan-300/10 px-4 py-2.5 text-sm font-semibold text-cyan-50 transition hover:border-cyan-200/40 hover:bg-cyan-300/15">{dashboardLabel}</Link>
+                <Link href="/dashboard" className="rounded-2xl border border-cyan-300/40 bg-[linear-gradient(135deg,rgba(34,211,238,0.98),rgba(59,130,246,0.95))] px-5 py-2.5 text-sm font-black text-slate-950 shadow-[0_18px_42px_rgba(34,211,238,0.22)] transition hover:scale-[1.02] hover:border-cyan-100/60">{dashboardCtaLabel}</Link>
                 {profileRole === 'admin' && (
                   <Link href="/admin" className="rounded-2xl border border-fuchsia-300/30 bg-fuchsia-300/10 px-4 py-2.5 text-sm font-semibold text-fuchsia-50 transition hover:border-fuchsia-200/50 hover:bg-fuchsia-300/15">{tr(language,{en:'Admin',pl:'Admin',de:'Admin',es:'Admin',pt:'Admin',ru:'Админ'})}</Link>
                 )}
