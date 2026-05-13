@@ -24,6 +24,11 @@ export async function GET(req: NextRequest) {
       hasDisplayAds: summary.hasDisplayAds,
       displayInventory: summary.displayInventory,
       rewardProvider: summary.rewardProvider,
+      rewardProviderType: summary.rewardProvider?.providerType ?? null,
+      youtubeVideoId: summary.rewardProvider?.youtubeVideoId ?? null,
+      minWatchPercent: summary.rewardProvider?.minWatchPercent ?? 90,
+      gamNetworkCode: summary.rewardProvider?.gamNetworkCode ?? null,
+      gamAdUnitPath: summary.rewardProvider?.gamAdUnitPath ?? null,
       enabledProviders: enabledProviders.map(p => ({
         id: p.id,
         type: p.provider_type,

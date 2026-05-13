@@ -46,6 +46,8 @@ export type ProviderSyncResult = {
 };
 
 const DEFAULT_AD_PROVIDERS = [
+  { provider_type: 'youtube_rewarded', provider_name: 'YouTube Rewarded Video', description: 'Show a YouTube video — user earns AI tokens after watching to completion' },
+  { provider_type: 'google_ad_manager', provider_name: 'Google Ad Manager (GAM)', description: 'GPT rewarded video ads via Google Ad Manager network code' },
   { provider_type: 'google_adsense', provider_name: 'Google AdSense', description: 'Google publisher monetization and display inventory' },
   { provider_type: 'google_ads', provider_name: 'Google Ads', description: 'Google ads account sync and campaign visibility' },
   { provider_type: 'taboola', provider_name: 'Taboola', description: 'Content discovery and monetization platform' },
@@ -85,6 +87,22 @@ export async function ensureDefaultAdProviders() {
 
 export function sanitizeProviderConfig(providerType: string, rawConfig: unknown) {
   const config = asObject(rawConfig);
+
+  if (providerType === 'youtube_rewarded') {
+    return {
+      youtubeVideoId: asString(config.youtubeVideoId),
+      rewardedEnabled: asBoolean(config.rewardedEnabled),
+      minWatchPercent: typeof config.minWatchPercent === 'number' ? config.minWatchPercent : 90,
+    };
+  }
+
+  if (providerType === 'google_ad_manager') {
+    return {
+      networkCode: asString(config.networkCode),
+      adUnitPath: asString(config.adUnitPath),
+      rewardedEnabled: asBoolean(config.rewardedEnabled),
+    };
+  }
 
   if (providerType === 'google_adsense') {
     const currentSync = asObject(config.sync);
@@ -426,14 +444,22 @@ export function getPublicAdInventory(provider: AdProviderRow) {
 }
 
 export function getRewardCapability(provider: AdProviderRow) {
+  if (!provider.enabled) return false;
   const config = asObject(provider.config_json);
-  return provider.enabled && asBoolean(config.rewardedEnabled);
+  if (provider.provider_type === 'youtube_rewarded') {
+    return asBoolean(config.rewardedEnabled) && Boolean(asString(config.youtubeVideoId));
+  }
+  if (provider.provider_type === 'google_ad_manager') {
+    return asBoolean(config.rewardedEnabled) && Boolean(asString(config.networkCode)) && Boolean(asString(config.adUnitPath));
+  }
+  return asBoolean(config.rewardedEnabled);
 }
 
 export function getProviderSummary(providers: AdProviderRow[]) {
   const enabledProviders = providers.filter((provider) => provider.enabled);
   const displayInventory = enabledProviders.map(getPublicAdInventory).find(Boolean) || null;
   const rewardProvider = enabledProviders.find((provider) => getRewardCapability(provider)) || null;
+  const rewardConfig = rewardProvider ? asObject(rewardProvider.config_json) : null;
 
   return {
     enabledCount: enabledProviders.length,
@@ -443,6 +469,10 @@ export function getProviderSummary(providers: AdProviderRow[]) {
     rewardProvider: rewardProvider ? {
       providerType: rewardProvider.provider_type,
       providerName: rewardProvider.provider_name,
+      youtubeVideoId: rewardProvider.provider_type === 'youtube_rewarded' ? asString(rewardConfig?.youtubeVideoId) : null,
+      minWatchPercent: rewardProvider.provider_type === 'youtube_rewarded' ? (typeof rewardConfig?.minWatchPercent === 'number' ? rewardConfig.minWatchPercent : 90) : 90,
+      gamNetworkCode: rewardProvider.provider_type === 'google_ad_manager' ? asString(rewardConfig?.networkCode) : null,
+      gamAdUnitPath: rewardProvider.provider_type === 'google_ad_manager' ? asString(rewardConfig?.adUnitPath) : null,
     } : null,
   };
 }

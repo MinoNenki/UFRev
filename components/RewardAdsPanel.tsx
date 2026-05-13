@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import type { Language } from '@/lib/i18n';
 import GoogleAdSenseSlot from '@/components/ads/GoogleAdSenseSlot';
+import YoutubeRewardModal from '@/components/ads/YoutubeRewardModal';
 
 type AdInventory = {
   providerType: string;
@@ -26,6 +27,10 @@ export default function RewardAdsPanel({ currentLanguage, initialCredits, watche
   const [displayInventory, setDisplayInventory] = useState<AdInventory | null>(null);
   const [checkingAds, setCheckingAds] = useState(true);
   const [highlighted, setHighlighted] = useState(false);
+  const [rewardProviderType, setRewardProviderType] = useState<string | null>(null);
+  const [youtubeVideoId, setYoutubeVideoId] = useState<string | null>(null);
+  const [minWatchPercent, setMinWatchPercent] = useState(90);
+  const [showVideoModal, setShowVideoModal] = useState(false);
   const watchButtonRef = useRef<HTMLButtonElement | null>(null);
   const rewardClaimsReady = Boolean(rewardToken);
 
@@ -60,6 +65,9 @@ export default function RewardAdsPanel({ currentLanguage, initialCredits, watche
           setHasRewardAds(Boolean(data.hasRewardAds));
           setHasDisplayAds(Boolean(data.hasDisplayAds));
           setDisplayInventory(data.displayInventory || null);
+          setRewardProviderType(data.rewardProviderType || null);
+          setYoutubeVideoId(data.youtubeVideoId || null);
+          setMinWatchPercent(typeof data.minWatchPercent === 'number' ? data.minWatchPercent : 90);
         } else {
           setHasRewardAds(false);
           setHasDisplayAds(false);
@@ -80,6 +88,13 @@ export default function RewardAdsPanel({ currentLanguage, initialCredits, watche
   async function handleWatch() {
     setLoading(true);
     setMessage(null);
+
+    // For YouTube provider — open modal first, tokens claimed on completion
+    if (rewardProviderType === 'youtube_rewarded' && youtubeVideoId) {
+      setLoading(false);
+      setShowVideoModal(true);
+      return;
+    }
 
     try {
       const res = await fetch('/api/rewards/ads', {
@@ -102,6 +117,28 @@ export default function RewardAdsPanel({ currentLanguage, initialCredits, watche
     }
   }
 
+  async function handleVideoComplete() {
+    setShowVideoModal(false);
+    setLoading(true);
+    setMessage(null);
+    try {
+      const res = await fetch('/api/rewards/ads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rewardToken, currentLanguage }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setMessage(data.error || tt(currentLanguage, { en: 'Reward error', pl: 'Błąd nagrody' }));
+        return;
+      }
+      setWatched(data.watchedToday);
+      setCredits(data.creditsBalance);
+      setMessage(data.message);
+    } finally {
+      setLoading(false);
+    }
+  }
   useEffect(() => {
     if (!rewardClaimsReady) {
       setMessage(tt(currentLanguage, {
@@ -155,6 +192,15 @@ export default function RewardAdsPanel({ currentLanguage, initialCredits, watche
 
   return (
     <div id="reward-ads-panel" className={rootClassName}>
+      {showVideoModal && youtubeVideoId && (
+        <YoutubeRewardModal
+          videoId={youtubeVideoId}
+          minWatchPercent={minWatchPercent}
+          onComplete={handleVideoComplete}
+          onClose={() => setShowVideoModal(false)}
+          lang={currentLanguage}
+        />
+      )}
       <div className="mb-3 inline-flex rounded-full border border-amber-300/30 bg-amber-300/10 px-4 py-2 text-sm font-medium text-amber-200">
         {tt(currentLanguage, { en: 'Reward ads', pl: 'Reklamy nagradzane', de: 'Belohnte Anzeigen', es: 'Anuncios con recompensa', pt: 'Anúncios recompensados', ja: '報酬広告', zh: '奖励广告', id: 'Iklan berhadiah', ru: 'Рекламные награды' })}
       </div>
