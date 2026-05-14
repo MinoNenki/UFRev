@@ -622,6 +622,11 @@ create policy "Service role manages referral events" on public.referral_events f
 -- Explicit Data API grants (Supabase rollout: 2026-05-30 / 2026-10-30)
 grant usage on schema public to anon, authenticated, service_role;
 
+-- Keep anon least-privilege and expose only selected public resources.
+revoke all on all tables in schema public from anon;
+revoke all on all sequences in schema public from anon;
+revoke all on all functions in schema public from anon;
+
 grant select on public.leaderboard to anon;
 grant select on public.reviews to anon;
 grant insert on public.reviews to anon;

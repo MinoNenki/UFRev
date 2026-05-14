@@ -5,6 +5,11 @@ begin;
 
 grant usage on schema public to anon, authenticated, service_role;
 
+-- Reset anonymous role to least privilege before applying explicit public access grants.
+revoke all on all tables in schema public from anon;
+revoke all on all sequences in schema public from anon;
+revoke all on all functions in schema public from anon;
+
 -- Keep public website/API behaviors that intentionally allow unauthenticated access.
 grant select on table public.leaderboard to anon;
 grant select, insert on table public.reviews to anon;
