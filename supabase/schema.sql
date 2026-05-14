@@ -618,3 +618,36 @@ drop policy if exists "Service role manages referral events" on public.referral_
 
 create policy "Users can read own referral events" on public.referral_events for select using (auth.uid() = referrer_user_id or auth.uid() = referred_user_id);
 create policy "Service role manages referral events" on public.referral_events for all using (auth.role() = 'service_role') with check (auth.role() = 'service_role');
+
+-- Explicit Data API grants (Supabase rollout: 2026-05-30 / 2026-10-30)
+grant usage on schema public to anon, authenticated, service_role;
+
+grant select on public.leaderboard to anon;
+grant select on public.reviews to anon;
+grant insert on public.reviews to anon;
+grant insert on public.support_messages to anon;
+grant select on public.ad_providers_config to anon;
+
+grant select, insert, update, delete on all tables in schema public to authenticated;
+grant select, insert, update, delete on all tables in schema public to service_role;
+
+grant usage, select on all sequences in schema public to authenticated;
+grant usage, select on all sequences in schema public to service_role;
+
+grant execute on all functions in schema public to authenticated;
+grant execute on all functions in schema public to service_role;
+
+alter default privileges for role postgres in schema public
+grant select, insert, update, delete on tables to authenticated;
+alter default privileges for role postgres in schema public
+grant select, insert, update, delete on tables to service_role;
+
+alter default privileges for role postgres in schema public
+grant usage, select on sequences to authenticated;
+alter default privileges for role postgres in schema public
+grant usage, select on sequences to service_role;
+
+alter default privileges for role postgres in schema public
+grant execute on functions to authenticated;
+alter default privileges for role postgres in schema public
+grant execute on functions to service_role;

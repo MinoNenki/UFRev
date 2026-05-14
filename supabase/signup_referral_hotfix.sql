@@ -39,6 +39,9 @@ create table if not exists public.referral_events (
   rewarded_at timestamptz
 );
 
+grant select, insert, update, delete on table public.referral_events to authenticated;
+grant select, insert, update, delete on table public.referral_events to service_role;
+
 create or replace function public.handle_new_user() returns trigger language plpgsql security definer as $$
 declare
   v_user_meta jsonb := coalesce(new.raw_user_meta_data, '{}'::jsonb);
@@ -113,3 +116,6 @@ $$;
 
 drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created after insert on auth.users for each row execute function public.handle_new_user();
+
+grant execute on function public.handle_new_user() to authenticated;
+grant execute on function public.handle_new_user() to service_role;

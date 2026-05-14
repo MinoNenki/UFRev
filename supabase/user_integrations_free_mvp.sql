@@ -22,6 +22,9 @@ create table if not exists public.user_integration_settings (
   updated_at timestamptz not null default now()
 );
 
+grant select, insert, update, delete on table public.user_integration_settings to authenticated;
+grant select, insert, update, delete on table public.user_integration_settings to service_role;
+
 alter table public.user_integration_settings enable row level security;
 
 drop policy if exists "Users can read own integration settings" on public.user_integration_settings;
