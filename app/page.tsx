@@ -205,6 +205,21 @@ export default async function HomePage() {
                 </ul>
               </div>
             </div>
+            <div className="mt-3 rounded-2xl border border-sky-300/30 bg-[linear-gradient(135deg,rgba(56,189,248,0.18),rgba(14,116,144,0.16),rgba(15,23,42,0.7))] p-4 shadow-[0_16px_45px_rgba(14,165,233,0.18)]">
+              <div className="text-[11px] uppercase tracking-[0.22em] text-sky-100">{tr(language, { en: 'What makes UFREV different', pl: 'Co wyróżnia UFREV' })}</div>
+              <div className="mt-2 text-base font-black leading-6 text-white sm:text-lg">
+                {tr(language, {
+                  en: 'One engine reads URL, screenshots, PDF, invoices and video files, then returns one clear decision screen.',
+                  pl: 'Jeden silnik czyta URL, screenshoty, PDF, faktury i pliki wideo, a potem zwraca jeden jasny ekran decyzji.',
+                })}
+              </div>
+              <p className="mt-2 text-sm leading-6 text-sky-50/90">
+                {tr(language, {
+                  en: 'You get BUY, TEST or SKIP with risk context and the safest next move before you spend more budget.',
+                  pl: 'Dostajesz BUY, TEST albo SKIP z kontekstem ryzyka i najbezpieczniejszym kolejnym krokiem, zanim wydasz kolejny budżet.',
+                })}
+              </p>
+            </div>
           </div>
 
             <div className="hidden content-start gap-5 md:grid">

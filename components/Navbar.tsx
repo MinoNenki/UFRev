@@ -97,11 +97,6 @@ export default async function Navbar() {
             />
           </div>
         )}
-        <div className="mt-1.5 pb-1 lg:hidden">
-          <div className="rounded-2xl border border-cyan-300/30 bg-cyan-300/10 px-3 py-2 text-center text-[11px] font-semibold tracking-[0.08em] text-cyan-100">
-            {tr(language, { en: 'Also analyzes video files', pl: 'Analizuje także pliki wideo', de: 'Analysiert auch Videodateien', es: 'Tambien analiza archivos de video', pt: 'Tambem analisa arquivos de video', ru: 'Анализирует также видеофайлы' })}
-          </div>
-        </div>
 
         <div className="hidden lg:flex lg:items-center lg:justify-between lg:gap-4">
           <div className="flex items-center justify-between gap-4">
@@ -125,7 +120,6 @@ export default async function Navbar() {
             <NavLink href="/privacy">{tr(language, { en: 'Privacy', pl: 'Prywatność', de: 'Datenschutz', es: 'Privacidad', pt: 'Privacidade', ru: 'Конфиденциальность' })}</NavLink>
             {!isSupabaseConfigured && <NavLink href="/setup">{tr(language, { en: 'Setup', pl: 'Konfiguracja', es: 'Configuración', ru: 'Настройka' })}</NavLink>}
             <LanguageSwitcher currentLanguage={language} />
-            <span className="rounded-2xl border border-cyan-300/25 bg-cyan-300/10 px-3 py-2 text-xs font-semibold text-cyan-100">{tr(language, { en: 'Also analyzes video', pl: 'Też analizuje wideo', de: 'Analysiert auch Video', es: 'Tambien analiza video', pt: 'Tambem analisa video', ru: 'Анализирует также видео' })}</span>
             {!isSupabaseConfigured ? (
               <Link href="/setup" className="rounded-2xl bg-[linear-gradient(135deg,rgba(34,211,238,1),rgba(16,185,129,0.95))] px-5 py-3 text-sm font-semibold text-slate-950 shadow-[0_16px_48px_rgba(34,211,238,0.20)] transition hover:scale-[1.02]">{tr(language,{en:'Configure',pl:'Skonfiguruj',de:'Konfigurieren',es:'Configurar',pt:'Configurar',ru:'Настроить'})}</Link>
             ) : user ? (
