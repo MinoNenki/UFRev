@@ -131,10 +131,10 @@ function RangeControl({
   };
 
   return (
-    <label className="block rounded-[18px] border border-cyan-300/30 bg-cyan-300/10 p-3">
-      <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-slate-200">
-        <span className="min-w-0 flex-1 text-[13px] leading-5 text-slate-200">{label}</span>
-        <span className="shrink-0 whitespace-nowrap rounded-lg border border-cyan-300/30 bg-slate-950/45 px-2 py-0.5 font-semibold text-cyan-100">{value}{suffix || ''}</span>
+    <label className="block rounded-[14px] border border-cyan-300/30 bg-cyan-300/10 p-2 sm:p-3">
+      <div className="flex flex-wrap items-center justify-between gap-1 text-sm text-slate-200">
+        <span className="min-w-0 flex-1 text-[11px] leading-4 text-slate-200 sm:text-[13px] sm:leading-5">{label}</span>
+        <span className="shrink-0 whitespace-nowrap rounded-md border border-cyan-300/30 bg-slate-950/45 px-1.5 py-0.5 text-[11px] font-semibold text-cyan-100 sm:px-2 sm:text-xs">{value}{suffix || ''}</span>
       </div>
       <input
         type="range"
@@ -150,12 +150,11 @@ function RangeControl({
         <div className="text-[10px] uppercase tracking-[0.14em] text-slate-400">
           {tt(language, { en: 'Enter manually', pl: 'Wpisz ręcznie' })}
         </div>
-        <div className="mt-1 grid grid-cols-[2.25rem_minmax(0,1fr)_2.25rem] items-center gap-2">
+        <div className="mt-1 grid grid-cols-[1.75rem_minmax(0,1fr)_1.75rem] items-center gap-1 sm:grid-cols-[2.25rem_minmax(0,1fr)_2.25rem] sm:gap-2">
           <button
             type="button"
             onClick={() => applyDelta(-1)}
-            className="h-9 w-full rounded-lg border border-cyan-300/30 bg-slate-950/45 text-base font-semibold text-cyan-100"
-            aria-label={tt(language, { en: 'Decrease', pl: 'Zmniejsz' })}
+            className="h-7 w-full rounded-md border border-cyan-300/30 bg-slate-950/45 text-sm font-semibold text-cyan-100 sm:h-9 sm:rounded-lg sm:text-base"
           >
             -
           </button>
@@ -171,13 +170,12 @@ function RangeControl({
                 commitManualValue(manualValue);
               }
             }}
-            className="min-w-0 w-full rounded-lg border border-cyan-300/30 bg-slate-950/45 px-2 py-1.5 text-center text-sm font-semibold text-white outline-none transition focus:border-cyan-300/70"
+            className="min-w-0 w-full rounded-md border border-cyan-300/30 bg-slate-950/45 px-1 py-1 text-center text-xs font-semibold text-white outline-none transition focus:border-cyan-300/70 sm:rounded-lg sm:px-2 sm:py-1.5 sm:text-sm"
           />
           <button
             type="button"
             onClick={() => applyDelta(1)}
-            className="h-9 w-full rounded-lg border border-cyan-300/30 bg-slate-950/45 text-base font-semibold text-cyan-100"
-            aria-label={tt(language, { en: 'Increase', pl: 'Zwiększ' })}
+            className="h-7 w-full rounded-md border border-cyan-300/30 bg-slate-950/45 text-sm font-semibold text-cyan-100 sm:h-9 sm:rounded-lg sm:text-base"
           >
             +
           </button>
@@ -336,9 +334,9 @@ export default function Simulator({
         </button>
       </div>
 
-      <div className="mt-5 grid grid-cols-1 items-start gap-4 md:grid-cols-2 md:items-stretch">
-        <div className="min-w-0 rounded-[20px] border border-cyan-300/30 bg-cyan-300/8 p-3 sm:p-4">
-          <div className="text-[10px] uppercase tracking-[0.2em] text-cyan-200 sm:text-[11px] sm:tracking-[0.22em]">
+      <div className="mt-5 grid grid-cols-2 items-start gap-2">
+        <div className="min-w-0 rounded-[20px] border border-cyan-300/30 bg-cyan-300/8 p-2 sm:p-3">
+          <div className="text-[9px] uppercase tracking-[0.18em] text-cyan-200 sm:text-[10px] sm:tracking-[0.2em]">  
             {tt(currentLanguage, { en: 'Controls', pl: 'Sterowanie' })}
           </div>
           <div className="mt-2 space-y-2">
@@ -351,8 +349,8 @@ export default function Simulator({
           </div>
         </div>
 
-        <div className="min-w-0 self-start rounded-[20px] border border-cyan-300/30 bg-cyan-300/8 p-3 backdrop-blur sm:p-4 md:sticky md:top-24 md:max-h-[calc(100vh-7rem)] md:overflow-y-auto">
-          <div className="text-[10px] uppercase tracking-[0.2em] text-cyan-200 sm:text-[11px] sm:tracking-[0.22em]">
+        <div className="min-w-0 self-start rounded-[20px] border border-cyan-300/30 bg-cyan-300/8 p-2 backdrop-blur sm:p-3 sm:sticky sm:top-24">
+          <div className="text-[9px] uppercase tracking-[0.18em] text-cyan-200 sm:text-[10px] sm:tracking-[0.2em]">  
             {tt(currentLanguage, { en: 'Live scenario economy', pl: 'Ekonomia scenariusza na żywo' })}
           </div>
           <div className="mt-2 grid gap-2">
