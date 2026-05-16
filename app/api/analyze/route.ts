@@ -2937,6 +2937,14 @@ ${extractedText || (currentLanguage === 'pl'
       );
     }
 
+    if (isServiceBusinessCase || startupIntent) {
+      responseContractLines.push(
+        currentLanguage === 'pl' ? '- Dla pytań startup/usługowych z brakującą ceną lub kosztem NIE dawaj binarnego „ODPUŚĆ” jako jedynego wniosku. Domyślnie prowadź usera przez „TEST KONTROLOWANY” z warunkami wejścia.' : '- For startup/service questions with missing hard price/cost data, do NOT give binary AVOID as the only conclusion. Default to CONTROLLED TEST guidance with entry conditions.',
+        currentLanguage === 'pl' ? '- Dodaj sekcję „Plan wejścia 30 dni”: oferta, sprzęt, pozyskanie pierwszych klientów, próg opłacalności.' : '- Add a dedicated "30-day entry plan" section: offer, equipment, first-client acquisition, and profitability threshold.',
+        currentLanguage === 'pl' ? '- Jeśli pytanie dotyczy Polski/UE, podaj lokalny kontekst (stawki orientacyjne, model pakietów, krok formalny) zamiast ogólnego e-commerce werdyktu.' : '- If the question targets Poland/EU, include local context (indicative rates, package model, formal setup step) instead of generic e-commerce verdict language.'
+      );
+    }
+
     if (marketResearchIntent) {
       responseContractLines.push(
         currentLanguage === 'pl' ? '- TRYB BADANIA RYNKU + SOURCING: Użytkownik pyta o listę producentów, dostawców lub komponentów.' : '- MARKET RESEARCH + SOURCING MODE: User is asking for a list of manufacturers, suppliers, or components.',
@@ -3054,7 +3062,7 @@ ${marketData.connectorSignals.map((item) => `- ${item.provider}: ${item.note}`).
       const completion = await openai.chat.completions.create({
         model: 'gpt-4o-mini',
         temperature: 0.35,
-        max_tokens: marketResearchIntent ? 700 : marketplaceListingIntent ? 420 : startupIntent ? 380 : 260,
+        max_tokens: marketResearchIntent ? 700 : marketplaceListingIntent ? 420 : (startupIntent || isServiceBusinessCase) ? 520 : 260,
         messages: [
           { role: 'system', content: `${ANALYSIS_SYSTEM_PROMPT}\n\n${dynamicSystemPrompt}\n\n${privateConsumerIntent ? 'Treat decision-engine output as secondary context only; the primary goal is a clear personal recommendation for the user.' : 'Always reference the decision engine result.'} If images or video preview frames are attached, include visual observations when relevant.\nCRITICAL:\n- Always prioritize preventing financial loss\n- Never recommend scaling without a controlled test\n- Avoid optimistic assumptions\n- Give a direct actionable next step\n- Be concise and concrete\n- Answer the user's exact question, not a generic template\n- Never invent facts that are not present in the uploaded material or extracted signals.` },
           {

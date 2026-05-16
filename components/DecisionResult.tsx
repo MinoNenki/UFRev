@@ -511,6 +511,23 @@ function extractHeadlineFromText(text?: string) {
     .trim();
 }
 
+function normalizeHighlightedNarrative(text?: string) {
+  const raw = String(text || '').trim();
+  if (!raw) return '';
+
+  return raw
+    .split('\n')
+    .map((line) => line.trimEnd())
+    .map((line) => line
+      .replace(/^#{1,6}\s+/g, '')
+      .replace(/\*\*(.*?)\*\*/g, '$1')
+      .replace(/^[-*]\s+/g, '• ')
+      .replace(/^\d+[\.)]\s+/g, '• ')
+    )
+    .join('\n')
+    .trim();
+}
+
 function MetricCard({ label, value, sublabel }: { label: string; value: string; sublabel?: string | null; language?: Language }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 sm:p-5">
@@ -753,6 +770,7 @@ export default function DecisionResult({
     infoTitleClass,
     infoBodyClass,
   } = model;
+  const highlightedNarrative = !narrativeMismatch ? normalizeHighlightedNarrative(result.text) : '';
 
   return (
     <div className="space-y-5">
@@ -832,6 +850,17 @@ export default function DecisionResult({
           </div>
         </div>
       </div>
+
+      {highlightedNarrative ? (
+        <div className="rounded-[24px] border border-amber-300/30 bg-[radial-gradient(circle_at_top_right,rgba(251,191,36,0.26),transparent_42%),linear-gradient(160deg,rgba(120,53,15,0.28),rgba(15,23,42,0.84))] p-4 shadow-[0_18px_60px_rgba(251,191,36,0.18)] sm:p-5 lg:p-6">
+          <div className="mb-3 inline-flex rounded-full border border-amber-200/45 bg-slate-950/45 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-100">
+            {tt(currentLanguage, { en: 'Detailed analysis description', pl: 'Wyróżniony opis analizy' })}
+          </div>
+          <div className="max-h-[340px] overflow-y-auto whitespace-pre-wrap pr-1 text-[15px] leading-8 text-slate-50 sm:max-h-[420px] sm:text-base">
+            {highlightedNarrative}
+          </div>
+        </div>
+      ) : null}
 
       <div className="grid gap-3 sm:grid-cols-2">
         <MetricCard
@@ -936,6 +965,7 @@ export function AdvancedDecisionReasoning({
     infoTitleClass,
     infoBodyClass,
   } = model;
+  const highlightedNarrative = !narrativeMismatch ? normalizeHighlightedNarrative(result.text) : '';
 
   return (
     <details className="advanced-reasoning-shell advanced-reasoning-hero rounded-[32px] border border-white/10 bg-white/[0.03] p-5 sm:p-6 xl:p-8" open>
@@ -1105,13 +1135,13 @@ export function AdvancedDecisionReasoning({
         </div>
       ) : null}
 
-      {result.text && !narrativeMismatch ? (
+      {highlightedNarrative ? (
         <div className="mt-5 rounded-[24px] border border-amber-300/30 bg-[radial-gradient(circle_at_top_right,rgba(251,191,36,0.26),transparent_42%),linear-gradient(160deg,rgba(120,53,15,0.28),rgba(15,23,42,0.84))] p-4 shadow-[0_18px_60px_rgba(251,191,36,0.18)] sm:p-5 lg:p-6">
           <div className="mb-3 inline-flex rounded-full border border-amber-200/45 bg-slate-950/45 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-100">
             {tt(currentLanguage, { en: 'Detailed analysis description', pl: 'Wyróżniony opis analizy' })}
           </div>
-          <div className="whitespace-pre-wrap text-[15px] leading-8 text-slate-50 sm:text-base">
-            {result.text}
+          <div className="max-h-[380px] overflow-y-auto whitespace-pre-wrap pr-1 text-[15px] leading-8 text-slate-50 sm:max-h-[520px] sm:text-base">
+            {highlightedNarrative}
           </div>
         </div>
       ) : null}

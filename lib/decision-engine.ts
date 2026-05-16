@@ -257,15 +257,18 @@ export function calculateDecision(input: DecisionInput): DecisionResult {
   const margin = analyzeMargin(price, cost);
   const hasMarginData = price > 0 && cost > 0;
   const hasCostData = cost > 0;
+  const queryText = `${input.analysisType || ''} ${input.content || ''} ${input.salesChannel || ''} ${input.targetMarket || ''}`.toLowerCase();
+  const startupServiceSignals = /druk(owanie)?\s*3d|drukarki?\s*3d|3d\s*print|additive\s*manufactur|prototyp|jak\s*zacz[ąa]ć|jak\s*zacza[cć]|jaki\s*sprz[ęe]t|co\s+jest\s+mi\s+potrzebne|otworzy[cć]\s+firm|założy[cć]\s+firm|zalozy[cć]\s+firm|bra[cć]\s+zlecenia/i.test(queryText);
+  const exploratoryServiceCase = startupServiceSignals && !hasMarginData && (price <= 0 || cost <= 0);
   const { evidenceStrength, dataMode } = estimateEvidenceStrength(input);
 
   const hasCompetitorEvidence = !!(input.competitorUrls || '').trim() || competitorAvgPrice > 0;
   const hasUrlEvidence = !!(input.websiteUrl || '').trim();
 
   const marginScore = price <= 0
-    ? 26
+    ? (exploratoryServiceCase ? 42 : 26)
     : cost <= 0
-      ? 28
+      ? (exploratoryServiceCase ? 44 : 28)
       : price <= cost
         ? clamp(18 + margin.marginPercent, 0, 40)
         : clamp(margin.marginPercent * 1.45);
@@ -335,9 +338,10 @@ export function calculateDecision(input: DecisionInput): DecisionResult {
   ];
 
   let score = clamp(weightedScore);
-  if (confidence < 35) score = clamp(score - 6);
+  if (confidence < 35) score = clamp(score - (exploratoryServiceCase ? 3 : 6));
   if (hasMarginData && margin.marginPercent < 18) score = clamp(score - 10);
   if (demand > 75 && competition < 45 && hasMarginData && margin.marginPercent > 35) score = clamp(score + 6);
+  if (exploratoryServiceCase) score = clamp(score + 8);
 
   const guardrailsTriggered: string[] = [];
   const capitalProtection: string[] = [
@@ -382,6 +386,7 @@ export function calculateDecision(input: DecisionInput): DecisionResult {
   let verdict: DecisionVerdict = 'TEST';
   if (score >= 78 && confidence >= 52) verdict = 'BUY';
   if (score <= 46 || (hasMarginData && margin.marginPercent < 12)) verdict = 'AVOID';
+  if (exploratoryServiceCase && verdict === 'AVOID' && score >= 34) verdict = 'TEST';
 
   if (verdict === 'BUY' && guardrailsTriggered.length) {
     verdict = 'TEST';
@@ -420,13 +425,21 @@ export function calculateDecision(input: DecisionInput): DecisionResult {
   }
 
   if (!hasCostData) {
-    issues.push('Cost input is missing, so margin is still unverified.');
-    improvements.push('Add landed cost, shipping, fees, and VAT before trusting the profit estimate.');
+    issues.push(exploratoryServiceCase
+      ? 'Hard cost input is still missing, so this remains an exploratory startup estimate.'
+      : 'Cost input is missing, so margin is still unverified.');
+    improvements.push(exploratoryServiceCase
+      ? 'Add a starter cost sheet (printer, material, maintenance, power, shipping, VAT) before scaling bids for EU jobs.'
+      : 'Add landed cost, shipping, fees, and VAT before trusting the profit estimate.');
   }
 
   if (!price) {
-    issues.push('Sell price is not fixed yet, so unit economics are still only a scenario estimate.');
-    improvements.push('Compare current Polish sell or rental rates before committing more inventory.');
+    issues.push(exploratoryServiceCase
+      ? 'Offer pricing is not fixed yet, so this should be treated as a staged market-entry test.'
+      : 'Sell price is not fixed yet, so unit economics are still only a scenario estimate.');
+    improvements.push(exploratoryServiceCase
+      ? 'Define 2-3 service packages (basic, standard, premium) and test them on a small first client batch before wider rollout.'
+      : 'Compare current Polish sell or rental rates before committing more inventory.');
   }
 
   if (hasMarginData && margin.marginPercent < guardrails.minMarginPercent) {
@@ -455,6 +468,9 @@ export function calculateDecision(input: DecisionInput): DecisionResult {
   improvements.push('Track conversion, CAC, and refund signals before increasing ad spend.');
 
   if (issues.length === 0) issues.push('No critical red flags detected, but execution quality will still decide the outcome.');
+  if (exploratoryServiceCase) {
+    why.unshift('This is an exploratory startup/service query, so the engine keeps a controlled TEST bias until hard unit-economics are confirmed.');
+  }
   if (guardrailsTriggered.length) {
     issues.push('Capital-protection guardrails were triggered, so scale should remain restricted.');
     why.push('The engine protected the verdict from overconfidence to reduce burn risk.');

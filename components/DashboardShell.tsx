@@ -269,7 +269,7 @@ export default function DashboardShell({
       {currentDecision ? (
         <>
           <div className="mt-5 md:hidden">
-            <details className="rounded-[24px] border border-white/10 bg-slate-950/45 p-4">
+            <details open className="rounded-[24px] border border-white/10 bg-slate-950/45 p-4">
               <summary className="cursor-pointer list-none rounded-2xl border border-cyan-300/20 bg-cyan-300/10 px-4 py-3 text-sm font-semibold text-cyan-100">
                 {tt(language, { en: 'Show full reasoning and rollout plan', pl: 'Pokaż pełne uzasadnienie i plan wdrożenia' })}
               </summary>
