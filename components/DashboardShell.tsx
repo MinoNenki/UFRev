@@ -165,12 +165,12 @@ export default function DashboardShell({
             </div>
           ))}
         </div>
-        <div className="grid grid-cols-2 gap-2 md:hidden">
+        <div className="flex flex-wrap gap-1.5 md:hidden">
           {quickVisibilityCards.map((item, index) => index < 4 && (
-            <div key={item.label} className="rounded-2xl border border-white/10 bg-slate-950/45 px-2 py-2">
-              <div className="text-[9px] uppercase tracking-[0.16em] text-slate-500">{item.label}</div>
-              <div className="mt-1 text-sm font-black text-white break-normal [overflow-wrap:anywhere]">{item.value}</div>
-              <div className="mt-0.5 text-[11px] text-slate-400 line-clamp-1">{item.note}</div>
+            <div key={item.label} className="w-1/2 rounded-xl border border-white/10 bg-slate-950/45 px-2 py-1.5">
+              <div className="text-[8px] uppercase tracking-[0.15em] text-slate-500">{item.label}</div>
+              <div className="mt-0.5 text-xs font-black text-white break-normal [overflow-wrap:anywhere]">{item.value}</div>
+              <div className="mt-0.5 text-[10px] text-slate-400 line-clamp-1">{item.note}</div>
             </div>
           ))}
         </div>

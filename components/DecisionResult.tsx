@@ -792,7 +792,7 @@ export default function DecisionResult({
 
   return (
     <div className="space-y-3 sm:space-y-4 lg:space-y-5">
-      <div className="rounded-[30px] border border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(34,211,238,0.12),transparent_24%),linear-gradient(135deg,rgba(255,255,255,0.04),rgba(15,23,42,0.72))] p-4 sm:p-5 lg:p-6 xl:p-7">
+      <div className="rounded-[30px] border border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(34,211,238,0.12),transparent_24%),linear-gradient(135deg,rgba(255,255,255,0.04),rgba(15,23,42,0.72))] p-3 sm:p-4 lg:p-5 xl:p-6">
         <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
           <div className="min-w-0 max-w-4xl">
             <div className="flex flex-wrap items-center gap-2">
@@ -880,29 +880,37 @@ export default function DecisionResult({
         </div>
       ) : null}
 
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 sm:gap-3">
+      <div className="flex flex-wrap gap-2">
+        <div className="w-1/2">
         <MetricCard
           language={currentLanguage}
           label={tt(currentLanguage, { en: 'Verdict', pl: 'Werdykt', pt: 'Veredito', ru: 'Вердикт' })}
           value={isDocumentMode ? tt(currentLanguage, { en: 'Review', pl: 'Przegląd', pt: 'Revisão', ru: 'Обзор' }) : isVisualMode ? tt(currentLanguage, { en: 'Insight', pl: 'Odczyt', pt: 'Insight', ru: 'Инсайт' }) : localizeVerdict(result.verdict, currentLanguage)}
         />
+        </div>
+        <div className="w-1/2">
         <MetricCard
           language={currentLanguage}
           label={isDocumentMode || isVisualMode || isServiceMode ? tt(currentLanguage, { en: 'Readiness', pl: 'Gotowość', pt: 'Prontidão', ru: 'Готовность' }) : tt(currentLanguage, { en: 'Margin', pl: 'Marża', pt: 'Margem', ru: 'Маржа' })}
           value={isDocumentMode || isVisualMode || isServiceMode ? `${result.moatScore ?? 0}%` : typeof result.pricing?.marginPercent === 'number' ? `${result.pricing.marginPercent}%` : '—'}
           sublabel={!isDocumentMode && !isVisualMode ? `${tt(currentLanguage, { en: 'Score', pl: 'Wynik', pt: 'Pontuação', ru: 'Оценка' })}: ${result.score ?? 0}/100` : undefined}
         />
+        </div>
+        <div className="w-1/2">
         <MetricCard
           language={currentLanguage}
           label={tt(currentLanguage, { en: 'Risk', pl: 'Ryzyko', pt: 'Risco', ru: 'Риск' })}
           value={localizeRisk(result.burnRisk, currentLanguage)}
           sublabel={localizeConfidence(result.confidenceLabel, currentLanguage)}
         />
+        </div>
+        <div className="w-1/2">
         <MetricCard
           language={currentLanguage}
           label={tt(currentLanguage, { en: 'Next step', pl: 'Następny krok', pt: 'Próximo passo', ru: 'Следующий шаг' })}
           value={String(primaryNextStep)}
         />
+        </div>
       </div>
 
       {hybridBreakdown ? (
@@ -919,9 +927,9 @@ export default function DecisionResult({
             {hybridBreakdown.summary || tt(currentLanguage, { en: 'The model is split into separate streams so you can see what to launch first.', pl: 'Model jest rozdzielony na osobne strumienie, aby było jasne, co uruchomić najpierw.' })}
           </p>
 
-          <div className="mt-4 grid gap-3 md:grid-cols-3">
+          <div className="mt-4 flex flex-wrap gap-2 sm:gap-3">
             {(hybridBreakdown.lanes || []).map((lane) => (
-              <div key={lane.key} className="rounded-2xl border border-white/10 bg-slate-950/45 p-4">
+              <div key={lane.key} className="w-1/2 sm:w-1/3 rounded-2xl border border-white/10 bg-slate-950/45 p-3 sm:p-4">
                 <div className="flex items-center justify-between gap-2">
                   <div className="text-sm font-semibold text-white">{lane.label}</div>
                   <span className={`rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] ${readinessTone(lane.readiness)}`}>
