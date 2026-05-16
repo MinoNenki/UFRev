@@ -1024,7 +1024,7 @@ export function AdvancedDecisionReasoning({
         </div>
       </summary>
 
-      <div className="advanced-reasoning-main-grid mt-6 grid grid-cols-2 gap-3 sm:gap-4">
+      <div className="advanced-reasoning-main-grid mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
         <div className={infoCardClass}>
           <div className={infoTitleClass}>
             {isDocumentMode

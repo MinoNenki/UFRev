@@ -336,8 +336,8 @@ export default function Simulator({
         </button>
       </div>
 
-      <div className="mt-5 grid grid-cols-1 items-start gap-3 md:grid-cols-[45%_55%] md:gap-3">
-        <div className="rounded-[20px] border border-white/10 bg-slate-950/35 p-2.5 sm:p-3">
+      <div className="mt-5 grid grid-cols-2 items-start gap-2 sm:gap-3">
+        <div className="min-w-0 rounded-[20px] border border-white/10 bg-slate-950/35 p-2.5 sm:p-3">
           <div className="text-[10px] uppercase tracking-[0.2em] text-cyan-200 sm:text-[11px] sm:tracking-[0.22em]">
             {tt(currentLanguage, { en: 'Controls', pl: 'Sterowanie' })}
           </div>
@@ -351,7 +351,7 @@ export default function Simulator({
           </div>
         </div>
 
-        <div className="sticky top-2 rounded-[20px] border border-cyan-300/25 bg-slate-950/85 p-2.5 backdrop-blur sm:rounded-[24px] sm:border-white/10 sm:bg-slate-950/45 sm:p-3">
+        <div className="min-w-0 sticky top-2 rounded-[20px] border border-cyan-300/25 bg-slate-950/85 p-2.5 backdrop-blur sm:rounded-[24px] sm:border-white/10 sm:bg-slate-950/45 sm:p-3">
           <div className="text-[10px] uppercase tracking-[0.2em] text-cyan-200 sm:text-[11px] sm:tracking-[0.22em]">
             {tt(currentLanguage, { en: 'Live scenario economy', pl: 'Ekonomia scenariusza na żywo' })}
           </div>
