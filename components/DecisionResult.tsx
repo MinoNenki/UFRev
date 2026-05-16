@@ -708,9 +708,9 @@ function buildDecisionResultViewModel(result: DecisionResultShape, currentLangua
           ? tt(currentLanguage, { en: 'Avoid for now', pl: 'Na ten moment lepiej odpuścić', pt: 'Melhor evitar por agora', ru: 'Пока лучше избегать' })
           : tt(currentLanguage, { en: 'Needs a short controlled test', pl: 'Wymaga krótkiego, kontrolowanego testu', pt: 'Precisa de um teste curto e controlado', ru: 'Нужен короткий контролируемый тест' }));
 
-  const infoCardClass = 'rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(15,23,42,0.42))] p-4 sm:p-5';
+  const infoCardClass = 'rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(15,23,42,0.42))] p-3 sm:p-5';
   const infoTitleClass = 'text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-300';
-  const infoBodyClass = 'mt-3 space-y-2 text-[15px] leading-7 text-slate-100';
+  const infoBodyClass = 'mt-3 space-y-2 text-[13px] leading-6 text-slate-100 sm:text-[15px] sm:leading-7';
 
   return {
     isCostMode,
@@ -1005,18 +1005,18 @@ export function AdvancedDecisionReasoning({
               </span>
             </div>
           </div>
-          <div className="grid gap-3 sm:grid-cols-3 xl:grid-cols-1 2xl:grid-cols-3">
-            <div className="advanced-reasoning-stat rounded-[22px] border border-white/10 bg-slate-950/45 p-4">
+          <div className="grid grid-cols-3 gap-2 sm:gap-3 xl:grid-cols-1 2xl:grid-cols-3">
+            <div className="advanced-reasoning-stat rounded-[22px] border border-white/10 bg-slate-950/45 p-2.5 sm:p-4">
               <div className="text-[11px] uppercase tracking-[0.18em] text-slate-400">{tt(currentLanguage, { en: 'Score', pl: 'Wynik' })}</div>
-              <div className="mt-2 text-3xl font-black tracking-[-0.04em] text-white">{result.score ?? 0}<span className="text-base text-slate-400">/100</span></div>
+              <div className="mt-1 text-xl font-black tracking-[-0.04em] text-white sm:mt-2 sm:text-3xl">{result.score ?? 0}<span className="text-xs text-slate-400 sm:text-base">/100</span></div>
             </div>
-            <div className="advanced-reasoning-stat rounded-[22px] border border-white/10 bg-slate-950/45 p-4">
+            <div className="advanced-reasoning-stat rounded-[22px] border border-white/10 bg-slate-950/45 p-2.5 sm:p-4">
               <div className="text-[11px] uppercase tracking-[0.18em] text-slate-400">{tt(currentLanguage, { en: 'Confidence', pl: 'Pewność' })}</div>
-              <div className="mt-2 text-3xl font-black tracking-[-0.04em] text-white">{result.confidence ?? 0}<span className="text-base text-slate-400">/100</span></div>
+              <div className="mt-1 text-xl font-black tracking-[-0.04em] text-white sm:mt-2 sm:text-3xl">{result.confidence ?? 0}<span className="text-xs text-slate-400 sm:text-base">/100</span></div>
             </div>
-            <div className="advanced-reasoning-stat rounded-[22px] border border-white/10 bg-slate-950/45 p-4">
+            <div className="advanced-reasoning-stat rounded-[22px] border border-white/10 bg-slate-950/45 p-2.5 sm:p-4">
               <div className="text-[11px] uppercase tracking-[0.18em] text-slate-400">{tt(currentLanguage, { en: 'Risk', pl: 'Ryzyko' })}</div>
-              <div className="mt-2 text-lg font-black text-white">{localizeRisk(result.burnRisk, currentLanguage)}</div>
+              <div className="mt-1 text-sm font-black text-white sm:mt-2 sm:text-lg">{localizeRisk(result.burnRisk, currentLanguage)}</div>
             </div>
           </div>
           <div className="advanced-reasoning-pill rounded-[22px] border px-4 py-3 text-sm font-semibold text-slate-950 xl:justify-self-end">
@@ -1025,7 +1025,7 @@ export function AdvancedDecisionReasoning({
         </div>
       </summary>
 
-      <div className="advanced-reasoning-main-grid mt-6 grid gap-4 xl:grid-cols-2">
+      <div className="advanced-reasoning-main-grid mt-6 grid grid-cols-2 gap-3 sm:gap-4">
         <div className={infoCardClass}>
           <div className={infoTitleClass}>
             {isDocumentMode
@@ -1095,7 +1095,7 @@ export function AdvancedDecisionReasoning({
         </div>
 
         {!isDocumentMode && !isVisualMode && (
-          <div className={`${infoCardClass} xl:col-span-2`}>
+          <div className={`${infoCardClass} col-span-2`}>
             <div className={infoTitleClass}>{tt(currentLanguage, { en: 'Signals', pl: 'Sygnały', es: 'Señales' })}</div>
             <div className={infoBodyClass}>
               {signals.length ? signals.map((item) => <div key={item}>• {item}</div>) : <div>—</div>}
@@ -1132,7 +1132,7 @@ export function AdvancedDecisionReasoning({
             </div>
           </div>
 
-          <div className="mt-4 grid gap-3 xl:grid-cols-2">
+          <div className="mt-4 grid grid-cols-2 gap-3">
             <div className="rounded-2xl border border-white/10 bg-slate-950/40 p-4">
               <div className="text-[11px] uppercase tracking-[0.18em] text-slate-400">{tt(currentLanguage, { en: 'Equipment list', pl: 'Lista sprzętu' })}</div>
               <div className="mt-2 space-y-2 text-sm text-slate-200">
@@ -1169,7 +1169,7 @@ export function AdvancedDecisionReasoning({
 
       {showGrowthIntel && (
         <>
-          <div className="mt-5 grid gap-4 xl:grid-cols-[1.05fr_0.95fr]">
+          <div className="mt-5 grid grid-cols-2 gap-3 sm:gap-4">
             <div className={infoCardClass}>
               <div className={infoTitleClass}>{tt(currentLanguage, { en: 'Market radar', pl: 'Radar rynku', es: 'Radar de mercado' })}</div>
               <div className="mt-3 flex flex-wrap gap-2">
@@ -1234,7 +1234,7 @@ export function AdvancedDecisionReasoning({
             </div>
           </div>
 
-          <div className="mt-5 grid gap-4 xl:grid-cols-[1.05fr_0.95fr]">
+          <div className="mt-5 grid grid-cols-2 gap-3 sm:gap-4">
             <div className={infoCardClass}>
               <div className={infoTitleClass}>{tt(currentLanguage, { en: 'Competitor watchtower', pl: 'Wieża konkurencji', es: 'Torre de competencia' })}</div>
               <div className="mt-3 flex flex-wrap gap-2">
@@ -1272,7 +1272,7 @@ export function AdvancedDecisionReasoning({
             </div>
           </div>
 
-          <div className="mt-5 grid gap-4 xl:grid-cols-2">
+          <div className="mt-5 grid grid-cols-2 gap-3 sm:gap-4">
             <div className={infoCardClass}>
               <div className={infoTitleClass}>{tt(currentLanguage, { en: 'Capital safeguards', pl: 'Zabezpieczenia kapitału', es: 'Salvaguardas de capital' })}</div>
               <div className={infoBodyClass}>
