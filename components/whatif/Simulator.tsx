@@ -80,6 +80,7 @@ function inferBaseInput(result: ResultLike, fallbackCurrency: SupportedCurrency)
 }
 
 function RangeControl({
+  language,
   label,
   value,
   min,
@@ -88,6 +89,7 @@ function RangeControl({
   suffix,
   onChange,
 }: {
+  language: Language;
   label: string;
   value: number;
   min: number;
@@ -96,11 +98,37 @@ function RangeControl({
   suffix?: string;
   onChange: (value: number) => void;
 }) {
+  const [manualValue, setManualValue] = useState(String(value));
+
+  useEffect(() => {
+    setManualValue(String(value));
+  }, [value]);
+
+  const stepPrecision = (() => {
+    const raw = String(step);
+    const dot = raw.indexOf('.');
+    return dot === -1 ? 0 : raw.length - dot - 1;
+  })();
+
+  const commitManualValue = (rawValue: string) => {
+    const normalized = rawValue.replace(',', '.').trim();
+    const parsed = Number(normalized);
+    if (!Number.isFinite(parsed)) {
+      setManualValue(String(value));
+      return;
+    }
+
+    const clamped = clamp(parsed, min, max);
+    const snapped = round(Math.round(clamped / step) * step, stepPrecision);
+    onChange(snapped);
+    setManualValue(String(snapped));
+  };
+
   return (
     <label className="block rounded-[18px] border border-white/10 bg-slate-950/40 p-3">
-      <div className="flex items-center justify-between gap-2 text-sm text-slate-200">
-        <span className="pr-2 text-[13px] leading-5 text-slate-200">{label}</span>
-        <span className="font-semibold text-white">{value}{suffix || ''}</span>
+      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 text-sm text-slate-200">
+        <span className="min-w-0 break-words pr-1 text-[13px] leading-5 text-slate-200">{label}</span>
+        <span className="shrink-0 whitespace-nowrap rounded-lg border border-white/10 bg-white/[0.04] px-2 py-0.5 font-semibold text-white">{value}{suffix || ''}</span>
       </div>
       <input
         type="range"
@@ -111,6 +139,29 @@ function RangeControl({
         onChange={(event) => onChange(Number(event.target.value))}
         className="mt-3 w-full accent-cyan-300"
       />
+
+      <div className="mt-2.5">
+        <div className="text-[10px] uppercase tracking-[0.14em] text-slate-400">
+          {tt(language, { en: 'Enter manually', pl: 'Wpisz ręcznie' })}
+        </div>
+        <div className="mt-1 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
+          <input
+            type="text"
+            inputMode="decimal"
+            value={manualValue}
+            onChange={(event) => setManualValue(event.target.value)}
+            onBlur={() => commitManualValue(manualValue)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                event.preventDefault();
+                commitManualValue(manualValue);
+              }
+            }}
+            className="min-w-0 rounded-lg border border-white/10 bg-white/[0.04] px-2.5 py-1.5 text-sm text-white outline-none transition focus:border-cyan-300/40"
+          />
+          <span className="shrink-0 text-[11px] text-slate-400">{min} - {max}</span>
+        </div>
+      </div>
     </label>
   );
 }
@@ -269,12 +320,12 @@ export default function Simulator({
             {tt(currentLanguage, { en: 'Controls', pl: 'Sterowanie' })}
           </div>
           <div className="mt-2 space-y-2">
-            <RangeControl label={tt(currentLanguage, { en: 'Sell price', pl: 'Cena sprzedaży' })} value={Number(controls.price || 0)} min={5} max={500} step={1} onChange={(value) => update('price', value)} />
-            <RangeControl label={tt(currentLanguage, { en: 'Estimated cost', pl: 'Szacowany koszt' })} value={Number(controls.cost || 0)} min={1} max={350} step={1} onChange={(value) => update('cost', value)} />
-            <RangeControl label={tt(currentLanguage, { en: 'Demand', pl: 'Popyt' })} value={Number(controls.demand || 0)} min={0} max={100} step={1} suffix="/100" onChange={(value) => update('demand', value)} />
-            <RangeControl label={tt(currentLanguage, { en: 'Competition', pl: 'Konkurencja' })} value={Number(controls.competition || 0)} min={0} max={100} step={1} suffix="/100" onChange={(value) => update('competition', value)} />
-            <RangeControl label={tt(currentLanguage, { en: 'Test budget', pl: 'Budżet testu' })} value={Number(controls.adBudget || 0)} min={50} max={2500} step={10} onChange={(value) => update('adBudget', value)} />
-            <RangeControl label={tt(currentLanguage, { en: 'Market monthly units', pl: 'Miesięczny wolumen rynku' })} value={Number(controls.marketMonthlyUnits || 0)} min={100} max={10000} step={50} onChange={(value) => update('marketMonthlyUnits', value)} />
+            <RangeControl language={currentLanguage} label={tt(currentLanguage, { en: 'Sell price', pl: 'Cena sprzedaży' })} value={Number(controls.price || 0)} min={5} max={500} step={1} onChange={(value) => update('price', value)} />
+            <RangeControl language={currentLanguage} label={tt(currentLanguage, { en: 'Estimated cost', pl: 'Szacowany koszt' })} value={Number(controls.cost || 0)} min={1} max={350} step={1} onChange={(value) => update('cost', value)} />
+            <RangeControl language={currentLanguage} label={tt(currentLanguage, { en: 'Demand', pl: 'Popyt' })} value={Number(controls.demand || 0)} min={0} max={100} step={1} suffix="/100" onChange={(value) => update('demand', value)} />
+            <RangeControl language={currentLanguage} label={tt(currentLanguage, { en: 'Competition', pl: 'Konkurencja' })} value={Number(controls.competition || 0)} min={0} max={100} step={1} suffix="/100" onChange={(value) => update('competition', value)} />
+            <RangeControl language={currentLanguage} label={tt(currentLanguage, { en: 'Test budget', pl: 'Budżet testu' })} value={Number(controls.adBudget || 0)} min={50} max={2500} step={10} onChange={(value) => update('adBudget', value)} />
+            <RangeControl language={currentLanguage} label={tt(currentLanguage, { en: 'Market monthly units', pl: 'Miesięczny wolumen rynku' })} value={Number(controls.marketMonthlyUnits || 0)} min={100} max={10000} step={50} onChange={(value) => update('marketMonthlyUnits', value)} />
           </div>
         </div>
 
