@@ -563,8 +563,8 @@ body::after {
   .simulator-wow-shell {
     position: relative;
     overflow: hidden;
-    box-shadow: 0 26px 80px rgba(5, 46, 22, 0.45), 0 0 0 1px rgba(16, 185, 129, 0.22), 0 0 44px rgba(245, 158, 11, 0.16);
-    animation: simulatorWowPulse 3s ease-in-out infinite;
+    box-shadow: 0 24px 72px rgba(8, 22, 46, 0.42), 0 0 0 1px rgba(34, 211, 238, 0.16), 0 0 26px rgba(59, 130, 246, 0.10);
+    animation: simulatorWowPulse 5.2s ease-in-out infinite;
   }
 
   .simulator-wow-shell::before {
@@ -574,7 +574,7 @@ body::after {
     width: 30%;
     pointer-events: none;
     transform: skewX(-18deg);
-    background: linear-gradient(112deg, transparent 0%, rgba(245,158,11,0.05) 14%, rgba(245,158,11,0.24) 46%, rgba(16,185,129,0.28) 55%, transparent 100%);
+    background: linear-gradient(112deg, transparent 0%, rgba(56,189,248,0.03) 14%, rgba(34,211,238,0.14) 46%, rgba(59,130,246,0.14) 55%, transparent 100%);
     animation: simulatorWowSweep 4.6s linear infinite;
   }
 
@@ -1640,8 +1640,8 @@ body::after {
 }
 
 @keyframes simulatorWowPulse {
-  0%, 100% { box-shadow: 0 26px 80px rgba(5,46,22,0.45), 0 0 0 1px rgba(16,185,129,0.22), 0 0 44px rgba(245,158,11,0.12); }
-  50% { box-shadow: 0 30px 100px rgba(5,46,22,0.58), 0 0 0 1px rgba(16,185,129,0.32), 0 0 58px rgba(245,158,11,0.24); }
+  0%, 100% { box-shadow: 0 24px 72px rgba(8,22,46,0.42), 0 0 0 1px rgba(34,211,238,0.16), 0 0 26px rgba(59,130,246,0.10); }
+  50% { box-shadow: 0 28px 84px rgba(8,22,46,0.48), 0 0 0 1px rgba(56,189,248,0.24), 0 0 34px rgba(59,130,246,0.16); }
 }
 
 @keyframes simulatorWowSweep {
@@ -1859,6 +1859,27 @@ body::after {
 
   .advanced-reasoning-main-grid {
     gap: 10px !important;
+  }
+
+  .advanced-reasoning-main-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .advanced-reasoning-main-grid > .decision-info-card {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .decision-info-body,
+  .decision-money-label,
+  .decision-money-value {
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+    white-space: normal !important;
+  }
+
+  .decision-money-row {
+    grid-template-columns: minmax(0, 1fr) !important;
   }
 }
 

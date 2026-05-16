@@ -131,10 +131,10 @@ function RangeControl({
   };
 
   return (
-    <label className="block rounded-[18px] border border-emerald-300/25 bg-emerald-300/10 p-3">
+    <label className="block rounded-[18px] border border-cyan-300/30 bg-cyan-300/10 p-3">
       <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-slate-200">
         <span className="min-w-0 flex-1 text-[13px] leading-5 text-slate-200">{label}</span>
-        <span className="shrink-0 whitespace-nowrap rounded-lg border border-emerald-300/25 bg-slate-950/45 px-2 py-0.5 font-semibold text-emerald-100">{value}{suffix || ''}</span>
+        <span className="shrink-0 whitespace-nowrap rounded-lg border border-cyan-300/30 bg-slate-950/45 px-2 py-0.5 font-semibold text-cyan-100">{value}{suffix || ''}</span>
       </div>
       <input
         type="range"
@@ -143,7 +143,7 @@ function RangeControl({
         step={step}
         value={value}
         onChange={(event) => onChange(Number(event.target.value))}
-        className="mt-3 w-full accent-emerald-300"
+        className="mt-3 w-full accent-cyan-300"
       />
 
       <div className="mt-2.5">
@@ -154,7 +154,7 @@ function RangeControl({
           <button
             type="button"
             onClick={() => applyDelta(-1)}
-            className="h-9 w-full rounded-lg border border-emerald-300/25 bg-slate-950/45 text-base font-semibold text-emerald-100"
+            className="h-9 w-full rounded-lg border border-cyan-300/30 bg-slate-950/45 text-base font-semibold text-cyan-100"
             aria-label={tt(language, { en: 'Decrease', pl: 'Zmniejsz' })}
           >
             -
@@ -171,12 +171,12 @@ function RangeControl({
                 commitManualValue(manualValue);
               }
             }}
-            className="min-w-0 w-full rounded-lg border border-emerald-300/25 bg-slate-950/45 px-2 py-1.5 text-center text-sm font-semibold text-white outline-none transition focus:border-emerald-300/60"
+            className="min-w-0 w-full rounded-lg border border-cyan-300/30 bg-slate-950/45 px-2 py-1.5 text-center text-sm font-semibold text-white outline-none transition focus:border-cyan-300/70"
           />
           <button
             type="button"
             onClick={() => applyDelta(1)}
-            className="h-9 w-full rounded-lg border border-emerald-300/25 bg-slate-950/45 text-base font-semibold text-emerald-100"
+            className="h-9 w-full rounded-lg border border-cyan-300/30 bg-slate-950/45 text-base font-semibold text-cyan-100"
             aria-label={tt(language, { en: 'Increase', pl: 'Zwiększ' })}
           >
             +
@@ -268,13 +268,13 @@ export default function Simulator({
   }
 
   const tone = opportunity.opportunityWindow === 'open'
-    ? 'border-emerald-400/30 bg-emerald-400/10 text-emerald-200'
+    ? 'border-cyan-300/35 bg-cyan-300/12 text-cyan-100'
     : opportunity.opportunityWindow === 'closed'
       ? 'border-rose-400/30 bg-rose-400/10 text-rose-200'
       : 'border-amber-300/30 bg-amber-300/10 text-amber-100';
 
   return (
-    <div className="simulator-wow-shell rounded-[30px] border border-emerald-300/35 bg-[radial-gradient(circle_at_top_right,rgba(245,158,11,0.20),transparent_26%),radial-gradient(circle_at_bottom_left,rgba(16,185,129,0.25),transparent_34%),linear-gradient(180deg,rgba(5,46,22,0.72),rgba(6,24,18,0.94))] p-5 sm:p-6">
+    <div className="simulator-wow-shell rounded-[30px] border border-cyan-300/24 bg-[radial-gradient(circle_at_top_right,rgba(56,189,248,0.10),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(14,165,233,0.10),transparent_34%),linear-gradient(180deg,rgba(10,20,38,0.78),rgba(7,14,30,0.96))] p-5 sm:p-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div>
           <div className="text-[11px] uppercase tracking-[0.24em] text-cyan-200">
@@ -301,34 +301,34 @@ export default function Simulator({
       </div>
 
       <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <div className="rounded-2xl border border-emerald-300/25 bg-emerald-300/10 p-4">
+        <div className="rounded-2xl border border-cyan-300/30 bg-cyan-300/10 p-4">
           <div className="text-[11px] uppercase tracking-[0.2em] text-slate-400">{tt(currentLanguage, { en: 'Scenario verdict', pl: 'Werdykt scenariusza' })}</div>
           <div className="mt-2 text-2xl font-black text-white">{simulatedDecision.verdict}</div>
         </div>
-        <div className="rounded-2xl border border-emerald-300/25 bg-emerald-300/10 p-4">
+        <div className="rounded-2xl border border-cyan-300/30 bg-cyan-300/10 p-4">
           <div className="text-[11px] uppercase tracking-[0.2em] text-slate-400">{tt(currentLanguage, { en: 'Score delta', pl: 'Zmiana score' })}</div>
-          <div className={`mt-2 text-2xl font-black ${(simulatedDecision.score || 0) >= (baseDecision.score || 0) ? 'text-emerald-300' : 'text-amber-200'}`}>
+          <div className={`mt-2 text-2xl font-black ${(simulatedDecision.score || 0) >= (baseDecision.score || 0) ? 'text-cyan-200' : 'text-amber-200'}`}>
             {(simulatedDecision.score || 0) - (baseDecision.score || 0) >= 0 ? '+' : ''}{(simulatedDecision.score || 0) - (baseDecision.score || 0)}
           </div>
         </div>
-        <div className="rounded-2xl border border-emerald-300/25 bg-emerald-300/10 p-4">
+        <div className="rounded-2xl border border-cyan-300/30 bg-cyan-300/10 p-4">
           <div className="text-[11px] uppercase tracking-[0.2em] text-slate-400">{tt(currentLanguage, { en: 'Momentum', pl: 'Momentum' })}</div>
           <div className="mt-2 text-2xl font-black text-white">{opportunity.momentumScore}/100</div>
         </div>
-        <div className="rounded-2xl border border-emerald-300/25 bg-emerald-300/10 p-4">
+        <div className="rounded-2xl border border-cyan-300/30 bg-cyan-300/10 p-4">
           <div className="text-[11px] uppercase tracking-[0.2em] text-slate-400">{tt(currentLanguage, { en: 'Execution readiness', pl: 'Gotowość wykonania' })}</div>
           <div className="mt-2 text-2xl font-black text-white">{opportunity.executionReadiness}/100</div>
         </div>
       </div>
 
       <div className="mt-5 flex flex-wrap gap-2">
-        <button type="button" onClick={() => applyPreset('upside')} className="rounded-full border border-emerald-300/35 bg-emerald-300/15 px-3 py-1.5 text-xs font-semibold text-emerald-100">
+        <button type="button" onClick={() => applyPreset('upside')} className="rounded-full border border-cyan-300/35 bg-cyan-300/14 px-3 py-1.5 text-xs font-semibold text-cyan-100">
           {tt(currentLanguage, { en: 'Upside case', pl: 'Scenariusz wzrostowy' })}
         </button>
         <button type="button" onClick={() => applyPreset('efficiency')} className="rounded-full border border-amber-300/30 bg-amber-300/12 px-3 py-1.5 text-xs font-semibold text-amber-100">
           {tt(currentLanguage, { en: 'Efficiency case', pl: 'Scenariusz efektywności' })}
         </button>
-        <button type="button" onClick={() => applyPreset('defensive')} className="rounded-full border border-emerald-300/30 bg-emerald-300/12 px-3 py-1.5 text-xs font-semibold text-emerald-100">
+        <button type="button" onClick={() => applyPreset('defensive')} className="rounded-full border border-cyan-300/32 bg-cyan-300/12 px-3 py-1.5 text-xs font-semibold text-cyan-100">
           {tt(currentLanguage, { en: 'Defensive case', pl: 'Scenariusz defensywny' })}
         </button>
         <button type="button" onClick={() => applyPreset('reset')} className="rounded-full border border-amber-300/30 bg-slate-950/35 px-3 py-1.5 text-xs font-semibold text-amber-100">
@@ -337,7 +337,7 @@ export default function Simulator({
       </div>
 
       <div className="mt-5 grid grid-cols-2 items-start gap-2 sm:gap-3">
-        <div className="min-w-0 rounded-[20px] border border-emerald-300/30 bg-emerald-300/8 p-2.5 sm:p-3">
+        <div className="min-w-0 rounded-[20px] border border-cyan-300/30 bg-cyan-300/8 p-2.5 sm:p-3">
           <div className="text-[10px] uppercase tracking-[0.2em] text-cyan-200 sm:text-[11px] sm:tracking-[0.22em]">
             {tt(currentLanguage, { en: 'Controls', pl: 'Sterowanie' })}
           </div>
@@ -351,24 +351,24 @@ export default function Simulator({
           </div>
         </div>
 
-        <div className="min-w-0 sticky top-2 rounded-[20px] border border-amber-300/35 bg-slate-950/85 p-2.5 backdrop-blur sm:rounded-[24px] sm:border-amber-300/30 sm:bg-slate-950/45 sm:p-3">
+        <div className="min-w-0 sticky top-2 rounded-[20px] border border-cyan-300/30 bg-cyan-300/8 p-2.5 backdrop-blur sm:rounded-[24px] sm:border-cyan-300/30 sm:bg-cyan-300/8 sm:p-3">
           <div className="text-[10px] uppercase tracking-[0.2em] text-cyan-200 sm:text-[11px] sm:tracking-[0.22em]">
             {tt(currentLanguage, { en: 'Live scenario economy', pl: 'Ekonomia scenariusza na żywo' })}
           </div>
           <div className="mt-2 grid gap-2">
-            <div className="rounded-xl border border-emerald-300/25 bg-emerald-300/10 px-2.5 py-2 sm:rounded-2xl sm:p-3">
+            <div className="rounded-xl border border-cyan-300/30 bg-cyan-300/10 px-2.5 py-2 sm:rounded-2xl sm:p-3">
               <div className="text-[11px] text-slate-400">{tt(currentLanguage, { en: 'Margin', pl: 'Marża' })}</div>
               <div className="mt-0.5 text-lg font-bold text-white sm:mt-1 sm:text-xl">{simulatedDecision.pricing.marginPercent}%</div>
             </div>
-            <div className="rounded-xl border border-emerald-300/25 bg-emerald-300/10 px-2.5 py-2 sm:rounded-2xl sm:p-3">
+            <div className="rounded-xl border border-cyan-300/30 bg-cyan-300/10 px-2.5 py-2 sm:rounded-2xl sm:p-3">
               <div className="text-[11px] text-slate-400">{tt(currentLanguage, { en: 'Suggested test price', pl: 'Sugerowana cena testowa' })}</div>
               <div className="mt-0.5 text-lg font-bold text-white sm:mt-1 sm:text-xl">{formatAmount(simulatedDecision.pricing.suggestedTestPrice)}</div>
             </div>
-            <div className="rounded-xl border border-emerald-300/25 bg-emerald-300/10 px-2.5 py-2 sm:rounded-2xl sm:p-3">
+            <div className="rounded-xl border border-cyan-300/30 bg-cyan-300/10 px-2.5 py-2 sm:rounded-2xl sm:p-3">
               <div className="text-[11px] text-slate-400">{tt(currentLanguage, { en: 'Monthly revenue proxy', pl: 'Proxy miesięcznego przychodu' })}</div>
               <div className="mt-0.5 text-lg font-bold text-white sm:mt-1 sm:text-xl">{formatAmount(simulatedDecision.market.estimatedMonthlyRevenue)}</div>
             </div>
-            <div className="rounded-xl border border-emerald-300/25 bg-emerald-300/10 px-2.5 py-2 sm:rounded-2xl sm:p-3">
+            <div className="rounded-xl border border-cyan-300/30 bg-cyan-300/10 px-2.5 py-2 sm:rounded-2xl sm:p-3">
               <div className="text-[11px] text-slate-400">{tt(currentLanguage, { en: 'Action bias', pl: 'Bias działania' })}</div>
               <div className="mt-0.5 text-lg font-bold text-white sm:mt-1 sm:text-xl">{opportunity.actionBias}</div>
             </div>
@@ -379,11 +379,11 @@ export default function Simulator({
 
       <div className="mt-5 grid gap-3 lg:grid-cols-3">
         {scenarioCards.map((item) => (
-          <div key={item.key} className="rounded-[22px] border border-emerald-300/25 bg-emerald-300/10 p-4">
+          <div key={item.key} className="rounded-[22px] border border-cyan-300/30 bg-cyan-300/10 p-4">
             <div className="text-[11px] uppercase tracking-[0.2em] text-slate-400">{item.label}</div>
             <div className="mt-2 flex items-center justify-between gap-3">
               <div className="text-xl font-black text-white">{item.decision.verdict}</div>
-              <div className={`rounded-full px-2.5 py-1 text-xs font-semibold ${item.delta >= 0 ? 'bg-emerald-400/10 text-emerald-200' : 'bg-amber-300/10 text-amber-100'}`}>
+              <div className={`rounded-full px-2.5 py-1 text-xs font-semibold ${item.delta >= 0 ? 'bg-cyan-300/12 text-cyan-100' : 'bg-amber-300/10 text-amber-100'}`}>
                 {item.delta >= 0 ? '+' : ''}{item.delta}
               </div>
             </div>

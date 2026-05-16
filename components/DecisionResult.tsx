@@ -601,9 +601,9 @@ function MoneyRow({
   language: Language;
 }) {
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-[20px] border border-white/10 bg-slate-950/40 px-4 py-3.5">
-      <div className="min-w-0 text-sm leading-5 text-slate-300 break-words">{label}</div>
-      <div className="pl-2 text-right text-sm font-semibold whitespace-nowrap text-white">
+    <div className="decision-money-row grid grid-cols-1 items-start gap-1.5 rounded-[20px] border border-white/10 bg-slate-950/40 px-4 py-3.5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:gap-3">
+      <div className="decision-money-label min-w-0 text-sm leading-5 text-slate-300 break-normal [overflow-wrap:break-word]">{label}</div>
+      <div className="decision-money-value text-left text-sm font-semibold text-white sm:pl-2 sm:text-right sm:whitespace-nowrap">
         {typeof value === 'number' && currency ? formatMoney(value, language, currency as SupportedCurrency) : '—'}
       </div>
     </div>
@@ -707,9 +707,9 @@ function buildDecisionResultViewModel(result: DecisionResultShape, currentLangua
           ? tt(currentLanguage, { en: 'Avoid for now', pl: 'Na ten moment lepiej odpuścić', pt: 'Melhor evitar por agora', ru: 'Пока лучше избегать' })
           : tt(currentLanguage, { en: 'Needs a short controlled test', pl: 'Wymaga krótkiego, kontrolowanego testu', pt: 'Precisa de um teste curto e controlado', ru: 'Нужен короткий контролируемый тест' }));
 
-  const infoCardClass = 'min-w-0 rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(15,23,42,0.42))] p-3 sm:p-5';
-  const infoTitleClass = 'text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-300';
-  const infoBodyClass = 'mt-3 space-y-2 text-[13px] leading-6 text-slate-100 sm:text-[15px] sm:leading-7';
+  const infoCardClass = 'decision-info-card min-w-0 rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(15,23,42,0.42))] p-3 sm:p-5';
+  const infoTitleClass = 'text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-300 sm:text-[11px] sm:tracking-[0.18em]';
+  const infoBodyClass = 'decision-info-body mt-3 space-y-2 text-[13px] leading-6 text-slate-100 break-normal [overflow-wrap:break-word] sm:text-[15px] sm:leading-7';
 
   return {
     isCostMode,
@@ -1024,7 +1024,7 @@ export function AdvancedDecisionReasoning({
         </div>
       </summary>
 
-      <div className="advanced-reasoning-main-grid mt-6 grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
+      <div className="advanced-reasoning-main-grid mt-6 grid grid-cols-1 gap-3 lg:grid-cols-2 lg:gap-4">
         <div className={infoCardClass}>
           <div className={infoTitleClass}>
             {isDocumentMode
@@ -1094,7 +1094,7 @@ export function AdvancedDecisionReasoning({
         </div>
 
         {!isDocumentMode && !isVisualMode && (
-          <div className={`${infoCardClass} col-span-2`}>
+          <div className={`${infoCardClass} md:col-span-2`}>
             <div className={infoTitleClass}>{tt(currentLanguage, { en: 'Signals', pl: 'Sygnały', es: 'Señales' })}</div>
             <div className={infoBodyClass}>
               {signals.length ? signals.map((item) => <div key={item}>• {item}</div>) : <div>—</div>}
@@ -1131,7 +1131,7 @@ export function AdvancedDecisionReasoning({
             </div>
           </div>
 
-          <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
+          <div className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-2">
             <div className="rounded-2xl border border-white/10 bg-slate-950/40 p-4">
               <div className="text-[11px] uppercase tracking-[0.18em] text-slate-400">{tt(currentLanguage, { en: 'Equipment list', pl: 'Lista sprzętu' })}</div>
               <div className="mt-2 space-y-2 text-sm text-slate-200">
@@ -1168,7 +1168,7 @@ export function AdvancedDecisionReasoning({
 
       {showGrowthIntel && (
         <>
-          <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
+          <div className="mt-5 grid grid-cols-1 gap-3 lg:grid-cols-2 lg:gap-4">
             <div className={infoCardClass}>
               <div className={infoTitleClass}>{tt(currentLanguage, { en: 'Market radar', pl: 'Radar rynku', es: 'Radar de mercado' })}</div>
               <div className="mt-3 flex flex-wrap gap-2">
@@ -1233,7 +1233,7 @@ export function AdvancedDecisionReasoning({
             </div>
           </div>
 
-          <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
+          <div className="mt-5 grid grid-cols-1 gap-3 lg:grid-cols-2 lg:gap-4">
             <div className={infoCardClass}>
               <div className={infoTitleClass}>{tt(currentLanguage, { en: 'Competitor watchtower', pl: 'Wieża konkurencji', es: 'Torre de competencia' })}</div>
               <div className="mt-3 flex flex-wrap gap-2">
@@ -1271,7 +1271,7 @@ export function AdvancedDecisionReasoning({
             </div>
           </div>
 
-          <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
+          <div className="mt-5 grid grid-cols-1 gap-3 lg:grid-cols-2 lg:gap-4">
             <div className={infoCardClass}>
               <div className={infoTitleClass}>{tt(currentLanguage, { en: 'Capital safeguards', pl: 'Zabezpieczenia kapitału', es: 'Salvaguardas de capital' })}</div>
               <div className={infoBodyClass}>
