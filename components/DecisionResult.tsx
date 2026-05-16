@@ -830,7 +830,7 @@ export default function DecisionResult({
             )}
           </div>
 
-          <div className="min-w-[220px] rounded-[24px] border border-white/10 bg-slate-950/40 p-4 sm:p-5 xl:max-w-[260px]">
+          <div className="w-full rounded-[24px] border border-white/10 bg-slate-950/40 p-4 sm:p-5 xl:w-auto xl:max-w-[260px]">
             <div className="text-[11px] uppercase tracking-[0.22em] text-slate-400">
               {tt(currentLanguage, { en: 'Executive summary', pl: 'Podsumowanie zarządcze', pt: 'Resumo executivo', ru: 'Краткое резюме' })}
             </div>
@@ -880,37 +880,29 @@ export default function DecisionResult({
         </div>
       ) : null}
 
-      <div className="flex flex-wrap gap-2">
-        <div className="w-1/2">
+      <div className="grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-4">
         <MetricCard
           language={currentLanguage}
           label={tt(currentLanguage, { en: 'Verdict', pl: 'Werdykt', pt: 'Veredito', ru: 'Вердикт' })}
           value={isDocumentMode ? tt(currentLanguage, { en: 'Review', pl: 'Przegląd', pt: 'Revisão', ru: 'Обзор' }) : isVisualMode ? tt(currentLanguage, { en: 'Insight', pl: 'Odczyt', pt: 'Insight', ru: 'Инсайт' }) : localizeVerdict(result.verdict, currentLanguage)}
         />
-        </div>
-        <div className="w-1/2">
         <MetricCard
           language={currentLanguage}
           label={isDocumentMode || isVisualMode || isServiceMode ? tt(currentLanguage, { en: 'Readiness', pl: 'Gotowość', pt: 'Prontidão', ru: 'Готовность' }) : tt(currentLanguage, { en: 'Margin', pl: 'Marża', pt: 'Margem', ru: 'Маржа' })}
           value={isDocumentMode || isVisualMode || isServiceMode ? `${result.moatScore ?? 0}%` : typeof result.pricing?.marginPercent === 'number' ? `${result.pricing.marginPercent}%` : '—'}
           sublabel={!isDocumentMode && !isVisualMode ? `${tt(currentLanguage, { en: 'Score', pl: 'Wynik', pt: 'Pontuação', ru: 'Оценка' })}: ${result.score ?? 0}/100` : undefined}
         />
-        </div>
-        <div className="w-1/2">
         <MetricCard
           language={currentLanguage}
           label={tt(currentLanguage, { en: 'Risk', pl: 'Ryzyko', pt: 'Risco', ru: 'Риск' })}
           value={localizeRisk(result.burnRisk, currentLanguage)}
           sublabel={localizeConfidence(result.confidenceLabel, currentLanguage)}
         />
-        </div>
-        <div className="w-1/2">
         <MetricCard
           language={currentLanguage}
           label={tt(currentLanguage, { en: 'Next step', pl: 'Następny krok', pt: 'Próximo passo', ru: 'Следующий шаг' })}
           value={String(primaryNextStep)}
         />
-        </div>
       </div>
 
       {hybridBreakdown ? (
@@ -927,9 +919,9 @@ export default function DecisionResult({
             {hybridBreakdown.summary || tt(currentLanguage, { en: 'The model is split into separate streams so you can see what to launch first.', pl: 'Model jest rozdzielony na osobne strumienie, aby było jasne, co uruchomić najpierw.' })}
           </p>
 
-          <div className="mt-4 flex flex-wrap gap-2 sm:gap-3">
+          <div className="mt-4 grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-3">
             {(hybridBreakdown.lanes || []).map((lane) => (
-              <div key={lane.key} className="w-1/2 sm:w-1/3 rounded-2xl border border-white/10 bg-slate-950/45 p-3 sm:p-4">
+              <div key={lane.key} className="rounded-2xl border border-white/10 bg-slate-950/45 p-3 sm:p-4">
                 <div className="flex items-center justify-between gap-2">
                   <div className="text-sm font-semibold text-white">{lane.label}</div>
                   <span className={`rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] ${readinessTone(lane.readiness)}`}>
@@ -994,9 +986,9 @@ export function AdvancedDecisionReasoning({
   const highlightedNarrative = !narrativeMismatch ? normalizeHighlightedNarrative(result.text) : '';
 
   return (
-    <details className="advanced-reasoning-shell advanced-reasoning-hero rounded-[32px] border border-white/10 bg-white/[0.03] p-5 sm:p-6 xl:p-8" open>
-      <summary className="advanced-reasoning-toggle advanced-reasoning-hero-toggle cursor-pointer list-none rounded-[28px] border border-white/10 p-5 sm:p-6 xl:p-7">
-        <div className="advanced-reasoning-toggle-inner grid gap-5 xl:grid-cols-[1.25fr_0.75fr] xl:items-end">
+    <details className="advanced-reasoning-shell advanced-reasoning-hero rounded-[32px] border border-white/10 bg-white/[0.03] p-3 sm:p-5 xl:p-8" open>
+      <summary className="advanced-reasoning-toggle advanced-reasoning-hero-toggle cursor-pointer list-none rounded-[28px] border border-white/10 p-3 sm:p-5 xl:p-7">
+        <div className="advanced-reasoning-toggle-inner grid gap-4 sm:gap-5 xl:grid-cols-[1.25fr_0.75fr] xl:items-end">
           <div>
             <div className="text-[11px] uppercase tracking-[0.22em] text-slate-500">{tt(currentLanguage, { en: 'Advanced decision layer', pl: 'Zaawansowana warstwa decyzji', es: 'Capa avanzada de decisión', pt: 'Camada avançada de decisão', ru: 'Расширенный слой решения' })}</div>
             <div className="mt-2 text-[clamp(1.6rem,2.8vw,2.8rem)] font-black leading-[0.98] tracking-[-0.04em] text-white">{tt(currentLanguage, { en: 'Advanced reasoning below the full result view', pl: 'Zaawansowane uzasadnienie w pełnej szerokości', es: 'Razonamiento avanzado bajo la vista completa del resultado', pt: 'Raciocínio avançado em largura total', ru: 'Расширенное обоснование во всю ширину' })}</div>
