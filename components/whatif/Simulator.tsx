@@ -97,9 +97,9 @@ function RangeControl({
   onChange: (value: number) => void;
 }) {
   return (
-    <label className="block rounded-[22px] border border-white/10 bg-slate-950/40 p-4">
-      <div className="flex items-center justify-between gap-3 text-sm text-slate-200">
-        <span>{label}</span>
+    <label className="block rounded-[18px] border border-white/10 bg-slate-950/40 p-3">
+      <div className="flex items-center justify-between gap-2 text-sm text-slate-200">
+        <span className="pr-2 text-[13px] leading-5 text-slate-200">{label}</span>
         <span className="font-semibold text-white">{value}{suffix || ''}</span>
       </div>
       <input
@@ -263,60 +263,45 @@ export default function Simulator({
         </button>
       </div>
 
-      <div className="mt-5 grid gap-3 xl:grid-cols-2">
-        <RangeControl label={tt(currentLanguage, { en: 'Sell price', pl: 'Cena sprzedaży' })} value={Number(controls.price || 0)} min={5} max={500} step={1} onChange={(value) => update('price', value)} />
-        <RangeControl label={tt(currentLanguage, { en: 'Estimated cost', pl: 'Szacowany koszt' })} value={Number(controls.cost || 0)} min={1} max={350} step={1} onChange={(value) => update('cost', value)} />
-        <RangeControl label={tt(currentLanguage, { en: 'Demand', pl: 'Popyt' })} value={Number(controls.demand || 0)} min={0} max={100} step={1} suffix="/100" onChange={(value) => update('demand', value)} />
-        <RangeControl label={tt(currentLanguage, { en: 'Competition', pl: 'Konkurencja' })} value={Number(controls.competition || 0)} min={0} max={100} step={1} suffix="/100" onChange={(value) => update('competition', value)} />
-        <RangeControl label={tt(currentLanguage, { en: 'Test budget', pl: 'Budżet testu' })} value={Number(controls.adBudget || 0)} min={50} max={2500} step={10} onChange={(value) => update('adBudget', value)} />
-        <RangeControl label={tt(currentLanguage, { en: 'Market monthly units', pl: 'Miesięczny wolumen rynku' })} value={Number(controls.marketMonthlyUnits || 0)} min={100} max={10000} step={50} onChange={(value) => update('marketMonthlyUnits', value)} />
-      </div>
+      <div className="mt-5 grid grid-cols-[1.08fr_0.92fr] items-start gap-2 sm:gap-3">
+        <div className="rounded-[20px] border border-white/10 bg-slate-950/35 p-2.5 sm:p-3">
+          <div className="text-[10px] uppercase tracking-[0.2em] text-cyan-200 sm:text-[11px] sm:tracking-[0.22em]">
+            {tt(currentLanguage, { en: 'Controls', pl: 'Sterowanie' })}
+          </div>
+          <div className="mt-2 space-y-2">
+            <RangeControl label={tt(currentLanguage, { en: 'Sell price', pl: 'Cena sprzedaży' })} value={Number(controls.price || 0)} min={5} max={500} step={1} onChange={(value) => update('price', value)} />
+            <RangeControl label={tt(currentLanguage, { en: 'Estimated cost', pl: 'Szacowany koszt' })} value={Number(controls.cost || 0)} min={1} max={350} step={1} onChange={(value) => update('cost', value)} />
+            <RangeControl label={tt(currentLanguage, { en: 'Demand', pl: 'Popyt' })} value={Number(controls.demand || 0)} min={0} max={100} step={1} suffix="/100" onChange={(value) => update('demand', value)} />
+            <RangeControl label={tt(currentLanguage, { en: 'Competition', pl: 'Konkurencja' })} value={Number(controls.competition || 0)} min={0} max={100} step={1} suffix="/100" onChange={(value) => update('competition', value)} />
+            <RangeControl label={tt(currentLanguage, { en: 'Test budget', pl: 'Budżet testu' })} value={Number(controls.adBudget || 0)} min={50} max={2500} step={10} onChange={(value) => update('adBudget', value)} />
+            <RangeControl label={tt(currentLanguage, { en: 'Market monthly units', pl: 'Miesięczny wolumen rynku' })} value={Number(controls.marketMonthlyUnits || 0)} min={100} max={10000} step={50} onChange={(value) => update('marketMonthlyUnits', value)} />
+          </div>
+        </div>
 
-      <div className="mt-4 sticky bottom-2 z-20 rounded-[18px] border border-cyan-300/25 bg-slate-950/85 px-3 py-2.5 backdrop-blur md:static md:mt-5 md:rounded-[24px] md:border-white/10 md:bg-slate-950/45 md:p-4">
-        <div className="text-[10px] uppercase tracking-[0.2em] text-cyan-200 md:text-[11px] md:tracking-[0.22em]">
-          {tt(currentLanguage, { en: 'Live scenario economy', pl: 'Ekonomia scenariusza na żywo' })}
+        <div className="sticky top-2 rounded-[20px] border border-cyan-300/25 bg-slate-950/85 p-2.5 backdrop-blur sm:rounded-[24px] sm:border-white/10 sm:bg-slate-950/45 sm:p-3">
+          <div className="text-[10px] uppercase tracking-[0.2em] text-cyan-200 sm:text-[11px] sm:tracking-[0.22em]">
+            {tt(currentLanguage, { en: 'Live scenario economy', pl: 'Ekonomia scenariusza na żywo' })}
+          </div>
+          <div className="mt-2 grid gap-2">
+            <div className="rounded-xl border border-white/10 bg-white/[0.04] px-2.5 py-2 sm:rounded-2xl sm:p-3">
+              <div className="text-[11px] text-slate-400">{tt(currentLanguage, { en: 'Margin', pl: 'Marża' })}</div>
+              <div className="mt-0.5 text-lg font-bold text-white sm:mt-1 sm:text-xl">{simulatedDecision.pricing.marginPercent}%</div>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/[0.04] px-2.5 py-2 sm:rounded-2xl sm:p-3">
+              <div className="text-[11px] text-slate-400">{tt(currentLanguage, { en: 'Suggested test price', pl: 'Sugerowana cena testowa' })}</div>
+              <div className="mt-0.5 text-lg font-bold text-white sm:mt-1 sm:text-xl">{formatAmount(simulatedDecision.pricing.suggestedTestPrice)}</div>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/[0.04] px-2.5 py-2 sm:rounded-2xl sm:p-3">
+              <div className="text-[11px] text-slate-400">{tt(currentLanguage, { en: 'Monthly revenue proxy', pl: 'Proxy miesięcznego przychodu' })}</div>
+              <div className="mt-0.5 text-lg font-bold text-white sm:mt-1 sm:text-xl">{formatAmount(simulatedDecision.market.estimatedMonthlyRevenue)}</div>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/[0.04] px-2.5 py-2 sm:rounded-2xl sm:p-3">
+              <div className="text-[11px] text-slate-400">{tt(currentLanguage, { en: 'Action bias', pl: 'Bias działania' })}</div>
+              <div className="mt-0.5 text-lg font-bold text-white sm:mt-1 sm:text-xl">{opportunity.actionBias}</div>
+            </div>
+          </div>
+          <p className="mt-2.5 text-xs leading-6 text-slate-300 sm:text-sm sm:leading-7">{opportunity.headline}</p>
         </div>
-        <div className="mt-2 grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-3">
-          <div className="rounded-xl border border-white/10 bg-white/[0.04] px-2.5 py-2 md:rounded-2xl md:p-3">
-            <div className="text-[11px] text-slate-400">{tt(currentLanguage, { en: 'Margin', pl: 'Marża' })}</div>
-            <div className="mt-0.5 text-lg font-bold text-white md:mt-1 md:text-xl">{simulatedDecision.pricing.marginPercent}%</div>
-          </div>
-          <div className="rounded-xl border border-white/10 bg-white/[0.04] px-2.5 py-2 md:rounded-2xl md:p-3">
-            <div className="text-[11px] text-slate-400">{tt(currentLanguage, { en: 'Test price', pl: 'Cena testowa' })}</div>
-            <div className="mt-0.5 text-lg font-bold text-white md:mt-1 md:text-xl">{formatAmount(simulatedDecision.pricing.suggestedTestPrice)}</div>
-          </div>
-          <div className="rounded-xl border border-white/10 bg-white/[0.04] px-2.5 py-2 md:rounded-2xl md:p-3">
-            <div className="text-[11px] text-slate-400">{tt(currentLanguage, { en: 'Revenue proxy', pl: 'Proxy przychodu' })}</div>
-            <div className="mt-0.5 text-lg font-bold text-white md:mt-1 md:text-xl">{formatAmount(simulatedDecision.market.estimatedMonthlyRevenue)}</div>
-          </div>
-          <div className="rounded-xl border border-white/10 bg-white/[0.04] px-2.5 py-2 md:rounded-2xl md:p-3">
-            <div className="text-[11px] text-slate-400">{tt(currentLanguage, { en: 'Bias', pl: 'Bias' })}</div>
-            <div className="mt-0.5 text-lg font-bold text-white md:mt-1 md:text-xl">{opportunity.actionBias}</div>
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-5 rounded-[24px] border border-white/10 bg-slate-950/45 p-4 sm:p-5">
-        <div className="text-[11px] uppercase tracking-[0.22em] text-cyan-200">{tt(currentLanguage, { en: 'Scenario economics', pl: 'Ekonomia scenariusza' })}</div>
-        <div className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3">
-            <div className="text-xs text-slate-400">{tt(currentLanguage, { en: 'Margin', pl: 'Marża' })}</div>
-            <div className="mt-1 text-xl font-bold text-white">{simulatedDecision.pricing.marginPercent}%</div>
-          </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3">
-            <div className="text-xs text-slate-400">{tt(currentLanguage, { en: 'Suggested test price', pl: 'Sugerowana cena testowa' })}</div>
-            <div className="mt-1 text-xl font-bold text-white">{formatAmount(simulatedDecision.pricing.suggestedTestPrice)}</div>
-          </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3">
-            <div className="text-xs text-slate-400">{tt(currentLanguage, { en: 'Monthly revenue proxy', pl: 'Proxy miesięcznego przychodu' })}</div>
-            <div className="mt-1 text-xl font-bold text-white">{formatAmount(simulatedDecision.market.estimatedMonthlyRevenue)}</div>
-          </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3">
-            <div className="text-xs text-slate-400">{tt(currentLanguage, { en: 'Action bias', pl: 'Bias działania' })}</div>
-            <div className="mt-1 text-xl font-bold text-white">{opportunity.actionBias}</div>
-          </div>
-        </div>
-        <p className="mt-3 text-sm leading-7 text-slate-300">{opportunity.headline}</p>
       </div>
 
       <div className="mt-5 grid gap-3 lg:grid-cols-3">
