@@ -265,14 +265,14 @@ export default function DashboardShell({
             <ReferralPanel currentLanguage={language} {...referralProps} />
           </div>
         </TutorialStep>
-
-        {currentDecision ? (
-          <div className="mt-6">
-            <Simulator result={currentDecision} currentLanguage={language} />
-          </div>
-        ) : null}
       </div>
       </section>
+
+      {currentDecision ? (
+        <div className="mt-6">
+          <Simulator result={currentDecision} currentLanguage={language} />
+        </div>
+      ) : null}
 
       {currentDecision ? (
         <>

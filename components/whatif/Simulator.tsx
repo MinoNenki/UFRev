@@ -336,8 +336,8 @@ export default function Simulator({
         </button>
       </div>
 
-      <div className="mt-5 grid grid-cols-1 items-start gap-3 lg:grid-cols-2 lg:items-stretch lg:gap-4">
-        <div className="min-w-0 rounded-[20px] border border-cyan-300/30 bg-cyan-300/8 p-2.5 sm:p-3 lg:h-full">
+      <div className="mt-5 grid grid-cols-1 items-start gap-4 md:grid-cols-2 md:items-stretch">
+        <div className="min-w-0 rounded-[20px] border border-cyan-300/30 bg-cyan-300/8 p-3 sm:p-4">
           <div className="text-[10px] uppercase tracking-[0.2em] text-cyan-200 sm:text-[11px] sm:tracking-[0.22em]">
             {tt(currentLanguage, { en: 'Controls', pl: 'Sterowanie' })}
           </div>
@@ -351,7 +351,7 @@ export default function Simulator({
           </div>
         </div>
 
-        <div className="min-w-0 self-start rounded-[20px] border border-cyan-300/30 bg-cyan-300/8 p-2.5 backdrop-blur lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:h-full sm:rounded-[24px] sm:border-cyan-300/30 sm:bg-cyan-300/8 sm:p-3">
+        <div className="min-w-0 self-start rounded-[20px] border border-cyan-300/30 bg-cyan-300/8 p-3 backdrop-blur sm:p-4 md:sticky md:top-24 md:max-h-[calc(100vh-7rem)] md:overflow-y-auto">
           <div className="text-[10px] uppercase tracking-[0.2em] text-cyan-200 sm:text-[11px] sm:tracking-[0.22em]">
             {tt(currentLanguage, { en: 'Live scenario economy', pl: 'Ekonomia scenariusza na żywo' })}
           </div>
