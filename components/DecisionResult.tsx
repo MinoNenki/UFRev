@@ -1,6 +1,5 @@
 'use client';
 
-import Simulator from '@/components/whatif/Simulator';
 import AdBanner from '@/components/ads/AdBanner';
 import { tr, type Language } from '@/lib/i18n';
 import { deriveMarketWatch, deriveOpportunityProfile } from '@/lib/decision-engine';
@@ -1290,9 +1289,6 @@ export function AdvancedDecisionReasoning({
             </div>
           </div>
 
-          <div className="mt-5">
-            <Simulator result={result} currentLanguage={currentLanguage} />
-          </div>
         </>
       )}
     </details>

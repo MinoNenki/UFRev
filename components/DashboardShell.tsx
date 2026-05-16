@@ -5,6 +5,7 @@ import AnalyzeForm from '@/components/AnalyzeForm';
 import DecisionResult, { AdvancedDecisionReasoning } from '@/components/DecisionResult';
 import RewardAdsPanel from '@/components/RewardAdsPanel';
 import ReferralPanel from '@/components/ReferralPanel';
+import Simulator from '@/components/whatif/Simulator';
 import TutorialMode, { TutorialStep } from '@/components/pro-ui/TutorialMode';
 import { tr, type Language } from '@/lib/i18n';
 
@@ -261,7 +262,10 @@ export default function DashboardShell({
         >
           <div className="grid gap-3 sm:gap-6 xl:grid-cols-2">
             <RewardAdsPanel currentLanguage={language} {...rewardAdsProps} />
-            <ReferralPanel currentLanguage={language} {...referralProps} />
+            <div className="space-y-3 sm:space-y-6">
+              <ReferralPanel currentLanguage={language} {...referralProps} />
+              {currentDecision ? <Simulator result={currentDecision} currentLanguage={language} /> : null}
+            </div>
           </div>
         </TutorialStep>
       </div>

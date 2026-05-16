@@ -124,10 +124,16 @@ function RangeControl({
     setManualValue(String(snapped));
   };
 
+  const applyDelta = (direction: -1 | 1) => {
+    const next = clamp(round(value + direction * step, stepPrecision), min, max);
+    onChange(next);
+    setManualValue(String(next));
+  };
+
   return (
     <label className="block rounded-[18px] border border-white/10 bg-slate-950/40 p-3">
       <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 text-sm text-slate-200">
-        <span className="min-w-0 break-words pr-1 text-[13px] leading-5 text-slate-200">{label}</span>
+        <span className="min-w-0 break-normal pr-1 text-[13px] leading-5 text-slate-200">{label}</span>
         <span className="shrink-0 whitespace-nowrap rounded-lg border border-white/10 bg-white/[0.04] px-2 py-0.5 font-semibold text-white">{value}{suffix || ''}</span>
       </div>
       <input
@@ -144,7 +150,15 @@ function RangeControl({
         <div className="text-[10px] uppercase tracking-[0.14em] text-slate-400">
           {tt(language, { en: 'Enter manually', pl: 'Wpisz ręcznie' })}
         </div>
-        <div className="mt-1 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
+        <div className="mt-1 grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2">
+          <button
+            type="button"
+            onClick={() => applyDelta(-1)}
+            className="h-9 w-9 rounded-lg border border-white/10 bg-white/[0.04] text-base font-semibold text-slate-100"
+            aria-label={tt(language, { en: 'Decrease', pl: 'Zmniejsz' })}
+          >
+            -
+          </button>
           <input
             type="text"
             inputMode="decimal"
@@ -159,8 +173,16 @@ function RangeControl({
             }}
             className="min-w-0 rounded-lg border border-white/10 bg-white/[0.04] px-2.5 py-1.5 text-sm text-white outline-none transition focus:border-cyan-300/40"
           />
-          <span className="shrink-0 text-[11px] text-slate-400">{min} - {max}</span>
+          <button
+            type="button"
+            onClick={() => applyDelta(1)}
+            className="h-9 w-9 rounded-lg border border-white/10 bg-white/[0.04] text-base font-semibold text-slate-100"
+            aria-label={tt(language, { en: 'Increase', pl: 'Zwiększ' })}
+          >
+            +
+          </button>
         </div>
+        <div className="mt-1 text-[11px] text-slate-400">{min} - {max}</div>
       </div>
     </label>
   );
@@ -314,7 +336,7 @@ export default function Simulator({
         </button>
       </div>
 
-      <div className="mt-5 grid grid-cols-[45%_55%] items-start gap-2 sm:gap-3">
+      <div className="mt-5 grid grid-cols-1 items-start gap-3 md:grid-cols-[45%_55%] md:gap-3">
         <div className="rounded-[20px] border border-white/10 bg-slate-950/35 p-2.5 sm:p-3">
           <div className="text-[10px] uppercase tracking-[0.2em] text-cyan-200 sm:text-[11px] sm:tracking-[0.22em]">
             {tt(currentLanguage, { en: 'Controls', pl: 'Sterowanie' })}
