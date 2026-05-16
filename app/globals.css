@@ -560,6 +560,24 @@ body::after {
     box-shadow: 0 14px 34px rgba(255,255,255,0.16), 0 0 24px rgba(251,191,36,0.12);
   }
 
+  .simulator-wow-shell {
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 26px 80px rgba(5, 46, 22, 0.45), 0 0 0 1px rgba(16, 185, 129, 0.22), 0 0 44px rgba(245, 158, 11, 0.16);
+    animation: simulatorWowPulse 3s ease-in-out infinite;
+  }
+
+  .simulator-wow-shell::before {
+    content: '';
+    position: absolute;
+    inset: -22% auto -22% -14%;
+    width: 30%;
+    pointer-events: none;
+    transform: skewX(-18deg);
+    background: linear-gradient(112deg, transparent 0%, rgba(245,158,11,0.05) 14%, rgba(245,158,11,0.24) 46%, rgba(16,185,129,0.28) 55%, transparent 100%);
+    animation: simulatorWowSweep 4.6s linear infinite;
+  }
+
   .chart-3d-shell {
     isolation: isolate;
   }
@@ -1621,6 +1639,17 @@ body::after {
   50% { transform: perspective(1200px) rotateX(1.2deg) rotateY(-1.5deg) translateY(-5px); }
 }
 
+@keyframes simulatorWowPulse {
+  0%, 100% { box-shadow: 0 26px 80px rgba(5,46,22,0.45), 0 0 0 1px rgba(16,185,129,0.22), 0 0 44px rgba(245,158,11,0.12); }
+  50% { box-shadow: 0 30px 100px rgba(5,46,22,0.58), 0 0 0 1px rgba(16,185,129,0.32), 0 0 58px rgba(245,158,11,0.24); }
+}
+
+@keyframes simulatorWowSweep {
+  0% { transform: translateX(-30%) skewX(-18deg); opacity: 0.2; }
+  35% { opacity: 0.9; }
+  100% { transform: translateX(430%) skewX(-18deg); opacity: 0; }
+}
+
 @keyframes homepageRibbonFloat {
   0% { transform: rotate(-8deg) translate3d(0, 0, 0) scale(1); }
   100% { transform: rotate(-4deg) translate3d(24px, 10px, 0) scale(1.06); }
@@ -1695,6 +1724,11 @@ body::after {
   .advanced-reasoning-toggle::before {
     animation: none !important;
     transform: none !important;
+  }
+
+  .simulator-wow-shell,
+  .simulator-wow-shell::before {
+    animation: none !important;
   }
 }
 

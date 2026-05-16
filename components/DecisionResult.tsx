@@ -1131,7 +1131,7 @@ export function AdvancedDecisionReasoning({
             </div>
           </div>
 
-          <div className="mt-4 grid grid-cols-2 gap-3">
+          <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
             <div className="rounded-2xl border border-white/10 bg-slate-950/40 p-4">
               <div className="text-[11px] uppercase tracking-[0.18em] text-slate-400">{tt(currentLanguage, { en: 'Equipment list', pl: 'Lista sprzętu' })}</div>
               <div className="mt-2 space-y-2 text-sm text-slate-200">
@@ -1168,7 +1168,7 @@ export function AdvancedDecisionReasoning({
 
       {showGrowthIntel && (
         <>
-          <div className="mt-5 grid grid-cols-2 gap-3 sm:gap-4">
+          <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
             <div className={infoCardClass}>
               <div className={infoTitleClass}>{tt(currentLanguage, { en: 'Market radar', pl: 'Radar rynku', es: 'Radar de mercado' })}</div>
               <div className="mt-3 flex flex-wrap gap-2">
@@ -1233,7 +1233,7 @@ export function AdvancedDecisionReasoning({
             </div>
           </div>
 
-          <div className="mt-5 grid grid-cols-2 gap-3 sm:gap-4">
+          <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
             <div className={infoCardClass}>
               <div className={infoTitleClass}>{tt(currentLanguage, { en: 'Competitor watchtower', pl: 'Wieża konkurencji', es: 'Torre de competencia' })}</div>
               <div className="mt-3 flex flex-wrap gap-2">
@@ -1271,7 +1271,7 @@ export function AdvancedDecisionReasoning({
             </div>
           </div>
 
-          <div className="mt-5 grid grid-cols-2 gap-3 sm:gap-4">
+          <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
             <div className={infoCardClass}>
               <div className={infoTitleClass}>{tt(currentLanguage, { en: 'Capital safeguards', pl: 'Zabezpieczenia kapitału', es: 'Salvaguardas de capital' })}</div>
               <div className={infoBodyClass}>
