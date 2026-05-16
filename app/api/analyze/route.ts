@@ -1938,8 +1938,31 @@ function buildFallbackAnalysis(params: {
   }
 
   if (currentLanguage === 'pl' && isServiceBusinessCase) {
+    const starterLane = serviceSetup?.primaryLane || 'Usługa o szybkim wejściu lokalnym';
+    const starterPkg = serviceSetup?.pricePackages?.[0];
+    const starterPriceFrom = starterPkg?.priceFrom != null ? formatMoney(starterPkg.priceFrom, currentLanguage, displayCurrency as any) : 'n/d';
+    const starterPriceTo = starterPkg?.priceTo != null ? formatMoney(starterPkg.priceTo, currentLanguage, displayCurrency as any) : 'n/d';
+
     return [
       directAnswerLead ? `Krótka odpowiedź: ${directAnswerLead}` : `Krótka odpowiedź: ${decision.verdict === 'BUY' ? 'wejdź ostrożnie i tylko po małym teście.' : decision.verdict === 'AVOID' ? 'na teraz lepiej odpuścić.' : 'zacznij od małego testu.'}`,
+      '',
+      'Plan Polska:',
+      `- Oferta startowa: ${starterLane}.`,
+      `- Model cenowy: pakiet bazowy ${starterPriceFrom} - ${starterPriceTo} z jasnym zakresem usługi i opcją dopłat za rozszerzenia.`,
+      '- Pozyskanie klientów: lokalne Google Maps, grupy branżowe FB, polecenia B2B i szybkie case study z pierwszych realizacji.',
+      '- Krok formalny/compliance: regulamin usługi, RODO dla leadów i wzór protokołu odbioru usługi.',
+      '',
+      'Plan UE:',
+      '- Oferta: ten sam core service + wersja oferty EN/DE + proces zdalnego onboardingu klienta.',
+      '- Model cenowy: baza + dopłata za realizację cross-border lub partnera lokalnego.',
+      '- Pozyskanie klientów: LinkedIn + katalogi branżowe + partnerstwa z lokalnymi wykonawcami.',
+      '- Krok formalny/compliance: przygotuj rozliczenia VAT OSS/IOSS i warunki świadczenia usług transgranicznych.',
+      '',
+      'Plan Global:',
+      '- Oferta: produktyzacja usługi (SOP, checklisty jakości, standaryzacja procesu).',
+      '- Model cenowy: pakiet wdrożeniowy + abonament QA/support dla partnerów.',
+      '- Pozyskanie klientów: outbound B2B, partnerstwa dystrybucyjne i publiczne case studies.',
+      '- Krok formalny/compliance: standard umów międzynarodowych, zakres odpowiedzialności i polityki jakości.',
       '',
       'Linki:',
       ...((productSourcing?.recommendedOffers || []).slice(0, 3).map((item: any) => `- ${item.title}: ${item.url}`) || []),
@@ -2307,6 +2330,7 @@ OUTPUT RULES:
 - If the user asks about opening a local business in a specific city/country, answer viability directly for that location with a concrete starter plan
 - If the user is researching a local service business, answer with the recommended service lane, starter equipment stack, startup-cost buckets, pricing-pack logic, and what to test first in that region
 - If the user asks how to start/open a business, ALWAYS include a visible startup-cost breakdown with ranges for equipment, operations, acquisition, and reserve
+- For startup/service expansion questions, when relevant split recommendations into local country, EU, and global rollout layers
 - If hard cost or market data is missing, recommend a conservative first batch and say which numbers still need confirmation before scaling
 - Then add "Reasons" with 3 concrete bullets when that structure fits the question
 - Then add "Actions" with 3 concrete next steps focused on what to change, add, remove, or test next
@@ -2941,7 +2965,8 @@ ${extractedText || (currentLanguage === 'pl'
       responseContractLines.push(
         currentLanguage === 'pl' ? '- Dla pytań startup/usługowych z brakującą ceną lub kosztem NIE dawaj binarnego „ODPUŚĆ” jako jedynego wniosku. Domyślnie prowadź usera przez „TEST KONTROLOWANY” z warunkami wejścia.' : '- For startup/service questions with missing hard price/cost data, do NOT give binary AVOID as the only conclusion. Default to CONTROLLED TEST guidance with entry conditions.',
         currentLanguage === 'pl' ? '- Dodaj sekcję „Plan wejścia 30 dni”: oferta, sprzęt, pozyskanie pierwszych klientów, próg opłacalności.' : '- Add a dedicated "30-day entry plan" section: offer, equipment, first-client acquisition, and profitability threshold.',
-        currentLanguage === 'pl' ? '- Jeśli pytanie dotyczy Polski/UE, podaj lokalny kontekst (stawki orientacyjne, model pakietów, krok formalny) zamiast ogólnego e-commerce werdyktu.' : '- If the question targets Poland/EU, include local context (indicative rates, package model, formal setup step) instead of generic e-commerce verdict language.'
+        currentLanguage === 'pl' ? '- Jeśli pytanie dotyczy Polski/UE, podaj lokalny kontekst (stawki orientacyjne, model pakietów, krok formalny) zamiast ogólnego e-commerce werdyktu.' : '- If the question targets Poland/EU, include local context (indicative rates, package model, formal setup step) instead of generic e-commerce verdict language.',
+        currentLanguage === 'pl' ? '- Odpowiedź musi zawierać 3 bloki: „Plan Polska”, „Plan UE”, „Plan Global”. W każdym bloku podaj: ofertę startową, model cenowy, pierwszy kanał pozyskania klientów i jeden krok formalny/compliance.' : '- Response must include 3 blocks: "Poland plan", "EU plan", and "Global plan". In each block provide: starter offer, pricing model, first acquisition channel, and one formal/compliance step.'
       );
     }
 
