@@ -153,7 +153,7 @@ export default async function DashboardPage() {
   ];
 
   return (
-    <main className="mx-auto max-w-[1500px] px-3 py-6 text-white sm:px-0 sm:py-12">
+    <main className="mx-auto max-w-[1500px] px-1.5 py-6 text-white sm:px-0 sm:py-12">
       <section className="mesh-panel dashboard-hero-shell animate-aurora relative rounded-[28px] p-4 shadow-[0_30px_140px_rgba(2,6,23,0.65)] sm:rounded-[40px] sm:p-9">
         <div className="spotlight-sweep" />
         <div className="noise-overlay" />

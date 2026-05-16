@@ -986,8 +986,8 @@ export function AdvancedDecisionReasoning({
   const highlightedNarrative = !narrativeMismatch ? normalizeHighlightedNarrative(result.text) : '';
 
   return (
-    <details className="advanced-reasoning-shell advanced-reasoning-hero rounded-[32px] border border-white/10 bg-white/[0.03] p-3 sm:p-5 xl:p-8" open>
-      <summary className="advanced-reasoning-toggle advanced-reasoning-hero-toggle cursor-pointer list-none rounded-[28px] border border-white/10 p-3 sm:p-5 xl:p-7">
+    <details className="advanced-reasoning-shell advanced-reasoning-hero advanced-reasoning-shell-mobile rounded-[32px] border border-white/10 bg-white/[0.03] p-3 sm:p-5 xl:p-8" open>
+      <summary className="advanced-reasoning-toggle advanced-reasoning-hero-toggle advanced-reasoning-toggle-mobile cursor-pointer list-none rounded-[28px] border border-white/10 p-3 sm:p-5 xl:p-7">
         <div className="advanced-reasoning-toggle-inner grid gap-4 sm:gap-5 xl:grid-cols-[1.25fr_0.75fr] xl:items-end">
           <div>
             <div className="text-[11px] uppercase tracking-[0.22em] text-slate-500">{tt(currentLanguage, { en: 'Advanced decision layer', pl: 'Zaawansowana warstwa decyzji', es: 'Capa avanzada de decisión', pt: 'Camada avançada de decisão', ru: 'Расширенный слой решения' })}</div>
@@ -1025,7 +1025,7 @@ export function AdvancedDecisionReasoning({
         </div>
       </summary>
 
-      <div className="mt-6 grid gap-4 xl:grid-cols-2">
+      <div className="advanced-reasoning-main-grid mt-6 grid gap-4 xl:grid-cols-2">
         <div className={infoCardClass}>
           <div className={infoTitleClass}>
             {isDocumentMode

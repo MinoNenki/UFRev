@@ -165,7 +165,7 @@ export default function DashboardShell({
             </div>
           ))}
         </div>
-        <div className="grid grid-cols-2 gap-1.5 md:hidden">
+        <div className="dashboard-signal-mobile-grid grid grid-cols-2 gap-1.5 md:hidden">
           {quickVisibilityCards.map((item, index) => index < 4 && (
             <div key={item.label} className="w-full rounded-xl border border-white/10 bg-slate-950/45 px-2 py-1.5">
               <div className="text-[8px] uppercase tracking-[0.15em] text-slate-500">{item.label}</div>
@@ -270,7 +270,7 @@ export default function DashboardShell({
       {currentDecision ? (
         <>
           <div className="mt-5 md:hidden">
-            <details open className="rounded-[24px] border border-white/10 bg-slate-950/45 p-2.5">
+            <details open className="mobile-advanced-wrapper rounded-[24px] border border-white/10 bg-slate-950/45 p-2.5">
               <summary className="cursor-pointer list-none rounded-2xl border border-cyan-300/20 bg-cyan-300/10 px-3 py-2.5 text-sm font-semibold text-cyan-100">
                 {tt(language, { en: 'Show full reasoning and rollout plan', pl: 'Pokaż pełne uzasadnienie i plan wdrożenia' })}
               </summary>
