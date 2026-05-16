@@ -132,8 +132,8 @@ function RangeControl({
 
   return (
     <label className="block rounded-[18px] border border-white/10 bg-slate-950/40 p-3">
-      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 text-sm text-slate-200">
-        <span className="min-w-0 break-normal pr-1 text-[13px] leading-5 text-slate-200">{label}</span>
+      <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-slate-200">
+        <span className="min-w-0 flex-1 text-[13px] leading-5 text-slate-200">{label}</span>
         <span className="shrink-0 whitespace-nowrap rounded-lg border border-white/10 bg-white/[0.04] px-2 py-0.5 font-semibold text-white">{value}{suffix || ''}</span>
       </div>
       <input
@@ -150,11 +150,11 @@ function RangeControl({
         <div className="text-[10px] uppercase tracking-[0.14em] text-slate-400">
           {tt(language, { en: 'Enter manually', pl: 'Wpisz ręcznie' })}
         </div>
-        <div className="mt-1 grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2">
+        <div className="mt-1 grid grid-cols-3 items-center gap-2">
           <button
             type="button"
             onClick={() => applyDelta(-1)}
-            className="h-9 w-9 rounded-lg border border-white/10 bg-white/[0.04] text-base font-semibold text-slate-100"
+            className="h-9 w-full rounded-lg border border-white/10 bg-white/[0.04] text-base font-semibold text-slate-100"
             aria-label={tt(language, { en: 'Decrease', pl: 'Zmniejsz' })}
           >
             -
@@ -171,12 +171,12 @@ function RangeControl({
                 commitManualValue(manualValue);
               }
             }}
-            className="min-w-0 rounded-lg border border-white/10 bg-white/[0.04] px-2.5 py-1.5 text-sm text-white outline-none transition focus:border-cyan-300/40"
+            className="min-w-0 w-full rounded-lg border border-white/10 bg-white/[0.04] px-2 py-1.5 text-center text-sm text-white outline-none transition focus:border-cyan-300/40"
           />
           <button
             type="button"
             onClick={() => applyDelta(1)}
-            className="h-9 w-9 rounded-lg border border-white/10 bg-white/[0.04] text-base font-semibold text-slate-100"
+            className="h-9 w-full rounded-lg border border-white/10 bg-white/[0.04] text-base font-semibold text-slate-100"
             aria-label={tt(language, { en: 'Increase', pl: 'Zwiększ' })}
           >
             +

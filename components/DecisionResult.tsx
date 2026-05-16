@@ -990,7 +990,7 @@ export function AdvancedDecisionReasoning({
         <div className="advanced-reasoning-toggle-inner grid gap-4 sm:gap-5 xl:grid-cols-[1.25fr_0.75fr] xl:items-end">
           <div>
             <div className="text-[11px] uppercase tracking-[0.22em] text-slate-500">{tt(currentLanguage, { en: 'Advanced decision layer', pl: 'Zaawansowana warstwa decyzji', es: 'Capa avanzada de decisión', pt: 'Camada avançada de decisão', ru: 'Расширенный слой решения' })}</div>
-            <div className="mt-2 text-[clamp(1.6rem,2.8vw,2.8rem)] font-black leading-[0.98] tracking-[-0.04em] text-white">{tt(currentLanguage, { en: 'Advanced reasoning below the full result view', pl: 'Zaawansowane uzasadnienie w pełnej szerokości', es: 'Razonamiento avanzado bajo la vista completa del resultado', pt: 'Raciocínio avançado em largura total', ru: 'Расширенное обоснование во всю ширину' })}</div>
+            <div className="mt-2 text-[clamp(1.6rem,2.8vw,2.8rem)] font-black leading-[0.98] tracking-[-0.04em] text-white">{tt(currentLanguage, { en: 'Advanced reasoning below the full result view', pl: 'Strategiczny kokpit decyzji', es: 'Razonamiento avanzado bajo la vista completa del resultado', pt: 'Raciocínio avançado em largura total', ru: 'Расширенное обоснование во всю ширину' })}</div>
             <p className="mt-3 max-w-5xl text-sm leading-7 text-slate-200 sm:text-[15px]">{tt(currentLanguage, { en: 'This area now works like a real analysis stage: you get the numbers, market radar, rollout, watchtower, safeguards, and scenario simulation in one broad surface without the narrow side-column squeeze.', pl: 'Ten blok działa teraz jak pełna scena analizy: dostajesz liczby, radar rynku, rollout, watchtower, zabezpieczenia i symulację na jednej szerokiej powierzchni, bez ścisku bocznej kolumny.', es: 'Esta área ahora funciona como una etapa real de análisis: recibes números, radar de mercado, rollout, watchtower, salvaguardas y simulación de escenarios en una superficie amplia, sin el estrechamiento de una columna lateral.', pt: 'Esta área funciona agora como um palco real da análise: números, radar de mercado, rollout, watchtower, salvaguardas e simulação numa superfície ampla.', ru: 'Этот блок теперь работает как полноценная сцена анализа: цифры, радар рынка, rollout, watchtower, защитные меры и симуляция на одной широкой поверхности.' })}</p>
             <div className="mt-4 flex flex-wrap gap-2.5">
               <span className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-100">{localizeExecutionMode(result.executionMode, currentLanguage)}</span>
@@ -1024,7 +1024,7 @@ export function AdvancedDecisionReasoning({
         </div>
       </summary>
 
-      <div className="advanced-reasoning-main-grid mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+      <div className="advanced-reasoning-main-grid mt-6 grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
         <div className={infoCardClass}>
           <div className={infoTitleClass}>
             {isDocumentMode
