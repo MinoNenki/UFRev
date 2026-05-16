@@ -515,7 +515,7 @@ function normalizeHighlightedNarrative(text?: string) {
   const raw = String(text || '').trim();
   if (!raw) return '';
 
-  return raw
+  const normalized = raw
     .split('\n')
     .map((line) => line.trimEnd())
     .map((line) => line
@@ -526,14 +526,32 @@ function normalizeHighlightedNarrative(text?: string) {
     )
     .join('\n')
     .trim();
+
+  // Add note about equipment and EU acquisition if not present
+  const hasEquipmentNote = /sprzęt|equipment|niezbęd/i.test(normalized);
+  const hasEUNote = /europa|europe|eu|zlecenia|acquisition|clients|contractsources/i.test(normalized);
+  
+  if (!hasEquipmentNote || !hasEUNote) {
+    let footer = '';
+    if (!hasEquipmentNote) {
+      footer += '\n\n📦 Sprzęt: Określ minimalny zestaw do startu, testów i skalowania lokalnie.';
+    }
+    if (!hasEUNote) {
+      footer += '\n\n🌍 Zlecenia UE: Przygotuj wersję EN/DE oferty i model partnerski dojazdu cross-border (np. LinkedIn, katalogi B2B, marketplace).';
+    }
+    footer += '\n\n💡 W celu uzyskania lepszej analizy: wypełnij zaawansowane pola w formularzu oraz dodaj plik — to znacznie poprawił werdykt.';
+    return normalized + footer;
+  }
+
+  return normalized;
 }
 
 function MetricCard({ label, value, sublabel }: { label: string; value: string; sublabel?: string | null; language?: Language }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 sm:p-5">
-      <div className="text-[11px] uppercase tracking-[0.2em] text-slate-400">{label}</div>
-      <div className="mt-2 break-words text-[clamp(1.1rem,2vw,1.35rem)] font-black leading-normal text-white [overflow-wrap:anywhere]">{value}</div>
-      {sublabel ? <div className="mt-1 text-xs text-slate-500">{sublabel}</div> : null}
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3 sm:p-4 lg:p-5">
+      <div className="text-[10px] uppercase tracking-[0.18em] text-slate-400 sm:text-[11px]">{label}</div>
+      <div className="mt-1.5 break-words text-[clamp(1rem,1.8vw,1.35rem)] font-black leading-normal text-white [overflow-wrap:anywhere] sm:mt-2">{value}</div>
+      {sublabel ? <div className="mt-0.5 text-[10px] text-slate-500 sm:text-xs">{sublabel}</div> : null}
     </div>
   );
 }
@@ -773,8 +791,8 @@ export default function DecisionResult({
   const highlightedNarrative = !narrativeMismatch ? normalizeHighlightedNarrative(result.text) : '';
 
   return (
-    <div className="space-y-5">
-      <div className="rounded-[30px] border border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(34,211,238,0.12),transparent_24%),linear-gradient(135deg,rgba(255,255,255,0.04),rgba(15,23,42,0.72))] p-5 sm:p-6 xl:p-7">
+    <div className="space-y-3 sm:space-y-4 lg:space-y-5">
+      <div className="rounded-[30px] border border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(34,211,238,0.12),transparent_24%),linear-gradient(135deg,rgba(255,255,255,0.04),rgba(15,23,42,0.72))] p-4 sm:p-5 lg:p-6 xl:p-7">
         <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
           <div className="min-w-0 max-w-4xl">
             <div className="flex flex-wrap items-center gap-2">
@@ -852,17 +870,17 @@ export default function DecisionResult({
       </div>
 
       {highlightedNarrative ? (
-        <div className="rounded-[24px] border border-amber-300/30 bg-[radial-gradient(circle_at_top_right,rgba(251,191,36,0.26),transparent_42%),linear-gradient(160deg,rgba(120,53,15,0.28),rgba(15,23,42,0.84))] p-4 shadow-[0_18px_60px_rgba(251,191,36,0.18)] sm:p-5 lg:p-6">
-          <div className="mb-3 inline-flex rounded-full border border-amber-200/45 bg-slate-950/45 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-100">
+        <div className="rounded-[24px] border border-amber-300/30 bg-[radial-gradient(circle_at_top_right,rgba(251,191,36,0.26),transparent_42%),linear-gradient(160deg,rgba(120,53,15,0.28),rgba(15,23,42,0.84))] p-3 shadow-[0_18px_60px_rgba(251,191,36,0.18)] sm:p-4 lg:p-5">
+          <div className="mb-2 inline-flex rounded-full border border-amber-200/45 bg-slate-950/45 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-amber-100 sm:mb-3 sm:px-3 sm:py-1 sm:text-[11px]">
             {tt(currentLanguage, { en: 'Detailed analysis description', pl: 'Wyróżniony opis analizy' })}
           </div>
-          <div className="max-h-[340px] overflow-y-auto whitespace-pre-wrap pr-1 text-[15px] leading-8 text-slate-50 sm:max-h-[420px] sm:text-base">
+          <div className="max-h-[280px] overflow-y-auto whitespace-pre-wrap pr-1 text-[14px] leading-7 text-slate-50 sm:max-h-[380px] sm:text-base sm:leading-8">
             {highlightedNarrative}
           </div>
         </div>
       ) : null}
 
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 sm:gap-3">
         <MetricCard
           language={currentLanguage}
           label={tt(currentLanguage, { en: 'Verdict', pl: 'Werdykt', pt: 'Veredito', ru: 'Вердикт' })}

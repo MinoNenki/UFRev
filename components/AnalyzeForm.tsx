@@ -600,7 +600,7 @@ export default function AnalyzeForm({
           </div>
 
           <div className="mt-4 flex flex-wrap gap-3 2xl:gap-2.5">
-            <label className="analysis-form-upload inline-flex cursor-pointer items-center gap-3 rounded-2xl border border-amber-200/30 bg-black/10 px-4 py-3 text-sm font-semibold text-white">
+            <label className="analysis-form-upload inline-flex cursor-pointer items-center gap-3 rounded-2xl border border-cyan-400/50 bg-cyan-400/20 px-4 py-3 text-sm font-semibold text-cyan-50 transition-all duration-300 animate-pulse shadow-[0_0_24px_rgba(34,211,238,0.4)] hover:shadow-[0_0_32px_rgba(34,211,238,0.6)] hover:border-cyan-300/70">
               <input
                 ref={fileInputRef}
                 type="file"
@@ -610,6 +610,7 @@ export default function AnalyzeForm({
                 multiple
                 onChange={handleFileChange}
               />
+              <span>📎</span>
               {tt(currentLanguage, { en: 'Add files', pl: 'Dodaj pliki', de: 'Dateien hinzufügen', es: 'Añadir archivos', ja: 'ファイルを追加', zh: '添加文件', id: 'Tambah file', ru: 'Добавить файлы' })}
             </label>
 
@@ -631,11 +632,15 @@ export default function AnalyzeForm({
             <button
               type="button"
               onClick={() => setAdvanced((v) => !v)}
-              className="rounded-2xl border border-white/10 px-4 py-3 text-sm font-semibold text-white hover:bg-white/5"
+              className={`rounded-2xl border px-4 py-3 text-sm font-semibold transition-all duration-300 ${
+                advanced
+                  ? 'border-cyan-400/30 bg-cyan-400/15 text-cyan-100 shadow-[0_0_20px_rgba(34,211,238,0.3)]'
+                  : 'border-amber-300/50 bg-amber-300/20 text-amber-50 animate-pulse shadow-[0_0_24px_rgba(251,191,36,0.4)]'
+              }`}
             >
               {advanced
                 ? tt(currentLanguage, { en: 'Hide advanced', pl: 'Ukryj zaawansowane', de: 'Erweitert ausblenden', es: 'Ocultar avanzado' })
-                : tt(currentLanguage, { en: 'Show advanced', pl: 'Pokaż zaawansowane', de: 'Erweitert anzeigen', es: 'Mostrar avanzado' })}
+                : tt(currentLanguage, { en: '⚡ Show advanced', pl: '⚡ Pokaż zaawansowane', de: '⚡ Erweitert anzeigen', es: '⚡ Mostrar avanzado' })}
             </button>
           </div>
 
