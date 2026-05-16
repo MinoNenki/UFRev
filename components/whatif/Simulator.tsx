@@ -263,7 +263,7 @@ export default function Simulator({
         </button>
       </div>
 
-      <div className="mt-5 grid grid-cols-[1.08fr_0.92fr] items-start gap-2 sm:gap-3">
+      <div className="mt-5 grid grid-cols-[45%_55%] items-start gap-2 sm:gap-3">
         <div className="rounded-[20px] border border-white/10 bg-slate-950/35 p-2.5 sm:p-3">
           <div className="text-[10px] uppercase tracking-[0.2em] text-cyan-200 sm:text-[11px] sm:tracking-[0.22em]">
             {tt(currentLanguage, { en: 'Controls', pl: 'Sterowanie' })}
