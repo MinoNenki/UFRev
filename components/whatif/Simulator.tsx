@@ -272,6 +272,30 @@ export default function Simulator({
         <RangeControl label={tt(currentLanguage, { en: 'Market monthly units', pl: 'Miesięczny wolumen rynku' })} value={Number(controls.marketMonthlyUnits || 0)} min={100} max={10000} step={50} onChange={(value) => update('marketMonthlyUnits', value)} />
       </div>
 
+      <div className="mt-4 sticky bottom-2 z-20 rounded-[18px] border border-cyan-300/25 bg-slate-950/85 px-3 py-2.5 backdrop-blur md:static md:mt-5 md:rounded-[24px] md:border-white/10 md:bg-slate-950/45 md:p-4">
+        <div className="text-[10px] uppercase tracking-[0.2em] text-cyan-200 md:text-[11px] md:tracking-[0.22em]">
+          {tt(currentLanguage, { en: 'Live scenario economy', pl: 'Ekonomia scenariusza na żywo' })}
+        </div>
+        <div className="mt-2 grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-3">
+          <div className="rounded-xl border border-white/10 bg-white/[0.04] px-2.5 py-2 md:rounded-2xl md:p-3">
+            <div className="text-[11px] text-slate-400">{tt(currentLanguage, { en: 'Margin', pl: 'Marża' })}</div>
+            <div className="mt-0.5 text-lg font-bold text-white md:mt-1 md:text-xl">{simulatedDecision.pricing.marginPercent}%</div>
+          </div>
+          <div className="rounded-xl border border-white/10 bg-white/[0.04] px-2.5 py-2 md:rounded-2xl md:p-3">
+            <div className="text-[11px] text-slate-400">{tt(currentLanguage, { en: 'Test price', pl: 'Cena testowa' })}</div>
+            <div className="mt-0.5 text-lg font-bold text-white md:mt-1 md:text-xl">{formatAmount(simulatedDecision.pricing.suggestedTestPrice)}</div>
+          </div>
+          <div className="rounded-xl border border-white/10 bg-white/[0.04] px-2.5 py-2 md:rounded-2xl md:p-3">
+            <div className="text-[11px] text-slate-400">{tt(currentLanguage, { en: 'Revenue proxy', pl: 'Proxy przychodu' })}</div>
+            <div className="mt-0.5 text-lg font-bold text-white md:mt-1 md:text-xl">{formatAmount(simulatedDecision.market.estimatedMonthlyRevenue)}</div>
+          </div>
+          <div className="rounded-xl border border-white/10 bg-white/[0.04] px-2.5 py-2 md:rounded-2xl md:p-3">
+            <div className="text-[11px] text-slate-400">{tt(currentLanguage, { en: 'Bias', pl: 'Bias' })}</div>
+            <div className="mt-0.5 text-lg font-bold text-white md:mt-1 md:text-xl">{opportunity.actionBias}</div>
+          </div>
+        </div>
+      </div>
+
       <div className="mt-5 rounded-[24px] border border-white/10 bg-slate-950/45 p-4 sm:p-5">
         <div className="text-[11px] uppercase tracking-[0.22em] text-cyan-200">{tt(currentLanguage, { en: 'Scenario economics', pl: 'Ekonomia scenariusza' })}</div>
         <div className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">

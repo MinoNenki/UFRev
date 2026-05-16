@@ -602,9 +602,9 @@ function MoneyRow({
   language: Language;
 }) {
   return (
-    <div className="flex items-center justify-between gap-4 rounded-[20px] border border-white/10 bg-slate-950/40 px-4 py-3.5">
-      <div className="text-sm text-slate-300">{label}</div>
-      <div className="text-sm font-semibold text-white">
+    <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-[20px] border border-white/10 bg-slate-950/40 px-4 py-3.5">
+      <div className="min-w-0 text-sm leading-5 text-slate-300 break-words">{label}</div>
+      <div className="pl-2 text-right text-sm font-semibold whitespace-nowrap text-white">
         {typeof value === 'number' && currency ? formatMoney(value, language, currency as SupportedCurrency) : '—'}
       </div>
     </div>
@@ -708,7 +708,7 @@ function buildDecisionResultViewModel(result: DecisionResultShape, currentLangua
           ? tt(currentLanguage, { en: 'Avoid for now', pl: 'Na ten moment lepiej odpuścić', pt: 'Melhor evitar por agora', ru: 'Пока лучше избегать' })
           : tt(currentLanguage, { en: 'Needs a short controlled test', pl: 'Wymaga krótkiego, kontrolowanego testu', pt: 'Precisa de um teste curto e controlado', ru: 'Нужен короткий контролируемый тест' }));
 
-  const infoCardClass = 'rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(15,23,42,0.42))] p-3 sm:p-5';
+  const infoCardClass = 'min-w-0 rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(15,23,42,0.42))] p-3 sm:p-5';
   const infoTitleClass = 'text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-300';
   const infoBodyClass = 'mt-3 space-y-2 text-[13px] leading-6 text-slate-100 sm:text-[15px] sm:leading-7';
 
