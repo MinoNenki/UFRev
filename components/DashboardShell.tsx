@@ -263,13 +263,14 @@ export default function DashboardShell({
           <div className="grid gap-3 sm:gap-6 xl:grid-cols-2">
             <RewardAdsPanel currentLanguage={language} {...rewardAdsProps} />
             <ReferralPanel currentLanguage={language} {...referralProps} />
-            {currentDecision ? (
-              <div className="xl:col-span-2">
-                <Simulator result={currentDecision} currentLanguage={language} />
-              </div>
-            ) : null}
           </div>
         </TutorialStep>
+
+        {currentDecision ? (
+          <div className="mt-6">
+            <Simulator result={currentDecision} currentLanguage={language} />
+          </div>
+        ) : null}
       </div>
       </section>
 
