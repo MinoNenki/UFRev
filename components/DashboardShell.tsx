@@ -33,11 +33,26 @@ export default function DashboardShell({
     rewardCredits: number;
   };
 }) {
-  const [currentDecision, setCurrentDecision] = useState<Decision | null>(initialLatestDecision);
+  const [currentDecision, setCurrentDecision] = useState<Decision | null>(null);
+  const hasInitialSavedDecision = Boolean(initialLatestDecision);
 
   const panelTitle = useMemo(
-    () =>
-      currentDecision === initialLatestDecision
+    () => {
+      if (!currentDecision && !hasInitialSavedDecision) {
+        return tt(language, {
+          en: 'No active result',
+          pl: 'Brak aktywnego wyniku',
+          de: 'Kein aktives Ergebnis',
+          es: 'Sin resultado activo',
+          ja: 'アクティブな結果なし',
+          zh: '无当前结果',
+          id: 'Tidak ada hasil aktif',
+          ru: 'Нет активного результата',
+          pt: 'Sem resultado ativo',
+        });
+      }
+
+      return currentDecision === initialLatestDecision && hasInitialSavedDecision
         ? tt(language, {
             en: 'Latest saved result',
             pl: 'Najnowszy zapisany wynik',
@@ -58,8 +73,9 @@ export default function DashboardShell({
             id: 'Hasil saat ini',
             ru: 'Текущий результат',
             pt: 'Resultado atual',
-          }),
-    [currentDecision, initialLatestDecision, language]
+          });
+    },
+    [currentDecision, hasInitialSavedDecision, initialLatestDecision, language]
   );
 
   const liveSignalCount = Array.isArray(currentDecision?.marketSignals) ? currentDecision.marketSignals.length : 0;

@@ -538,7 +538,7 @@ function normalizeHighlightedNarrative(text?: string) {
   const raw = String(text || '').trim();
   if (!raw) return '';
 
-  const normalized = raw
+  return raw
     .split('\n')
     .map((line) => line.trimEnd())
     .map((line) => line
@@ -549,24 +549,6 @@ function normalizeHighlightedNarrative(text?: string) {
     )
     .join('\n')
     .trim();
-
-  // Add note about equipment and EU acquisition if not present
-  const hasEquipmentNote = /sprzęt|equipment|niezbęd/i.test(normalized);
-  const hasEUNote = /europa|europe|eu|zlecenia|acquisition|clients|contractsources/i.test(normalized);
-  
-  if (!hasEquipmentNote || !hasEUNote) {
-    let footer = '';
-    if (!hasEquipmentNote) {
-      footer += '\n\n📦 Sprzęt: Określ minimalny zestaw do startu, testów i skalowania lokalnie.';
-    }
-    if (!hasEUNote) {
-      footer += '\n\n🌍 Zlecenia UE: Przygotuj wersję EN/DE oferty i model partnerski dojazdu cross-border (np. LinkedIn, katalogi B2B, marketplace).';
-    }
-    footer += '\n\n💡 W celu uzyskania lepszej analizy: wypełnij zaawansowane pola w formularzu oraz dodaj plik — to znacznie poprawił werdykt.';
-    return normalized + footer;
-  }
-
-  return normalized;
 }
 
 function MetricCard({ label, value, sublabel }: { label: string; value: string; sublabel?: string | null; language?: Language }) {

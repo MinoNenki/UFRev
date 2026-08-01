@@ -45,7 +45,7 @@ export default async function DashboardPage() {
     supabase.from('credit_reward_events').select('ads_watched').eq('user_id', user.id).eq('reward_date', today).maybeSingle(),
   ]);
 
-  const latestDecision = analyses?.[0]?.decision_json || null;
+  const latestDecision = null;
   const rewardToken = createRewardToken(user.id);
   const watchedRewardAds = rewardEvent?.ads_watched ?? 0;
   const rewardAdsLeftToday = Math.max(0, rewardSettings.dailyAdLimit - watchedRewardAds);
