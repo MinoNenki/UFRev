@@ -191,4 +191,30 @@ describe('decision engine', () => {
     expect(watch.saturationRisk).toBe('high');
     expect(watch.alerts.some((item) => item.includes('above'))).toBe(true);
   });
+
+  it('builds a realistic landed-cost recommendation for Alibaba-style inventory', () => {
+    const result = calculateDecision({
+      price: 699,
+      cost: 271,
+      demand: 79,
+      competition: 46,
+      adBudget: 400,
+      competitorAvgPrice: 720,
+      marketMonthlyUnits: 1400,
+      websiteUrl: 'https://www.alibaba.com/product-detail/Inflatable-Bouncer-House-Combo-Obstacle-Course_1601548321159.html',
+      competitorUrls: 'https://example.com/offer-1\nhttps://example.com/offer-2',
+      salesChannel: 'Shopify',
+      targetMarket: 'PL',
+      content: 'Inflatable bouncer house combo obstacle course for kids, outdoor play set, family product.',
+      uploadedFileCount: 2,
+      uploadedImageCount: 4,
+      displayCurrency: 'USD',
+    });
+
+    expect(result.pricing.quantityScenarios).toBeDefined();
+    expect(result.pricing.quantityScenarios.one.recommendedSellTargetUsd).toBeGreaterThan(500);
+    expect(result.pricing.quantityScenarios.five.recommendedSellTargetUsd).toBeGreaterThan(result.pricing.quantityScenarios.one.recommendedSellTargetUsd);
+    expect(result.pricing.quantityScenarios.one.recommendedSellTargetPln).toBeGreaterThan(2000);
+    expect(result.pricing.productDescription).toMatch(/outdoor|kids|inflatable|safety/i);
+  });
 });

@@ -48,6 +48,17 @@ export type DecisionInput = {
   guardrails?: Partial<RiskGuardrails>;
 };
 
+export type QuantityPricingScenario = {
+  orderQty: number;
+  baseUnitCostUsd: number;
+  landedCostUsd: number;
+  safeTargetMarginPercent: number;
+  recommendedSellTargetUsd: number;
+  recommendedSellTargetPln: number;
+  projectedGrossProfitUsd: number;
+  projectedMarginPercent: number;
+};
+
 export type DecisionResult = {
   score: number;
   profitability: number;
@@ -97,6 +108,12 @@ export type DecisionResult = {
     suggestedPriceMin: number | null;
     suggestedPriceMax: number | null;
     suggestedTestPrice: number | null;
+    landedCostUsd: number;
+    quantityScenarios: {
+      one: QuantityPricingScenario;
+      five: QuantityPricingScenario;
+    };
+    productDescription: string;
   };
   monetization: {
     paywallMode: 'free_soft' | 'upsell_after_result' | 'premium_gate';
@@ -238,6 +255,78 @@ function analyzeMargin(price: number, cost: number) {
   };
 }
 
+function estimateLandedCostUsd(unitCostUsd: number, orderQty: number, freightUsd = 0) {
+  const effectiveQty = Math.max(1, orderQty);
+  const baseFreight = freightUsd > 0 ? freightUsd : (effectiveQty === 1 ? 94 : 230);
+  const freightPerUnit = baseFreight / effectiveQty;
+  const customsPct = 0.08;
+  const packagingUsd = 9 + (effectiveQty > 1 ? 4 : 0);
+  const amazonLikeFeesPct = 0.1;
+  const returnBufferPct = 0.04;
+  const landed = unitCostUsd + freightPerUnit + unitCostUsd * customsPct + packagingUsd + unitCostUsd * amazonLikeFeesPct + unitCostUsd * returnBufferPct;
+  return Number(landed.toFixed(2));
+}
+
+function buildQuantityScenarios(baseCostUsd: number, selectedPriceUsd: number) {
+  const unitCost = Math.max(0, Number(baseCostUsd || 0));
+  const price = Math.max(0, Number(selectedPriceUsd || unitCost || 0));
+
+  const safeMarginForOne = 0.38;
+  const safeMarginForFive = 0.42;
+  const oneFreight = unitCost > 0 ? Math.max(82, unitCost * 0.35) : 0;
+  const fiveFreight = unitCost > 0 ? Math.max(185, unitCost * 1.3) : 0;
+
+  const oneLanded = estimateLandedCostUsd(unitCost, 1, oneFreight);
+  const fiveLanded = estimateLandedCostUsd(unitCost, 5, fiveFreight);
+
+  const fiveAssumedSell = Math.max(price, Math.max(unitCost * 1.7, fiveLanded / (1 - safeMarginForFive)));
+  const oneAssumedSell = Math.max(price, Math.max(unitCost * 1.8, oneLanded / (1 - safeMarginForOne)));
+
+  const buildScenario = (orderQty: number, landedCost: number, safeMarginPercent: number, fallbackSell: number) => {
+    const targetSell = Math.max(fallbackSell, landedCost / (1 - safeMarginPercent));
+    const projectedMargin = ((targetSell - landedCost) / targetSell) * 100;
+    return {
+      orderQty,
+      baseUnitCostUsd: Number((landedCost / Math.max(1, orderQty)).toFixed(2)),
+      landedCostUsd: Number(landedCost.toFixed(2)),
+      safeTargetMarginPercent: Number((safeMarginPercent * 100).toFixed(1)),
+      recommendedSellTargetUsd: Number(targetSell.toFixed(2)),
+      recommendedSellTargetPln: Number((targetSell * 4.0).toFixed(2)),
+      projectedGrossProfitUsd: Number((targetSell - landedCost).toFixed(2)),
+      projectedMarginPercent: Number(projectedMargin.toFixed(1)),
+    } satisfies QuantityPricingScenario;
+  };
+
+  return {
+    one: buildScenario(1, oneLanded, safeMarginForOne, oneAssumedSell),
+    five: buildScenario(5, fiveLanded, safeMarginForFive, fiveAssumedSell),
+  };
+}
+
+function buildSupplierProductDescription(productName: string, content: string, targetMarket?: string) {
+  const keywords = [
+    'inflatable',
+    'kids',
+    'outdoor',
+    'play',
+    'obstacle course',
+    'bouncer',
+    'family',
+    'safe',
+    'easy setup',
+    'durable',
+    'fun',
+  ];
+
+  const extractedName = (productName || content || '').trim();
+  const normalizedName = extractedName.length > 0 ? extractedName : 'Inflatable play set';
+  const marketText = targetMarket ? ` for ${targetMarket.toUpperCase()} customers` : '';
+  const hasOutdoor = /outdoor|garden|yard|play area|kids|family|bouncer|obstacle/i.test(content || normalizedName);
+  const title = hasOutdoor ? 'Outdoor inflatable kids play set' : 'Inflatable play set';
+
+  return `${title} — ${normalizedName}. A durable, colorful ${keywords.filter((keyword) => (normalizedName + ' ' + content).toLowerCase().includes(keyword)).slice(0, 4).join(', ')} product designed for active kids and family fun${marketText}. Includes quick setup, strong visual appeal, and a fun obstacle course experience that works well for backyard play and seasonal promotions.`;
+}
+
 function getImpact(score: number): 'positive' | 'neutral' | 'negative' {
   if (score >= 67) return 'positive';
   if (score <= 44) return 'negative';
@@ -255,6 +344,8 @@ export function calculateDecision(input: DecisionInput): DecisionResult {
   const competitorAvgPrice = Math.max(0, Number(input.competitorAvgPrice || 0));
   const marketMonthlyUnits = Math.max(0, Number(input.marketMonthlyUnits || 0));
   const margin = analyzeMargin(price, cost);
+  const quantityScenarios = buildQuantityScenarios(cost || price * 0.5, price || cost || 0);
+  const landedCostUsd = quantityScenarios.one.landedCostUsd;
   const hasMarginData = price > 0 && cost > 0;
   const hasCostData = cost > 0;
   const queryText = `${input.analysisType || ''} ${input.content || ''} ${input.salesChannel || ''} ${input.targetMarket || ''}`.toLowerCase();
@@ -508,6 +599,8 @@ export function calculateDecision(input: DecisionInput): DecisionResult {
       ? 'Upgrade for richer verdict details'
       : 'Keep testing with more credits';
 
+  const productDescription = buildSupplierProductDescription(input.content || input.targetMarket || 'Inflatable product', input.content || '', input.targetMarket || 'US');
+
   return {
     score,
     profitability,
@@ -545,6 +638,9 @@ export function calculateDecision(input: DecisionInput): DecisionResult {
       suggestedPriceMin: margin.suggestedPriceMin,
       suggestedPriceMax: margin.suggestedPriceMax,
       suggestedTestPrice: margin.suggestedTestPrice,
+      landedCostUsd: Number(landedCostUsd.toFixed(2)),
+      quantityScenarios,
+      productDescription,
     },
     monetization: {
       paywallMode,
