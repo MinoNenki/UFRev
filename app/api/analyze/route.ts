@@ -1488,12 +1488,12 @@ async function generateModelAnalysisText(params: {
   try {
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
-      temperature: 0.3,
-      max_tokens: 260,
+      temperature: 0.7,
+      max_tokens: 420,
       messages: [
         {
           role: 'system',
-          content: `${ANALYSIS_SYSTEM_PROMPT}\n\n${params.dynamicSystemPrompt}\n\n${modeInstruction}\n\nCRITICAL:\n- Answer the exact user question first\n- Use only the provided visual/document evidence\n- If something is unclear, say so directly instead of guessing`,
+          content: `${ANALYSIS_SYSTEM_PROMPT}\n\n${params.dynamicSystemPrompt}\n\n${modeInstruction}\n\nCRITICAL:\n- Answer the exact user question first\n- Use only the provided visual/document evidence\n- If something is unclear, say so directly instead of guessing\n- Write a rich, varied, specific narrative in 3-5 paragraphs with concrete business logic and no repeated template phrases\n- Clearly explain the actual reason behind the verdict, with true supporting evidence from the input\n- Use varied wording and sentence structure so each result reads differently from the last`,
         },
         {
           role: 'user',
