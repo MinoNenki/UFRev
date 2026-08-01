@@ -539,15 +539,17 @@ function normalizeHighlightedNarrative(text?: string) {
   if (!raw) return '';
 
   return raw
-    .split('\n')
-    .map((line) => line.trimEnd())
-    .map((line) => line
+    .split(/\n{2,}|\n/)
+    .map((block) => block.trim())
+    .filter(Boolean)
+    .map((block) => block
       .replace(/^#{1,6}\s+/g, '')
       .replace(/\*\*(.*?)\*\*/g, '$1')
       .replace(/^[-*]\s+/g, '• ')
       .replace(/^\d+[\.)]\s+/g, '• ')
-    )
-    .join('\n')
+      .replace(/\s{2,}/g, ' ')
+      .trim())
+    .join('\n\n')
     .trim();
 }
 
@@ -936,23 +938,60 @@ export default function DecisionResult({
 
       {result.pricing?.quantityScenarios && (
         <div className="rounded-[24px] border border-cyan-300/20 bg-[linear-gradient(135deg,rgba(34,211,238,0.12),rgba(15,23,42,0.75))] p-4 sm:p-5">
-          <div className="mb-3 text-[11px] uppercase tracking-[0.22em] text-cyan-100">
-            {tt(currentLanguage, { en: 'Margin by quantity', pl: 'Marża według ilości' })}
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+            <div className="text-[11px] uppercase tracking-[0.22em] text-cyan-100">
+              {tt(currentLanguage, { en: 'Margin by quantity', pl: 'Marża według ilości' })}
+            </div>
+            <div className="rounded-full border border-cyan-200/30 bg-slate-950/45 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-cyan-100">
+              {tt(currentLanguage, { en: '1-unit test vs 5-unit scale', pl: 'Test 1 sztuki vs skala 5 sztuk' })}
+            </div>
           </div>
+
           <div className="grid gap-3 md:grid-cols-2">
             {(['one', 'five'] as const).map((key) => {
               const scenario = result.pricing!.quantityScenarios![key];
+              const isOne = key === 'one';
+
               return (
-                <div key={key} className="rounded-[20px] border border-white/10 bg-slate-950/45 p-4">
-                  <div className="text-[11px] uppercase tracking-[0.18em] text-slate-400">
-                    {key === 'one' ? tt(currentLanguage, { en: '1 unit', pl: '1 sztuka' }) : tt(currentLanguage, { en: '5 units', pl: '5 sztuk' })}
+                <div
+                  key={key}
+                  className={`rounded-[20px] border p-4 ${isOne ? 'border-amber-300/30 bg-slate-950/60' : 'border-white/10 bg-slate-950/45'}`}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <div className="text-[11px] uppercase tracking-[0.18em] text-slate-400">
+                        {isOne ? tt(currentLanguage, { en: '1 unit', pl: '1 sztuka' }) : tt(currentLanguage, { en: '5 units', pl: '5 sztuk' })}
+                      </div>
+                      <div className="mt-2 text-2xl font-black text-white">{formatMoney(scenario.recommendedSellTargetUsd, currentLanguage, 'USD')}</div>
+                    </div>
+                    <div className={`rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] ${isOne ? 'border-amber-300/30 bg-amber-400/10 text-amber-100' : 'border-cyan-300/30 bg-cyan-400/10 text-cyan-100'}`}>
+                      {scenario.projectedMarginPercent}%
+                    </div>
                   </div>
-                  <div className="mt-2 text-xl font-black text-white">{formatMoney(scenario.recommendedSellTargetUsd, currentLanguage, 'USD')}</div>
-                  <div className="mt-1 text-sm text-slate-300">{formatMoney(scenario.recommendedSellTargetPln, currentLanguage, 'PLN')} / {tt(currentLanguage, { en: 'PLN target', pl: 'cel PLN' })}</div>
-                  <div className="mt-3 space-y-1 text-sm text-slate-200">
-                    <div>{tt(currentLanguage, { en: 'Landed cost', pl: 'Koszt lądowy' })}: {formatMoney(scenario.landedCostUsd, currentLanguage, 'USD')}</div>
-                    <div>{tt(currentLanguage, { en: 'Gross profit', pl: 'Zysk brutto' })}: {formatMoney(scenario.projectedGrossProfitUsd, currentLanguage, 'USD')}</div>
-                    <div>{tt(currentLanguage, { en: 'Margin', pl: 'Marża' })}: {scenario.projectedMarginPercent}%</div>
+
+                  <div className="mt-2 text-sm text-slate-300">
+                    {formatMoney(scenario.recommendedSellTargetPln, currentLanguage, 'PLN')} / {tt(currentLanguage, { en: 'PLN target', pl: 'cel PLN' })}
+                  </div>
+
+                  <div className="mt-4 space-y-2 text-sm text-slate-200">
+                    <div className="flex items-center justify-between gap-3">
+                      <span>{tt(currentLanguage, { en: 'Landed cost', pl: 'Koszt lądowy' })}</span>
+                      <span className="font-semibold text-white">{formatMoney(scenario.landedCostUsd, currentLanguage, 'USD')}</span>
+                    </div>
+                    <div className="flex items-center justify-between gap-3">
+                      <span>{tt(currentLanguage, { en: 'Gross profit', pl: 'Zysk brutto' })}</span>
+                      <span className="font-semibold text-white">{formatMoney(scenario.projectedGrossProfitUsd, currentLanguage, 'USD')}</span>
+                    </div>
+                    <div className="flex items-center justify-between gap-3">
+                      <span>{tt(currentLanguage, { en: 'Margin', pl: 'Marża' })}</span>
+                      <span className="font-semibold text-white">{scenario.projectedMarginPercent}%</span>
+                    </div>
+                  </div>
+
+                  <div className="mt-3 text-[11px] uppercase tracking-[0.16em] text-slate-400">
+                    {isOne
+                      ? tt(currentLanguage, { en: 'Safer for a first test', pl: 'Bezpieczniejsze przy pierwszym teście' })
+                      : tt(currentLanguage, { en: 'Better scale efficiency', pl: 'Lepsza efektywność skali' })}
                   </div>
                 </div>
               );
