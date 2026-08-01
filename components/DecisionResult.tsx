@@ -961,15 +961,6 @@ export default function DecisionResult({
         </div>
       )}
 
-      {result.pricing?.productDescription && (
-        <div className="rounded-[24px] border border-emerald-300/20 bg-emerald-300/10 p-4 sm:p-5">
-          <div className="mb-2 text-[11px] uppercase tracking-[0.22em] text-emerald-100">
-            {tt(currentLanguage, { en: 'Shop-ready product description', pl: 'Opis produktu gotowy do sklepu' })}
-          </div>
-          <p className="text-sm leading-7 text-slate-100 sm:text-[15px]">{result.pricing.productDescription}</p>
-        </div>
-      )}
-
       {hybridBreakdown ? (
         <div className="rounded-[24px] border border-cyan-300/20 bg-cyan-300/10 p-4 sm:p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
